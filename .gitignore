@@ -1,0 +1,23 @@
+#################
+## Eclipse
+#################
+
+*.pydevproject
+.project
+.metadata
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+target/
+
+.idea
+.idea/
+*.iml
+.DS_Store
+

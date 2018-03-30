@@ -1,0 +1,106 @@
+/*================右键菜单==================*/
+div#rMenu {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    background-color: #0593d3;
+    text-align: left;
+    /*padding: 2px;*/
+}
+
+div#rMenu ul {
+    color: #FFF;
+    padding: 5px 10px 0;
+    margin-bottom: 5px;
+}
+
+div#rMenu ul li {
+    margin: 2px 0;
+    padding: 0;
+    cursor: pointer;
+    list-style: none outside none;
+    /*background-color: #f3f3f3;*/
+    font-size: 12px;
+}
+
+div#rMenu ul li:hover {
+    font-weight: 700;
+}
+
+div#rMenu ul li i {
+    width: 13px;
+}
+
+div#rMenu hr {
+    margin: 10px 0 !important;
+}
+
+/*=========================================*/
+
+.note_content_common_view {
+    margin-bottom: 10px;
+    display: none;
+}
+
+.note_content_common_view span {
+    margin-left: 0px !important;
+    height: 30px;
+    padding: 8px 5px;
+    margin-right: 10px;
+    margin-bottom: 2px;
+    font-size: 100%;
+}
+
+.note_content_common_edit {
+    margin-bottom: 10px;
+    display: none;
+}
+
+.note_content_common_edit span {
+    height: 31px;
+    font-size: 100%;
+    margin-right: 15px;
+}
+
+.note_content_common_edit input {
+    height: 26px;
+}
+
+.note_content_common_edit input .c_title {
+    width: 200px;
+}
+
+.note_content_common_edit select {
+    height: 25px;
+    width: 100px;
+}
+
+.note_content_common_edit code {
+    height: 28px;
+}
+
+label {
+    padding: 0 5px;
+}
+
+/*
+.editormd-preview-active {
+    padding: 20px !important;
+}
+
+.editormd-preview {
+    top: 0px !important;
+}*/
+
+
+.btn_info1 {
+    color: #fff;
+    background: #0593d3;
+}
+
+.btn_info1:hover {
+    color: #fff !important;
+    background: #337cbb;
+}
+
+
