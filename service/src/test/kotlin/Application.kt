@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource
  * Created by vanki on 2018/1/17 21:46.
  */
 @SpringBootApplication
-@ComponentScan(basePackages = arrayOf("com.qiqinote.repository", "com.qiqinote.service"))
+@ComponentScan(basePackages = ["com.qiqinote.dao", "com.qiqinote.service", "com.qiqinote.configuration"])
 class Application
 
 fun main(args: Array<String>) {

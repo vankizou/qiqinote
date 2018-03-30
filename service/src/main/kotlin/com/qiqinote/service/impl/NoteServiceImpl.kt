@@ -2,6 +2,7 @@ package com.qiqinote.service.impl
 
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
+import com.qiqinote.constant.DBConst.Note.pathLink
 import com.qiqinote.constant.RedisKeyEnum
 import com.qiqinote.constant.ServiceConst
 import com.qiqinote.dao.NoteDao
@@ -30,7 +31,6 @@ class NoteServiceImpl @Autowired constructor(
 ) : NoteService {
     private val maxTitleLen = 200
     private val defaultPwd = ""
-    private val pathLink = "_"
 
     override fun add(loginUserId: Long, note: Note, noteDetailList: List<NoteDetail>?): ResultVO<Long> {
         if (StringUtil.isEmpty(note.title?.trim())) {
@@ -63,7 +63,7 @@ class NoteServiceImpl @Autowired constructor(
                     note.secret = DBConst.Note.secretClose
                 }
             }
-            note.path = parent.path + pathLink + parent.id
+            note.path = parent.path + DBConst.Note.pathLink + parent.id
         }
 
         note.secret = note.secret ?: DBConst.Note.secretOpen
@@ -117,7 +117,7 @@ class NoteServiceImpl @Autowired constructor(
 
         if (newParentId != DBConst.defaultParentId && newParentId != oldParentId) {
             val parent = this.getById(newParentId) ?: return ResultVO(CodeEnum.NOT_FOUND)
-            note.path = parent.path + pathLink + newParentId
+            note.path = parent.path + DBConst.Note.pathLink + newParentId
         }
 
         EntityUtil.copyValIfNull(note, old)
@@ -141,18 +141,14 @@ class NoteServiceImpl @Autowired constructor(
 
     override fun deleteById(loginUserId: Long, id: Long): ResultVO<Int> {
         val old = this.getById(id) ?: return ResultVO()
-        if (old.userId != loginUserId) {
-            return ResultVO()
-        }
-        old.isDel = DBConst.trueVal
+        val status = this.noteDao.deleteById(loginUserId, id)
+        if (status <= 0) return ResultVO(CodeEnum.FAIL)
+
         this.updateNoteNum(loginUserId, old.parentId ?: DBConst.defaultParentId)
         this.closeNoteInRedis(loginUserId, id)
-        this.deleteSubNotes(loginUserId, old.id!!, old.path ?: DBConst.defaultParentId.toString())
+
         return ResultVO()
     }
-
-    fun deleteSubNotes(loginUserId: Long, parentId: Long, parentPath: String) =
-            this.noteDao.deleteSubNotes(loginUserId, "$parentPath$pathLink$parentId")
 
     override fun getById(id: Long) = this.noteDao.getById(id)
 
@@ -209,7 +205,7 @@ class NoteServiceImpl @Autowired constructor(
         var voTmp: NoteTreeVO?
 
         do {
-            val page = this.page(loginUserId, userId, parentId, totalRowTmp, currPage, pageSize)
+            val page = this.page(loginUserId, userId, parentId, totalRowTmp, currPage, pageSize, 10, "title DESC, note_num DESC")
             noteListTmp = page.data
             if (noteListTmp.isEmpty()) break
             if (resultList == null) {
@@ -237,7 +233,8 @@ class NoteServiceImpl @Autowired constructor(
         return resultList ?: arrayListOf()
     }
 
-    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, "note_num DESC, TITLE ASC", totalRow, currPage, pageSize, navNum)
+    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int, orderBy: String?)
+            = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, totalRow, currPage, pageSize, navNum)
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
         if (DBConst.defaultParentId == noteId) {

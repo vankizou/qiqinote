@@ -132,7 +132,7 @@ class NoteController @Autowired constructor(
     @GetMapping("/pageOfHome.json")
     fun pageOfHome(currPage: Int?, pageSize: Int?, navNum: Int?): ResultVO<Page<NoteHomeVO>> {
         val page = this.noteService.page(this.justGetLoginUserId(), null, null,
-                null, currPage ?: Page.firstPage, pageSize ?: 10)
+                null, currPage ?: Page.firstPage, pageSize ?: 10, navNum ?: 3, "view_num DESC, id ASC")
         val noteList = page.data
 
         val returnPage = Page<NoteHomeVO>()
@@ -201,10 +201,8 @@ class NoteController @Autowired constructor(
     }
 
     @ResponseBody
-    @RequestMapping(value = "/download" + WebConst.jsonSuffix)
+    @RequestMapping("/download" + WebConst.jsonSuffix)
     fun downloadNote(id: Long, password: String?): ResultVO<Any> {
-        val noteTempList = TemplateUtil.getExportNoteTempList() ?: return ResultVO(CodeEnum.FAIL)
-
         val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, password)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
@@ -215,7 +213,7 @@ class NoteController @Autowired constructor(
     }
 
     @ResponseBody
-    @RequestMapping(value = "/doDownload" + WebConst.jsonSuffix)
+    @RequestMapping("/doDownload" + WebConst.jsonSuffix)
     fun doDownloadNote(id: Long, password: String?) {
         val noteTempList = TemplateUtil.getExportNoteTempList() ?: return
 

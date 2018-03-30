@@ -107,13 +107,34 @@ class NoteDaoImpl @Autowired constructor(
         return this.namedParameterJdbcTemplate.update(sql, paramMap)
     }
 
-    override fun deleteSubNotes(userId: Long, path: String): Int {
-        val sql = StringBuilder(128)
-        sql.append(NamedSQLUtil.getUpdateSQLWithoutCondition(Note::class, mapOf("is_del" to DBConst.trueVal)))
-        sql.append(" WHERE ")
-        sql.append("user_id=:userId AND path like ':path%' AND is_del=:isDel")
+    override fun deleteById(userId: Long, id: Long): Int {
+        val note = this.getById(id) ?: return 1
+        if (note.userId != userId) return 1
 
-        val paramMap = mapOf("userId" to userId, "path" to path, "isDel" to DBConst.falseVal)
+        val paramMap = LinkedHashMap<String, Any?>(4)
+        paramMap["is_del"] = DBConst.trueVal
+
+        paramMap["id"] = id
+        paramMap["user_id"] = userId
+
+        val status = this.namedParameterJdbcTemplate.update(NamedSQLUtil.getUpdateSQL(Note::class, paramMap, paramMap.size - 1 - 2), paramMap)
+        if (status > 0) {
+            deleteSubNotes(userId, note.path + DBConst.Note.pathLink + note.id)
+            return 1
+        }
+        return status
+    }
+
+    private fun deleteSubNotes(userId: Long, path: String): Int {
+        val paramMap = mutableMapOf<String, Any>("is_del" to DBConst.trueVal)
+
+        val sql = StringBuilder(128)
+        sql.append(NamedSQLUtil.getUpdateSQLWithoutCondition(Note::class, paramMap))
+        sql.append(" WHERE ")
+        sql.append("user_id=:userId AND path like '$path%' AND is_del=:currIsDel")
+
+        paramMap["userId"] = userId
+        paramMap["currIsDel"] = DBConst.falseVal
         return this.namedParameterJdbcTemplate.update(sql.toString(), paramMap)
     }
 
@@ -159,7 +180,7 @@ class NoteDaoImpl @Autowired constructor(
         /**
          * 首页等
          */
-        if (loginUserId == null || userId == null) {
+        if (loginUserId == null || userId != loginUserId) {
             statusList.add(DBConst.Note.statusPass)
             secretList.add(DBConst.Note.secretOpen)
 
@@ -176,22 +197,24 @@ class NoteDaoImpl @Autowired constructor(
             isMine = false
         }
         if (!secretList.isEmpty()) {
-            conditionSql.append(" AND secret")
-            if (secretList.size == 1) {
-                conditionSql.append("=").append(secretList[0])
-            } else {
-                val secretListStr = secretList.toString()
-                conditionSql.append(" IN(").append(secretListStr.substring(1, secretListStr.length - 1)).append(")")
+            conditionSql.append(" AND (")
+
+            val secretSql = StringBuilder(32)
+            secretList.forEach {
+                secretSql.append(" OR secret=").append(it)
             }
+            conditionSql.append(secretSql.substring(4))
+            conditionSql.append(")")
         }
         if (!statusList.isEmpty()) {
-            conditionSql.append(" AND status")
-            if (statusList.size == 1) {
-                conditionSql.append("=").append(statusList[0])
-            } else {
-                val statusListStr = statusList.toString()
-                conditionSql.append(" IN(").append(statusListStr.substring(1, statusListStr.length - 1)).append(")")
+            conditionSql.append(" AND (")
+
+            val statusSql = StringBuilder(32)
+            statusList.forEach {
+                statusSql.append(" OR status=").append(it)
             }
+            conditionSql.append(statusSql.substring(4))
+            conditionSql.append(")")
         }
         var totalRowDB = totalRow
         if (totalRowDB == null) {
@@ -207,7 +230,7 @@ class NoteDaoImpl @Autowired constructor(
         if (StringUtil.isNotEmpty(orderBy)) {
             conditionSql.append(" ORDER BY ").append(orderBy)
         } else {
-            conditionSql.append(" ORDER BY ").append("ID ASC")
+            conditionSql.append(" ORDER BY ").append("title DESC, note_num DESC")
         }
         conditionSql.append(" LIMIT ").append(resultPage.startRow).append(",").append(resultPage.pageSize)
 

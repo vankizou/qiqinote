@@ -1,6 +1,6 @@
 package com.qiqinote.util.sql
 
-import com.qiqinote.po.Picture
+import com.qiqinote.po.Note
 import com.qiqinote.po.User
 import org.apache.commons.lang3.StringUtils
 import kotlin.reflect.KClass
@@ -248,7 +248,7 @@ object NamedSQLUtil {
 
         println()
         println()
-        printFieldMap(User::class)
+        printFieldMap(Note::class)
     }
 
     private fun <T : Any> printFieldMap(cls: KClass<T>) {
@@ -257,7 +257,7 @@ object NamedSQLUtil {
 
         println("val paramMap = mutableMapOf<String, Any?>()")
         props.forEach({
-//            println("""paramMap["${fieldToDBField(it.name)}"] = $clsName.${it.name}""")
+            //            println("""paramMap["${fieldToDBField(it.name)}"] = $clsName.${it.name}""")
             println("""$clsName.${it.name}?.let{paramMap["${fieldToDBField(it.name)}"] = it}""")
         })
     }

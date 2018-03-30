@@ -15,6 +15,8 @@ object DBConst {
     }
 
     object Note {
+        val pathLink = "_"
+
         val typeNormal = 1      /* 笔记类型. 普通 */
         val typeMarkdown = 2    /* 笔记类型. markdown */
 

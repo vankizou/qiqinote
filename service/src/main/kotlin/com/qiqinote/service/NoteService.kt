@@ -1,9 +1,9 @@
 package com.qiqinote.service
 
+import com.qiqinote.dao.NoteDao
 import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
-import com.qiqinote.dao.NoteDao
 import com.qiqinote.vo.NoteTreeVO
 import com.qiqinote.vo.NoteViewVO
 import com.qiqinote.vo.ResultVO
@@ -25,7 +25,7 @@ interface NoteService : BaseService<NoteDao> {
     fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int = 0): MutableList<NoteTreeVO>
 
     fun page(loginUserId: Long?, userId: Long?, parentId: Long?,
-             totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int = 10): Page<Note>
+             totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int = 10, orderBy: String?): Page<Note>
 
     fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean
 
