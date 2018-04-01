@@ -49,7 +49,7 @@ object PasswordUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println(PasswordUtil.getEncPwd("vanki "))
+        println(PasswordUtil.getEncPwd("123456"))
         println(PasswordUtil.getDecPwd(PasswordUtil.getEncPwd("12312345678901234567890123456789012345678")))
 
         println(PasswordUtil.getEncPwd(""))
