@@ -6,7 +6,7 @@ import java.util.*
  * Created by vanki on 2018/1/17 22:24.
  */
 object PasswordUtil {
-    private val PWD_KEY = "MRaRv3TjBaJn0F3m"
+    private val PWD_KEY = "Vanki!@#123abcQI"
 
     fun getEncPwd(pwd: String) = String(Base64.getEncoder().encode(getRc4Str(pwd, PWD_KEY).toByteArray(Charsets.UTF_8)))
 
@@ -49,7 +49,7 @@ object PasswordUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println(PasswordUtil.getEncPwd("12312345678901234567890123456789012345678"))
+        println(PasswordUtil.getEncPwd("vanki "))
         println(PasswordUtil.getDecPwd(PasswordUtil.getEncPwd("12312345678901234567890123456789012345678")))
 
         println(PasswordUtil.getEncPwd(""))
