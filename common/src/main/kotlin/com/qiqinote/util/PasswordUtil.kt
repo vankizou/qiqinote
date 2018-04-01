@@ -6,7 +6,7 @@ import java.util.*
  * Created by vanki on 2018/1/17 22:24.
  */
 object PasswordUtil {
-    private val PWD_KEY = "Vanki!@#123abcQI"
+    private val PWD_KEY = "Vanki!@#1QI"
 
     fun getEncPwd(pwd: String) = String(Base64.getEncoder().encode(getRc4Str(pwd, PWD_KEY).toByteArray(Charsets.UTF_8)))
 
