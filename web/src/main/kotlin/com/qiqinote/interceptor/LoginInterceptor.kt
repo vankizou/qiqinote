@@ -78,7 +78,7 @@ class LoginInterceptor(
             if (resultVO.isSuccess()) return true
         }
 
-        response.sendRedirect("/signOut.html")
+        WebUtil.doSignOut(request, response)
         return false
     }
 }

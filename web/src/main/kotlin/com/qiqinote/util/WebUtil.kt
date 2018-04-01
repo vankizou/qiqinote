@@ -3,6 +3,7 @@ package com.qiqinote.util
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.WebConst
+import com.qiqinote.constant.WebKeyEnum
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.vo.ResultVO
 import org.apache.log4j.Logger
@@ -50,5 +51,10 @@ object WebUtil {
             log.warn("未登录, 跳转到登录页面, 请求路径: ${requestURI}");
             throw QiqiNoteException(CodeEnum.NOT_LOGIN_HTML)
         }
+    }
+
+    fun doSignOut(request: HttpServletRequest, response: HttpServletResponse) {
+        CookieUtil.deleteCookie(response, WebKeyEnum.cookieRememberUser.shortName)
+        request.getSession().invalidate()
     }
 }

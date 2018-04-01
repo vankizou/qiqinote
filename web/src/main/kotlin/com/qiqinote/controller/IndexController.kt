@@ -1,13 +1,16 @@
 package com.qiqinote.controller
 
-import com.qiqinote.constant.*
+import com.qiqinote.constant.CodeEnum
+import com.qiqinote.constant.DBConst
+import com.qiqinote.constant.WebConst
+import com.qiqinote.constant.WebPageEnum
 import com.qiqinote.dto.UserContext
 import com.qiqinote.dto.UserDTO
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.po.User
 import com.qiqinote.service.UserService
-import com.qiqinote.util.CookieUtil
 import com.qiqinote.util.UserUtil
+import com.qiqinote.util.WebUtil
 import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -101,8 +104,7 @@ class IndexController @Autowired constructor(
     @ResponseBody
     @RequestMapping("/signOut" + WebConst.jsonSuffix)
     fun signOutJson(): ResultVO<Any> {
-        this.request.getSession().invalidate()
-        CookieUtil.deleteCookie(this.response, WebKeyEnum.cookieRememberUser.shortName)
+        WebUtil.doSignOut(this.request, this.response)
         return ResultVO()
     }
 
@@ -111,8 +113,7 @@ class IndexController @Autowired constructor(
      */
     @RequestMapping("/signOut" + WebConst.htmlSuffix)
     fun signOutHtml(): ModelAndView {
-        this.request.getSession().invalidate()
-        CookieUtil.deleteCookie(this.response, WebKeyEnum.cookieRememberUser.shortName)
+        WebUtil.doSignOut(this.request, this.response)
         return ModelAndView("redirect:/")
     }
 }
