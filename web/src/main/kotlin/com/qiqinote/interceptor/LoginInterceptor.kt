@@ -74,7 +74,8 @@ class LoginInterceptor(
         val userIdAndPwd = UserUtil.getUserIdAndPwdByCookie(request)
 
         userIdAndPwd?.let {
-            val resultVO = UserUtil.signIn(request, response, userService, userIdAndPwd[0], userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin)
+            val resultVO = UserUtil.signIn(request, response, userService, userIdAndPwd[0],
+                    userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin)
             if (resultVO.isSuccess()) return true
         }
 

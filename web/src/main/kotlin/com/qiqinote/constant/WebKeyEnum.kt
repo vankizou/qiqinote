@@ -7,5 +7,5 @@ enum class WebKeyEnum(val shortName: String) {
     cookieRememberUser("qiqicru"),
     cookieImageCodeV("qiqicicv"),
 
-    sessionUserContext("qiqisuc"),
+    sessionUserContext("suc"),
 }
