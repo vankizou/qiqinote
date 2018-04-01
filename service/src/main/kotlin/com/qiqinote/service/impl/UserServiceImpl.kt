@@ -31,7 +31,7 @@ class UserServiceImpl @Autowired constructor(
 
     override fun preSignIn(account: String?, password: String?, isRemember: Int, origin: Int, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?> {
         val accounted = account?.trim()
-        val passworded = password?.trim()
+        val passworded = password
         if (StringUtil.isEmpty(accounted) ||
                 (origin != DBConst.UserLoginRecord.originAutoLogin && StringUtil.isEmpty(passworded))) {
             return ResultVO(CodeEnum.PARAM_ERROR)

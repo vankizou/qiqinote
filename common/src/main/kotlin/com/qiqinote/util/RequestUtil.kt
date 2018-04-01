@@ -22,7 +22,7 @@ object RequestUtil {
             ip = request.remoteAddr
         }
         if (ip != null) {
-            val ipArray = ip.split(delimiters = ',', limit = 2)
+            val ipArray = ip.split(',', limit = 2)
             if (ipArray.isNotEmpty()) ip = ipArray[0]
         }
         return ip
