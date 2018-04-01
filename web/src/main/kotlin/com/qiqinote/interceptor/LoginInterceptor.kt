@@ -1,16 +1,12 @@
 package com.qiqinote.interceptor
 
-import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
 import com.qiqinote.service.UserService
 import com.qiqinote.util.UserUtil
 import com.qiqinote.util.WebUtil
 import org.apache.log4j.Logger
-import org.springframework.lang.Nullable
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
-import org.springframework.web.servlet.ModelAndView
-import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -75,10 +71,13 @@ class LoginInterceptor(
         var uc = UserUtil.getUCBySession(request)
         if (uc != null) return true
 
-        val userId = UserUtil.getUserIdByCookie(request) ?: return false
+        val userIdAndPwd = UserUtil.getUserIdAndPwdByCookie(request)
 
-        val resultVO = UserUtil.signIn(request, response, userService, userId.toString(), origin = DBConst.UserLoginRecord.originAutoLogin)
-        if (resultVO.isSuccess()) return true
+        userIdAndPwd?.let {
+            val resultVO = UserUtil.signIn(request, response, userService, userIdAndPwd[0], userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin)
+            if (resultVO.isSuccess()) return true
+        }
+
         response.sendRedirect("/signOut.html")
         return false
     }

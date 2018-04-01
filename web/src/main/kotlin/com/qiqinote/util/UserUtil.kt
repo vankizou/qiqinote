@@ -1,5 +1,6 @@
 package com.qiqinote.util
 
+import com.qiqinote.constant.ServiceConst
 import com.qiqinote.constant.WebKeyEnum
 import com.qiqinote.dto.UserContext
 import com.qiqinote.po.UserLoginRecord
@@ -15,23 +16,29 @@ import javax.servlet.http.HttpServletResponse
 object UserUtil {
     private const val userRememberCookieDelim = ','
 
-    fun setUserIdInCookie(response: HttpServletResponse, userId: Long?) {
-        if (userId == null) return
+    fun setUserIdAndPwdInCookie(response: HttpServletResponse, userId: Long, pwd: String) {
+        val date = Date()
         var value: String = StringBuilder()
+                .append(date.time)
+                .append(userRememberCookieDelim)
                 .append(userId)
                 .append(userRememberCookieDelim)
-                .append(DateUtil.formatDatetime(Date()))
+                .append(pwd)
+                .append(userRememberCookieDelim)
+                .append(DateUtil.formatDatetime(date))
                 .toString()
         value = PasswordUtil.getEncPwd(value)
         CookieUtil.setCookie(response, WebKeyEnum.cookieRememberUser.shortName, value)
     }
 
-    fun getUserIdByCookie(request: HttpServletRequest): Long? {
+    fun getUserIdAndPwdByCookie(request: HttpServletRequest): Array<String>? {
         var value: String? = CookieUtil.getCookie(request, WebKeyEnum.cookieRememberUser.shortName)
         if (StringUtil.isEmpty(value)) return null
 
         value = PasswordUtil.getDecPwd(value?.trim() ?: "")
-        return value.splitToSequence(userRememberCookieDelim).firstOrNull()?.toLongOrNull()
+        val loginInfos = value.split(userRememberCookieDelim)
+        if (loginInfos.isEmpty() || loginInfos.size < 4) return null
+        return arrayOf(loginInfos[1], loginInfos[2])
     }
 
     fun setUCInSession(request: HttpServletRequest, uc: UserContext) = request.getSession().setAttribute(WebKeyEnum.sessionUserContext.shortName, uc)
@@ -40,13 +47,18 @@ object UserUtil {
 
     fun signIn(request: HttpServletRequest, response: HttpServletResponse, userService: UserService,
                account: String?, password: String? = null, isRemember: Int = 0, origin: Int): ResultVO<UserContext> {
-        val resultVO = userService.preSignIn(account, password, isRemember, origin, UserLoginRecord.buildRequestInfo(request))
+        val userLoginRecord = UserLoginRecord.buildRequestInfo(request)
+        userLoginRecord.origin = origin
+
+        val resultVO = userService.preSignIn(account, password, userLoginRecord)
         val ucVO = resultVO.data
         if (ucVO?.user == null) return ResultVO(resultVO.code, resultVO.msg)
 
         val uc = UserContext.build(ucVO.user!!, ucVO.avatar)
         UserUtil.setUCInSession(request, uc)
-        if (isRemember == 1) UserUtil.setUserIdInCookie(response, uc.user.id)
+        if (isRemember == ServiceConst.trueVal && uc.user.id != null && password != null) {
+            UserUtil.setUserIdAndPwdInCookie(response, uc.user.id!!, password)
+        }
 
         return ResultVO(uc)
     }

@@ -29,11 +29,10 @@ class UserServiceImpl @Autowired constructor(
         private val userLoginRecordService: UserLoginRecordService
 ) : UserService {
 
-    override fun preSignIn(account: String?, password: String?, isRemember: Int, origin: Int, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?> {
+    override fun preSignIn(account: String?, password: String?, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?> {
         val accounted = account?.trim()
         val passworded = password
-        if (StringUtil.isEmpty(accounted) ||
-                (origin != DBConst.UserLoginRecord.originAutoLogin && StringUtil.isEmpty(passworded))) {
+        if (StringUtil.isEmpty(accounted) || StringUtil.isEmpty(passworded)) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
         var userId = accounted?.toLongOrNull()
@@ -43,10 +42,7 @@ class UserServiceImpl @Autowired constructor(
         } else {
             user = this.getByName(accounted!!)
         }
-        if (user == null ||
-                (DBConst.UserLoginRecord.originAutoLogin != origin &&
-                        (user.password != null && passworded != PasswordUtil.getDecPwd(user.password!!)))
-        ) {
+        if (user == null || (user.password != null && passworded != PasswordUtil.getDecPwd(user.password!!))) {
             return ResultVO(CodeEnum.USER_ACCOUNT_OR_PWD_ERROR)
         }
         if (userId == null) {
@@ -57,7 +53,6 @@ class UserServiceImpl @Autowired constructor(
          * 帐号校验成功
          */
         userLoginRecord.userId = userId
-        userLoginRecord.origin = origin
         this.userLoginRecordService.add(userLoginRecord)
 
         val ucVO = this.getUserContextVO(user)
@@ -69,7 +64,7 @@ class UserServiceImpl @Autowired constructor(
      */
     override fun upsertUser(user: User): ResultVO<Long> {
         user.name = user.name?.trim()
-        user.password = user.password?.trim()
+        user.password = user.password
 
         if (StringUtil.isNumber(user.name)) {
             return ResultVO(CodeEnum.USER_NAME_NOT_ALLOW)
