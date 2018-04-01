@@ -73,6 +73,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j</artifactId>
+            <version>${spring-boot-starter-log4j.version}</version>
         </dependency>
 
         <dependency>
