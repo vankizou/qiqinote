@@ -31,10 +31,12 @@ class NoteController @Autowired constructor(
         private val userService: UserService,
         private val noteService: NoteService
 ) : BaseController() {
-    @GetMapping("/edit/{id}" + WebConst.needLoginHtmlSuffix)
-    fun editHtml(@PathVariable("id") id: Long): ModelAndView {
+    fun editHtml(@PathVariable("idOrIdLink") idOrIdLink: String): ModelAndView {
         val loginUserId = this.getLoginUserId()
-        val noteVO = this.noteService.getNoteVOById(loginUserId, id, null)
+
+        val id = idOrIdLink.toLongOrNull()
+
+        val noteVO = this.noteService.getNoteVOById(loginUserId, id, if (id == null) idOrIdLink else null, null)
         if (noteVO == null || noteVO.needPwd == ServiceConst.falseVal) {
             throw QiqiNoteException(CodeEnum.NOT_FOUND)
         }
@@ -43,15 +45,17 @@ class NoteController @Autowired constructor(
         return mv
     }
 
-    @GetMapping("/{id}" + WebConst.htmlSuffix)
-    fun viewHtml(@PathVariable("id") id: Long, password: String?): ModelAndView {
+    @GetMapping("/{idOrIdLink}")
+    fun viewHtml(@PathVariable("idOrIdLink") idOrIdLink: String, password: String?): ModelAndView {
         val loginUserId = this.justGetLoginUserId()
         val mv = ModelAndView(WebPageEnum.note_view.url)
-        val noteVO = this.noteService.getNoteVOById(loginUserId, id, password)
+
+        val id = idOrIdLink.toLongOrNull()
+        val noteVO = this.noteService.getNoteVOById(loginUserId, id, if (id == null) idOrIdLink else null, password)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
 
         // 父节点数据
-        noteVO.parentNote = this.noteService.getById(noteVO.note?.parentId ?: DBConst.defaultParentId)
+        noteVO.parentNote = this.noteService.getByIdOrIdLink(noteVO.note?.parentId ?: DBConst.defaultParentId)
 
         // 用户
         if (noteVO.note?.userId != null) {
@@ -72,7 +76,7 @@ class NoteController @Autowired constructor(
         val result = this.noteService.add(this.getLoginUserId(), noteVO.note
                 ?: Note(), noteVO.noteDetailList)
         if (!result.isSuccess()) return ResultVO(result.code, result.msg)
-        return ResultVO(this.noteService.getById(result.data!!))
+        return ResultVO(this.noteService.getByIdOrIdLink(result.data!!))
     }
 
     @ResponseBody
@@ -107,14 +111,15 @@ class NoteController @Autowired constructor(
 
     @ResponseBody
     @GetMapping("/getNoteVOById" + WebConst.jsonSuffix)
-    fun getNoteVoById(id: Long, password: String?): ResultVO<Any> {
-        val vo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, password)
+    fun getNoteVOById(idOrIdLink: String, password: String?): ResultVO<Any> {
+        val id = idOrIdLink.toLongOrNull()
+        val vo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, if (id == null) idOrIdLink else null, password)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
         if (vo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.NOTE_PWD_ERROR)
         }
         // 父节点数据
-        vo.parentNote = this.noteService.getById(vo.note?.parentId ?: DBConst.defaultParentId)
+        vo.parentNote = this.noteService.getByIdOrIdLink(vo.note?.parentId ?: DBConst.defaultParentId)
 
         vo.createDatetimeStr = DateUtil.formatDate(vo.note?.createDatetime)
         vo.updateDatetimeStr = DateUtil.formatDate(vo.note?.updateDatetime)
@@ -177,7 +182,7 @@ class NoteController @Autowired constructor(
             if (parentNoteIdTmp == DBConst.defaultParentId) continue
             var pNote: Note? = parentNoteMap[parentNoteIdTmp]
             if (pNote == null) {
-                pNote = this.noteService.getById(parentNoteIdTmp)
+                pNote = this.noteService.getByIdOrIdLink(parentNoteIdTmp)
                 if (pNote == null) continue
                 parentNoteMap.put(parentNoteIdTmp, pNote)
             }
@@ -203,7 +208,7 @@ class NoteController @Autowired constructor(
     @ResponseBody
     @RequestMapping("/download" + WebConst.jsonSuffix)
     fun downloadNote(id: Long, password: String?): ResultVO<Any> {
-        val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, password)
+        val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, null, password)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.NOTE_PWD_ERROR)
@@ -217,7 +222,7 @@ class NoteController @Autowired constructor(
     fun doDownloadNote(id: Long, password: String?) {
         val noteTempList = TemplateUtil.getExportNoteTempList() ?: return
 
-        val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, password)
+        val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, null, password)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return

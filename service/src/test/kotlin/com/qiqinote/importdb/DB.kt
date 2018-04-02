@@ -1,7 +1,9 @@
 package com.qiqinote.importdb
 
+import com.qiqinote.dao.NoteDao
 import com.qiqinote.po.Note
 import com.qiqinote.po.User
+import com.qiqinote.service.NoteService
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.sql.NamedSQLUtil
 import org.junit.Test
@@ -20,6 +22,15 @@ import org.springframework.test.context.junit4.SpringRunner
 class DB {
     @Autowired
     private lateinit var namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+    @Autowired
+    private lateinit var noteDao: NoteDao
+
+    @Test
+    fun noteIdLink() {
+        val list= this.namedParameterJdbcTemplate.query("select * from note", mapOf<String, Any>(), BeanPropertyRowMapper(Note::class.java))
+
+        list.forEach({this.noteDao.updateIdLink(it.userId!!, it.id!!, PasswordUtil.getEncNoteId(it.id!!))})
+    }
 
     @Test
     fun note() {

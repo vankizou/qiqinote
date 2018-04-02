@@ -18,9 +18,9 @@ interface NoteService : BaseService<NoteDao> {
 
     fun deleteById(loginUserId: Long, id: Long): ResultVO<Int>
 
-    fun getById(id: Long): Note?
+    fun getByIdOrIdLink(id: Long?, idLink: String? = null): Note?
 
-    fun getNoteVOById(loginUserId: Long?, id: Long, password: String?): NoteViewVO?
+    fun getNoteVOById(loginUserId: Long?, id: Long?, idLink: String?, password: String?): NoteViewVO?
 
     fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int = 0): MutableList<NoteTreeVO>
 

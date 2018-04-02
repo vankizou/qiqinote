@@ -48,7 +48,7 @@ var setting_noLogin = {
 }
 
 // 树，右键菜单，笔记目录下的笔记数量，笔记私密类型
-var tree, rMenu, childNoteNumJson = {}, noteSecretTypeJson = {};
+var tree, rMenu, childNoteNumJson = {}, noteSecretTypeJson = {}, noteIdAndNoteIdLinkJson = {};
 $(document).ready(function () {
     $('#noteTree').css('height', $(window).height() - 88);
     var rootName = (c_noteUserAlias ? c_noteUserAlias : "TA") + "的笔记";
@@ -94,6 +94,7 @@ function addNote() {
             return false;
         }
         noteSecretTypeJson[data['id']] = data['secret'];
+        noteIdAndNoteIdLinkJson[data['id']] = data['idLink'];
         updateDiyDom(parentNode, 1);
         tree.addNodes(parentNode, {id: data["id"], pId: pId, name: data["title"]});
     };
@@ -444,6 +445,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         var noteSecret = note['secret'];
 
         noteSecretTypeJson[noteId] = noteSecret;
+        noteIdAndNoteIdLinkJson[noteId] = note['idLink']
 
         if (existsNodeIdArr.indexOf(noteId) != -1) continue;    // 节点已存在
 

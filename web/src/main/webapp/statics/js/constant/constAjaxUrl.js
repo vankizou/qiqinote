@@ -28,8 +28,7 @@ var ConstAjaxUrl = {
     },
 
     Note: {
-        edit_shtml: ['/note/edit/${id}.htm', '${id}'],
-        view_html: ['/note/${id}.html', '${id}'],
+        view_html: ['/note/${id}', '${id}'],
         download: ['/note/download.json'],
         doDownload: ['/note/doDownload.json'],
 

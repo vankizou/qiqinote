@@ -8,6 +8,8 @@ import java.util.*
 class Note {
     var id: Long? = null
 
+    var idLink: String? = null
+
     var parentId: Long? = null
 
     var path: String? = null

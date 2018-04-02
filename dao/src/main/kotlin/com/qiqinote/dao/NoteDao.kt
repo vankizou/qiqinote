@@ -9,6 +9,8 @@ import com.qiqinote.po.Note
 interface NoteDao {
     fun insert(note: Note): Long
 
+    fun updateIdLink(userId: Long, id: Long, idLink: String): Int
+
     fun updateViewNum(userId: Long, id: Long, viewNum: Long): Int
 
     fun updateNoteNum(userId: Long, id: Long): Int
@@ -25,7 +27,7 @@ interface NoteDao {
 
     fun countNoteHasContent(userId: Long): Int
 
-    fun getById(id: Long): Note?
+    fun getByIdOrIdLink(id: Long?, idLink: String?): Note?
 
     fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note>
 }

@@ -15,7 +15,7 @@ $(function () {
         "\r\n" +
         ">> 2. 在菜单列表右击会有相应操作\r\n" +
         "\r\n" +
-        ">> 3. 在菜单列表双击打开笔记\r\n" +
+        ">> 3. 在菜单列表单击打开笔记/目录\r\n" +
         "\r\n" +
         ">> 4. 菜单列表排序是根据笔记数量倒序\r\n" +
         "\r\n" +
@@ -29,6 +29,8 @@ $(function () {
         ">> 1. 公开的笔记会上主页的哦，所以请将笔记做的棒棒哒，才倍有面子！\r\n" +
         "\r\n" +
         ">> 2. 目录设置私密不会影响旗下笔记公开或加密，反之设置私密或加密的目录下若有公开笔记是会上主页的\r\n" +
+        "\r\n" +
+        ">> 3. 访链的笔记与私密类似, 但是访链知道笔记链接可直接访问\r\n" +
         "\r\n" +
         "------------\r\n" +
         "\r\n" +
@@ -177,8 +179,11 @@ function buildMarkdownEdit(val, heightDiff) {
 
 var currPwd;    // 密码
 function viewNote(noteId, password, isNotAsync) {
+    if (noteId == ConstDB.defaultParentId) return;
+
+    var idLink = noteIdAndNoteIdLinkJson[noteId]
     var params = {
-        "id": noteId,
+        "idOrIdLink": idLink,
         "password": password
     }
     var context;
@@ -198,7 +203,7 @@ function viewNote(noteId, password, isNotAsync) {
         }
         buildViewNoteCommonInfo(val, data['note']);
 
-        history.pushState(null, null, "/note/" + noteId + ".html");
+        history.pushState(null, null, "/note/" + idLink);
 
         context = true;
     };

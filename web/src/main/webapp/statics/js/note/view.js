@@ -6,7 +6,7 @@ $(function () {
     var startContent = $('#j_content').html();
 
     if (c_isNeedPwd == ConstDB.Note.isNeedPwdYes) {
-        fnGetNoteVo(c_noteId);
+        fnGetNoteVo(c_noteIdLink);
     } else if (!startContent) {
         $('#j_empty_content').show();
         $('.j_note_info').hide();
@@ -17,12 +17,12 @@ $(function () {
     }
 });
 
-function fnGetNoteVo(noteId, msg) {
+function fnGetNoteVo(noteIdOrIdLink, msg) {
     if (!msg) msg = "请输入密码";
     var pwd = prompt(msg);
     if (pwd == null) return;//fnGetNoteVo(noteId);
     var params = {
-        "id": noteId,
+        "idOrIdLink": noteIdOrIdLink,
         "password": pwd,
         "is_pop_error_window": false
     };
@@ -46,7 +46,7 @@ function fnGetNoteVo(noteId, msg) {
             }
             $('#j_note_info_create_datetime').html(data['createDatetimeStr']);
             $('#j_note_info_update_datetime').html(data['updateDatetimeStr']);
-            $('#j_note_info_user_url').attr('href', '/user/' + data['user']['id'] + '.html');
+            $('#j_note_info_user_url').attr('href', '/user/' + data['user']['name']);
 
             if (!vankiEditor) fnInitVankiEditor(val);
         } else {
@@ -56,7 +56,7 @@ function fnGetNoteVo(noteId, msg) {
         changeFooterMarginTop();
     };
     var fnFail = function (data) {
-        fnGetNoteVo(noteId, "密码输入错误，请重新输入");
+        fnGetNoteVo(noteIdOrIdLink, "密码输入错误，请重新输入");
     };
     vankiAjax(ConstAjaxUrl.Note.getNoteVOById, params, fnSucc, fnFail);
 }

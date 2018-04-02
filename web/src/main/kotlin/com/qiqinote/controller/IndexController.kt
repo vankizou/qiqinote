@@ -29,7 +29,10 @@ class IndexController @Autowired constructor(
 ) : BaseController() {
 
     @RequestMapping("/")
-    fun index() = ModelAndView(WebPageEnum.index.url)
+    fun index() = if (this.userContext != null) "redirect:/${this.userContext!!.user.name}" else ModelAndView(WebPageEnum.index.url)
+
+    @RequestMapping("/index" + WebConst.htmlSuffix)
+    fun index2() = ModelAndView(WebPageEnum.index.url)
 
     @RequestMapping("/{idOrName}")
     fun userHome(@PathVariable("idOrName") idOrName: String): ModelAndView {
@@ -116,4 +119,7 @@ class IndexController @Autowired constructor(
         WebUtil.doSignOut(this.request, this.response)
         return ModelAndView("redirect:/")
     }
+
+    @RequestMapping("/info/markdown/case" + WebConst.htmlSuffix)
+    fun markdownCase() = ModelAndView("info/markdown")
 }

@@ -57,6 +57,8 @@ class NoteDaoImpl @Autowired constructor(
         return 0
     }
 
+    override fun updateIdLink(userId: Long, id: Long, idLink: String) = this.updateById(userId, id, mapOf("id_link" to idLink))
+
     override fun updateViewNum(userId: Long, id: Long, viewNum: Long) = this.updateById(userId, id, mapOf("view_num" to viewNum))
 
     override fun updateNoteNum(userId: Long, id: Long): Int {
@@ -108,7 +110,7 @@ class NoteDaoImpl @Autowired constructor(
     }
 
     override fun deleteById(userId: Long, id: Long): Int {
-        val note = this.getById(id) ?: return 1
+        val note = this.getByIdOrIdLink(id, null) ?: return 1
         if (note.userId != userId) return 1
 
         val paramMap = LinkedHashMap<String, Any?>(4)
@@ -152,8 +154,14 @@ class NoteDaoImpl @Autowired constructor(
         return this.namedParameterJdbcTemplate.queryForObject(sql.toString(), paramMap, Int::class.java) ?: 0
     }
 
-    override fun getById(id: Long): Note? {
-        val paramMap = mapOf("id" to id, "is_del" to DBConst.falseVal)
+    override fun getByIdOrIdLink(id: Long?, idLink: String?): Note? {
+        if (id == null && idLink == null) return null
+
+        val paramMap = mutableMapOf<String, Any>()
+        paramMap["is_del"] = DBConst.falseVal
+        id?.let { paramMap["id"] = id }
+        idLink?.let { paramMap["id_link"] = idLink }
+
         val sql = NamedSQLUtil.getSelectSQL(Note::class, paramMap)
         val list = this.namedParameterJdbcTemplate.query(sql, paramMap, rowMapper)
         return if (list.isEmpty()) null else list[0]

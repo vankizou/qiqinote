@@ -25,6 +25,7 @@
 
     <script type="text/javascript">
         var c_noteId = '${noteVO.note.id}';
+        var c_noteIdLink = '${noteVO.note.idLink}';
         var c_isNeedPwd = '${noteVO.needPwd}';
 
         $(function() {

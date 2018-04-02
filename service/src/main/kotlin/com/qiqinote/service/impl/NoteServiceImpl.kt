@@ -2,7 +2,6 @@ package com.qiqinote.service.impl
 
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
-import com.qiqinote.constant.DBConst.Note.pathLink
 import com.qiqinote.constant.RedisKeyEnum
 import com.qiqinote.constant.ServiceConst
 import com.qiqinote.dao.NoteDao
@@ -11,6 +10,7 @@ import com.qiqinote.po.NoteDetail
 import com.qiqinote.service.NoteDetailService
 import com.qiqinote.service.NoteService
 import com.qiqinote.util.EntityUtil
+import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
 import com.qiqinote.vo.NoteTreeVO
 import com.qiqinote.vo.NoteViewVO
@@ -50,7 +50,7 @@ class NoteServiceImpl @Autowired constructor(
         if (DBConst.defaultParentId == note.parentId) {
             note.path = DBConst.defaultParentId.toString()
         } else {
-            val parent = this.getById(note.parentId!!)
+            val parent = this.getByIdOrIdLink(note.parentId!!)
 
             if (parent == null || note.userId != parent.userId) {
                 return ResultVO(CodeEnum.FAIL)
@@ -79,6 +79,7 @@ class NoteServiceImpl @Autowired constructor(
 
         val id = this.noteDao.insert(note)
         if (id > 0) {
+            this.noteDao.updateIdLink(loginUserId, id, PasswordUtil.getEncNoteId(id))
             /**
              * 如果有笔记内容
              */
@@ -106,7 +107,7 @@ class NoteServiceImpl @Autowired constructor(
             return ResultVO(CodeEnum.NOTE_TITLE_LEN_ERROR)
         }
 
-        val old = this.getById(note.id!!) ?: return ResultVO(CodeEnum.NOT_FOUND)
+        val old = this.getByIdOrIdLink(note.id!!) ?: return ResultVO(CodeEnum.NOT_FOUND)
         if (loginUserId != old.userId) {
             return ResultVO(CodeEnum.FORBIDDEN)
         }
@@ -116,7 +117,7 @@ class NoteServiceImpl @Autowired constructor(
         val oldParentId = old.parentId ?: DBConst.defaultParentId
 
         if (newParentId != DBConst.defaultParentId && newParentId != oldParentId) {
-            val parent = this.getById(newParentId) ?: return ResultVO(CodeEnum.NOT_FOUND)
+            val parent = this.getByIdOrIdLink(newParentId) ?: return ResultVO(CodeEnum.NOT_FOUND)
             note.path = parent.path + DBConst.Note.pathLink + newParentId
         }
 
@@ -140,7 +141,7 @@ class NoteServiceImpl @Autowired constructor(
     }
 
     override fun deleteById(loginUserId: Long, id: Long): ResultVO<Int> {
-        val old = this.getById(id) ?: return ResultVO()
+        val old = this.getByIdOrIdLink(id) ?: return ResultVO()
         val status = this.noteDao.deleteById(loginUserId, id)
         if (status <= 0) return ResultVO(CodeEnum.FAIL)
 
@@ -150,20 +151,24 @@ class NoteServiceImpl @Autowired constructor(
         return ResultVO()
     }
 
-    override fun getById(id: Long) = this.noteDao.getById(id)
+    override fun getByIdOrIdLink(id: Long?, idLink: String?) = this.noteDao.getByIdOrIdLink(id, idLink)
 
-    override fun getNoteVOById(loginUserId: Long?, id: Long, password: String?): NoteViewVO? {
-        val note = this.getById(id) ?: return null
+    override fun getNoteVOById(loginUserId: Long?, id: Long?, idLink: String?, password: String?): NoteViewVO? {
+        if (id == null && idLink == null) return null
+
+        val note = this.getByIdOrIdLink(id, idLink) ?: return null
         var secret = note.secret ?: DBConst.Note.secretOpen
 
         /**
          * 拒绝访问
          */
         if (loginUserId != note.userId) {
-            if (note.status != DBConst.Note.statusPass || secret == DBConst.Note.secretClose) {
+            if (note.status != DBConst.Note.statusPass ||
+                    secret == DBConst.Note.secretClose ||
+                    (secret == DBConst.Note.secretLink && idLink == null && idLink != note.idLink)) {
                 return null
             }
-            if (secret == DBConst.Note.secretPwd && note.password != null && !note.password.equals(password)) {
+            if (secret == DBConst.Note.secretPwd && note.password != null && (note.password != password ?: defaultPwd)) {
                 val pwdNote = Note()
                 pwdNote.id = id
                 pwdNote.title = note.title
@@ -180,7 +185,7 @@ class NoteServiceImpl @Autowired constructor(
         vo.noteDetailList = this.noteDetailService.listByNoteId(note.id!!)
 
         if (loginUserId != note.userId) {
-            this.updateViewNum(note.userId!!, id, (note.viewNum ?: 0) + 1)
+            this.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
         }
         return vo
     }
@@ -233,8 +238,7 @@ class NoteServiceImpl @Autowired constructor(
         return resultList ?: arrayListOf()
     }
 
-    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int, orderBy: String?)
-            = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, totalRow, currPage, pageSize, navNum)
+    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int, orderBy: String?) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, totalRow, currPage, pageSize, navNum)
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
         if (DBConst.defaultParentId == noteId) {

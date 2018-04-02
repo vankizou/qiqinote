@@ -6,11 +6,16 @@ import java.util.*
  * Created by vanki on 2018/1/17 22:24.
  */
 object PasswordUtil {
-    private val PWD_KEY = "Vanki!@#1QI"
+    private val pwdKey = "Vanki!@#1QI"
+    private val noteKey = "!@#Note123"
 
-    fun getEncPwd(pwd: String) = String(Base64.getEncoder().encode(getRc4Str(pwd, PWD_KEY).toByteArray(Charsets.UTF_8)))
+    fun getEncNoteId(noteId: Long) = String(Base64.getEncoder().encode(getRc4Str(noteId.toString(), noteKey).toByteArray(Charsets.UTF_8))).trim()
 
-    fun getDecPwd(encPwd: String) = getRc4Str(String(Base64.getDecoder().decode(encPwd)), PWD_KEY)
+    fun getDecNoteId(encNoteId: String) = getRc4Str(String(Base64.getDecoder().decode(encNoteId)), noteKey).toLong()
+
+    fun getEncPwd(pwd: String) = String(Base64.getEncoder().encode(getRc4Str(pwd, pwdKey).toByteArray(Charsets.UTF_8))).trim()
+
+    fun getDecPwd(encPwd: String) = getRc4Str(String(Base64.getDecoder().decode(encPwd)), pwdKey)
 
     private fun getRc4Str(aInput: String, aKey: String): String {
         val iS = IntArray(256)
@@ -49,10 +54,14 @@ object PasswordUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        println(PasswordUtil.getEncNoteId(1))
+        println(PasswordUtil.getEncNoteId(15))
+        println(PasswordUtil.getEncNoteId(175))
+        println(PasswordUtil.getEncNoteId(1755))
+        println(PasswordUtil.getEncNoteId(17552))
+        println(PasswordUtil.getDecNoteId(PasswordUtil.getEncNoteId(2812345678)))
+
         println(PasswordUtil.getEncPwd("123456"))
         println(PasswordUtil.getDecPwd(PasswordUtil.getEncPwd("12312345678901234567890123456789012345678")))
-
-        println(PasswordUtil.getEncPwd(""))
-        println(PasswordUtil.getDecPwd(PasswordUtil.getEncPwd("")))
     }
 }

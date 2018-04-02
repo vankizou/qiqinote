@@ -52,6 +52,7 @@ function getNoteList(pageNo, pageSize, navNum) {
             var d = datas[i];
 
             var noteId = d['note']['id'];
+            var noteIdLink = d['note']['idLink'];
             var noteTitle = d['note']['title'];
             var noteCreateDatetime = d['note']['createDatetime'];
             var noteViewNum = d['note']['viewNum'];
@@ -66,7 +67,7 @@ function getNoteList(pageNo, pageSize, navNum) {
                 pNoteTitle = pNote['title'];
             }
 
-            var viewNoteUrl = ConstAjaxUrl.Note.view_html[0].replace(ConstAjaxUrl.Note.view_html[1], noteId);
+            var viewNoteUrl = ConstAjaxUrl.Note.view_html[0].replace(ConstAjaxUrl.Note.view_html[1], noteIdLink);
             var viewUserUrl = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], userName);
 
             node += '<tr>'
