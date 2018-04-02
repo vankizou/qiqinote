@@ -170,7 +170,8 @@ class NoteServiceImpl @Autowired constructor(
             }
             if (secret == DBConst.Note.secretPwd && note.password != null && (note.password != password ?: defaultPwd)) {
                 val pwdNote = Note()
-                pwdNote.id = id
+                pwdNote.id = note.id
+                pwdNote.idLink = note.idLink
                 pwdNote.title = note.title
 
                 val noteVo = NoteViewVO()
