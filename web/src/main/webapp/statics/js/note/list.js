@@ -337,10 +337,10 @@ function onDblClick(event, treeId, treeNode) {
             beforeExpand(treeId, treeNode)
         }
     }
-    openNote(treeNode.id);
+    openNote(treeNode.id, treeNode);
 }
 
-function openNote(noteId) {
+function openNote(noteId, treeNode) {
     if (!noteId) {
         var node = tree.getSelectedNodes()[0];
         noteId = node.id;
@@ -356,7 +356,11 @@ function openNote(noteId) {
             if (password == null) return;
         }
     }
-    viewNote(noteId, password);
+    var flag = viewNote(noteId, password, false);
+    if (flag) {
+        buildNoteTreeNodes(treeNode.id, treeNode);
+        if (secretType == ConstDB.Note.secretPwd) openedPwdJson[treeNode.id] = password;
+    }
 }
 
 function beforeCollapse(treeId, treeNode) {
@@ -387,12 +391,6 @@ function beforeExpand(treeId, treeNode) {
                 password = tempPwd;
             }
         }
-    }
-    if (viewNote(treeNode.id, password, true)) {
-        buildNoteTreeNodes(treeNode.id, treeNode);
-        if (secretType == ConstDB.Note.secretPwd) openedPwdJson[treeNode.id] = password;
-    } else {
-        return false;
     }
     return (treeNode.expand !== false);
 }
@@ -609,7 +607,7 @@ function downloadNote(password) {
         if (tempPwd == null) return false;
         downloadNote(tempPwd);
     };
-    vankiAjax(ConstAjaxUrl.Note.download, params, fnSucc, fnFail, false);
+    vankiAjax(ConstAjaxUrl.Note.download, params, fnSucc, fnFail);
 }
 
 /*================右键菜单==================*/

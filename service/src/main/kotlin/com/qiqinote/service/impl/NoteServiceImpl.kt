@@ -185,8 +185,8 @@ class NoteServiceImpl @Autowired constructor(
         vo.note = note
         vo.noteDetailList = this.noteDetailService.listByNoteId(note.id!!)
 
-        if (loginUserId != note.userId) {
-            this.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
+        if (loginUserId != note.userId && note.noteContentNum ?: 0 > 0) {
+            this.noteDao.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
         }
         return vo
     }
@@ -211,7 +211,7 @@ class NoteServiceImpl @Autowired constructor(
         var voTmp: NoteTreeVO?
 
         do {
-            val page = this.page(loginUserId, userId, parentId, totalRowTmp, currPage, pageSize, 10, "title DESC, note_num DESC")
+            val page = this.page(loginUserId, userId, parentId, totalRowTmp, currPage, pageSize, 10, "note_num DESC, title DESC")
             noteListTmp = page.data
             if (noteListTmp.isEmpty()) break
             if (resultList == null) {
@@ -264,8 +264,6 @@ class NoteServiceImpl @Autowired constructor(
     }
 
     override fun countNoteHasContent(userId: Long) = this.noteDao.countNoteHasContent(userId)
-
-    private fun updateViewNum(userId: Long, id: Long, viewNum: Long) = this.noteDao.updateViewNum(userId, id, viewNum)
 
     private fun updateNoteNum(loginUserId: Long, parentId: Long) {
         if (parentId == DBConst.defaultParentId) return

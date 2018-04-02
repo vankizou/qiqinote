@@ -2,13 +2,13 @@
  * Created by vanki on 16/10/28.
  */
 
-var vankiAjax = function (ajaxInfo, ajaxParams, successFun, failFun, ajaxContext, isNotAsync) {
+var vankiAjax = function (ajaxInfo, ajaxParams, successFun, failFun, ajaxContext, isAsync) {
     $.ajax({
         url: ajaxInfo[0],
         type: ajaxInfo[1],
         dataType: ajaxInfo[2],
         data: ajaxParams,
-        async: !isNotAsync,
+        async: isAsync,
 
         success: function (data) {
             operateMyAjaxData(data, ajaxContext, successFun, failFun, ajaxParams ? ajaxParams.is_pop_error_window : undefined);

@@ -178,7 +178,7 @@ function buildMarkdownEdit(val, heightDiff) {
 }
 
 var currPwd;    // 密码
-function viewNote(noteId, password, isNotAsync) {
+function viewNote(noteId, password, isAsync) {
     if (noteId == ConstDB.defaultParentId) return;
 
     var idLink = noteIdAndNoteIdLinkJson[noteId]
@@ -203,11 +203,12 @@ function viewNote(noteId, password, isNotAsync) {
         }
         buildViewNoteCommonInfo(val, data['note']);
 
+
         history.pushState(null, null, "/note/" + idLink);
 
         context = true;
     };
-    vankiAjax(ConstAjaxUrl.Note.getNoteVOById, params, fnSucc, null, null, isNotAsync);
+    vankiAjax(ConstAjaxUrl.Note.getNoteVOById, params, fnSucc, null, null, isAsync);
     return context;
 }
 
