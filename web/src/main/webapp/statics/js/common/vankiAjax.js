@@ -11,12 +11,12 @@ var vankiAjax = function (ajaxInfo, ajaxParams, successFun, failFun, ajaxContext
         async: isAsync,
 
         success: function (data) {
-            operateMyAjaxData(data, ajaxContext, successFun, failFun, ajaxParams ? ajaxParams.is_pop_error_window : undefined);
+            operateMyAjaxData(data, ajaxContext, successFun, failFun, ajaxParams ? ajaxParams.is_pop : undefined);
         }
     })
 }
 
-var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop_error_window) {
+var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop) {
     if (typeof data == 'string') data = eval('(' + data + ')');
     var code = data['code'];
     if (code == ConstStatusCode.CODE_200[0]) {
@@ -27,11 +27,11 @@ var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop
             return;
         }
         // 是否弹出错误码信息
-        if (is_pop_error_window != false && !is_pop_error_window) is_pop_error_window = true;
+        if (is_pop != false && !is_pop) is_pop = true;
         var errInfo = ConstStatusCode["CODE_" + code];
         if (code == 201) {// 未登录
             popLoginRegister();
-        } else if (errInfo && is_pop_error_window) {
+        } else if (errInfo && is_pop) {
             vankiLayerMsgFailTou(errInfo[1]);
             // vankiMsgAlertAutoClose(errInfo[1], 3000);
         }
@@ -40,7 +40,7 @@ var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop
     }
 }
 
-var vankiParseResponseData = function (data, succFn, failFn, is_pop_error_window) {
+var vankiParseResponseData = function (data, succFn, failFn, is_pop) {
     if (typeof data == 'string') data = eval('(' + data + ')');
     var code = data['code'];
     if (code == ConstStatusCode.CODE_200[0]) {
@@ -51,11 +51,11 @@ var vankiParseResponseData = function (data, succFn, failFn, is_pop_error_window
             return;
         }
         // 是否弹出错误码信息
-        if (is_pop_error_window != false && !is_pop_error_window) is_pop_error_window = true;
+        if (is_pop != false && !is_pop) is_pop = true;
         var errInfo = ConstStatusCode["CODE_" + code];
         if (code == 201) {// 未登录
             popLoginRegister();
-        } else if (errInfo && is_pop_error_window) {
+        } else if (errInfo && is_pop) {
             vankiLayerMsgFailTou(errInfo[1]);
             // vankiMsgAlertAutoClose(errInfo[1], 3000);
         }

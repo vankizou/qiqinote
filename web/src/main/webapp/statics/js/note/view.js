@@ -24,7 +24,7 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
     var params = {
         "idOrIdLink": noteIdOrIdLink,
         "password": pwd,
-        "is_pop_error_window": false
+        "is_pop": false
     };
     var fnSucc = function (data) {
         var val = "";

@@ -178,20 +178,25 @@ function buildMarkdownEdit(val, heightDiff) {
 }
 
 var currPwd;    // 密码
-function viewNote(noteId, password, isAsync) {
+function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
     if (noteId == ConstDB.defaultParentId) return;
 
+    var secretType = noteSecretTypeJson[noteId];
+    var password;
+    if (c_myUserId != c_noteUserId && (secretType == ConstDB.Note.secretPwd || isNeedPwd)) {
+        if (((password = openedPwdJson[noteId]) == undefined) || isNeedPwd) {
+            password = prompt(msgIfNeedPwd);
+            // if (password == null) return;
+        }
+    }
     var idLink = noteIdAndNoteIdLinkJson[noteId]
     var params = {
         "idOrIdLink": idLink,
-        "password": password
+        "password": password,
+        "is_pop": false,
     }
     var context;
     var fnSucc = function (data) {
-        if (!data || data.isNeedPwd == 1) {
-            vankiMsgAlertAutoClose("密码错误");
-            return;
-        }
         var noteDetailList = data['noteDetailList'];
         var val = "";
         if (noteDetailList && noteDetailList[0]) {
@@ -203,12 +208,16 @@ function viewNote(noteId, password, isAsync) {
         }
         buildViewNoteCommonInfo(val, data['note']);
 
-
         history.pushState(null, null, "/note/" + idLink);
 
         context = true;
     };
-    vankiAjax(ConstAjaxUrl.Note.getNoteVOById, params, fnSucc, null, null, isAsync);
+    var fnFail = function (data) {
+        if (data['code'] == ConstStatusCode.CODE_1120[0]) {
+            viewNote(noteId,"密码错误, 请重新输入", true)
+        }
+    };
+    vankiAjax(ConstAjaxUrl.Note.getNoteVOById, params, fnSucc, fnFail, null, false);
     return context;
 }
 

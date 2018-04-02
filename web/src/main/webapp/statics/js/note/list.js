@@ -347,19 +347,9 @@ function openNote(noteId, treeNode) {
         if (!noteId) return;
     }
 
-    var secretType = noteSecretTypeJson[noteId];
-
-    var password;
-    if (c_myUserId != c_noteUserId && secretType == ConstDB.Note.secretPwd) {
-        if ((password = openedPwdJson[noteId]) == undefined) {
-            password = prompt("请输入密码");
-            if (password == null) return;
-        }
-    }
-    var flag = viewNote(noteId, password, false);
+    var flag = viewNote(noteId, "请输入密码", false);
     if (flag) {
         buildNoteTreeNodes(treeNode.id, treeNode);
-        if (secretType == ConstDB.Note.secretPwd) openedPwdJson[treeNode.id] = password;
     }
 }
 
@@ -376,22 +366,6 @@ function beforeCollapse(treeId, treeNode) {
 var openedPwdJson = {};
 
 function beforeExpand(treeId, treeNode) {
-    var secretType;
-    var password;
-
-    if (c_noteUserId == c_myUserId) {
-        var params = {id: treeNode.id, noteUserId: c_noteUserId};
-        vankiAjax(ConstAjaxUrl.Note.openNote, params);
-    } else {
-        secretType = noteSecretTypeJson[treeNode.id];
-        if (secretType == ConstDB.Note.secretPwd) {
-            if ((password = openedPwdJson[treeNode.id]) != '' && !password) {
-                var tempPwd = prompt("请输入密码");
-                if (tempPwd == null) return false;
-                password = tempPwd;
-            }
-        }
-    }
     return (treeNode.expand !== false);
 }
 
@@ -592,7 +566,7 @@ function downloadNote(password) {
 
     password = password ? password : openedPwdJson[noteId];
     var params = {
-        is_pop_error_window: false,
+        is_pop: false,
         id: noteId,
         password: password
     };
