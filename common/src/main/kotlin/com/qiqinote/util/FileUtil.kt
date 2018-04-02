@@ -79,18 +79,22 @@ object FileUtil {
         return list
     }
 
-    fun readFile(filePath: String): String? {
-        val file = File(filePath)
+    fun readFile(file: File): String? {
         if (!file.exists() || !file.isFile) return null
 
-        var fis: FileInputStream? = null
+        var fis: FileInputStream = FileInputStream(file)
+        val str = readFile(fis)
+        fis.close()
+        return str
+    }
+
+    fun readFile(inputStream: InputStream): String? {
         var isr: InputStreamReader? = null
         var br: BufferedReader? = null
         val sb = StringBuffer()
 
         try {
-            fis = FileInputStream(file)
-            isr = InputStreamReader(fis)
+            isr = InputStreamReader(inputStream)
             br = BufferedReader(isr)
             var line: String?
             while (true) {
@@ -103,7 +107,6 @@ object FileUtil {
             log.error("", e)
         } finally {
             try {
-                if (fis != null) fis.close()
                 if (isr != null) isr.close()
                 if (br != null) br.close()
             } catch (e: IOException) {
@@ -113,6 +116,7 @@ object FileUtil {
         }
         return sb.toString()
     }
+
 
     /**
      * 复制文件
