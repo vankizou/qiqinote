@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地
+ Source Server         : 140.143.225.238(腾讯云北京)
  Source Server Type    : MySQL
- Source Server Version : 50710
- Source Host           : localhost
- Source Database       : vanki2
+ Source Server Version : 50721
+ Source Host           : 140.143.225.238
+ Source Database       : qiqinote
 
  Target Server Type    : MySQL
- Target Server Version : 50710
+ Target Server Version : 50721
  File Encoding         : utf-8
 
- Date: 03/29/2018 12:15:46 PM
+ Date: 04/03/2018 15:15:50 PM
 */
 
 SET NAMES utf8;
@@ -49,6 +49,7 @@ CREATE TABLE `find_pwd_question` (
 DROP TABLE IF EXISTS `note`;
 CREATE TABLE `note` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_link` varchar(64) DEFAULT NULL,
   `parent_id` bigint(20) DEFAULT '-1' COMMENT '父ID',
   `path` varchar(255) DEFAULT NULL COMMENT '目录树路径, 如: -1_父父id_父id',
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
@@ -72,8 +73,9 @@ CREATE TABLE `note` (
   `is_del` int(2) DEFAULT '0' COMMENT '是否删除. 0否 1是. 默认0',
   PRIMARY KEY (`id`),
   KEY `索引1` (`user_id`),
-  KEY `索引2` (`parent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  KEY `索引2` (`parent_id`),
+  KEY `id_link` (`id_link`)
+) ENGINE=InnoDB AUTO_INCREMENT=262 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `note_detail`
@@ -89,7 +91,7 @@ CREATE TABLE `note_detail` (
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `索引` (`note_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `picture`
@@ -110,7 +112,7 @@ CREATE TABLE `picture` (
   `is_del` int(2) DEFAULT '0' COMMENT '是否删除. 0否 1是. 默认0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `user`
@@ -137,7 +139,7 @@ CREATE TABLE `user` (
   `is_del` int(2) DEFAULT '0' COMMENT '是否删除. 0否, 1是. 默认0',
   PRIMARY KEY (`id`),
   KEY `索引` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1025 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `user_login_record`
@@ -161,6 +163,6 @@ CREATE TABLE `user_login_record` (
   `connection` varchar(32) DEFAULT NULL,
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
