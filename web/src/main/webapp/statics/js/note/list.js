@@ -366,6 +366,10 @@ function beforeCollapse(treeId, treeNode) {
 var openedPwdJson = {};
 
 function beforeExpand(treeId, treeNode) {
+    if (c_noteUserId == c_myUserId) {
+        var params = {id: treeNode.id, noteUserId: c_noteUserId};
+        vankiAjax(ConstAjaxUrl.Note.openNote, params);
+    }
     return (treeNode.expand !== false);
 }
 
