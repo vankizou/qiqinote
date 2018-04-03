@@ -64,6 +64,8 @@ class NoteServiceImpl @Autowired constructor(
                 }
             }
             note.path = parent.path + DBConst.Note.pathLink + parent.id
+            note.secret = parent.secret
+            note.password = parent.password
         }
 
         note.secret = note.secret ?: DBConst.Note.secretOpen
