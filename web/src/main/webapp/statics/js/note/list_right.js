@@ -186,7 +186,7 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
     if (c_myUserId != c_noteUserId && (secretType == ConstDB.Note.secretPwd || isNeedPwd)) {
         if (((password = openedPwdJson[noteId]) == undefined) || isNeedPwd) {
             password = prompt(msgIfNeedPwd);
-            // if (password == null) return;
+            if (password == null) return;
         }
     }
     var idLink = noteIdAndNoteIdLinkJson[noteId]
