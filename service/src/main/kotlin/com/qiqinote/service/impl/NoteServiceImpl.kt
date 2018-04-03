@@ -211,7 +211,8 @@ class NoteServiceImpl @Autowired constructor(
         var voTmp: NoteTreeVO?
 
         do {
-            val page = this.page(loginUserId, userId, parentId, totalRowTmp, currPage, pageSize, 10, "note_num DESC, title DESC")
+            val page = this.page(loginUserId, userId, parentId, null,
+                    totalRowTmp, currPage, pageSize, 10, "note_num DESC, title DESC")
             noteListTmp = page.data
             if (noteListTmp.isEmpty()) break
             if (resultList == null) {
@@ -239,7 +240,8 @@ class NoteServiceImpl @Autowired constructor(
         return resultList ?: arrayListOf()
     }
 
-    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int, orderBy: String?) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, totalRow, currPage, pageSize, navNum)
+    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?,
+                      totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int, orderBy: String?) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, totalRow, currPage, pageSize, navNum)
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
         if (DBConst.defaultParentId == noteId) {

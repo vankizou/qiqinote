@@ -167,7 +167,7 @@ class NoteDaoImpl @Autowired constructor(
         return if (list.isEmpty()) null else list[0]
     }
 
-    override fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?,
+    override fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
                                  totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
         val conditionSql = StringBuilder(256)
         conditionSql.append(" WHERE ")
@@ -182,6 +182,12 @@ class NoteDaoImpl @Autowired constructor(
             paramMap["user_id"] = it
         }
         conditionSql.append(NamedSQLUtil.getAndCondition(paramMap))
+
+        titleLike?.let {
+            if (StringUtil.isNotEmpty(titleLike.trim())) {
+                conditionSql.append(" AND title like '%${titleLike.trim()}%'")
+            }
+        }
 
         val statusList = arrayListOf<Int>()
         val secretList = arrayListOf<Int>()

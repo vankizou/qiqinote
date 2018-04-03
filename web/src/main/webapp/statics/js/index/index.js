@@ -16,15 +16,21 @@ $(function () {
         var val = $('#j_page_jump_val').val();
         if (val && /^\d+$/.test(val)) getNoteList(val, pageSize);
     });
+
+    $('#j_note_title_like').keyup(function (event) {
+       if (event.keyCode != 13) return;
+        getNoteList(1, pageSize)
+    });
 });
 
 function getNoteList(pageNo, pageSize, navNum) {
     var params = {
-        type: ConstDB.Note.typeNote,
+        type: ConstDB.Note.typeMarkdown,
         isOrderByTimeDesc: true,
-        pageNo: pageNo,
+        currPage: pageNo,
         pageSize: pageSize,
-        navNum: navNum
+        navNum: navNum,
+        titleLike: $('#j_note_title_like').val()
     };
     var fnSucc = function (data) {
         console.info(data)

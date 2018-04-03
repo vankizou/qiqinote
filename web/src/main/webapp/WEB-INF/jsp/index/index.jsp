@@ -7,7 +7,7 @@
 <html>
 <head>
     <base href="<%=basePath%>">
-    <meta name="baidu-site-verification" content="vzLAJqujvV" />
+    <meta name="baidu-site-verification" content="vzLAJqujvV"/>
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="Expires" content="0"/>
@@ -25,7 +25,7 @@
 
 <script type="text/javascript">
     $(function () {
-       $("#copyright").show().css("margin-top", "80px");
+        $("#copyright").show().css("margin-top", "80px");
     });
 </script>
 
@@ -33,7 +33,14 @@
     <div class="c_index_body">
         <div class="panel panel-info" id="j_note_list">
             <!-- Default panel contents -->
-            <div class="panel-heading">大神笔记列表</div>
+            <div class="panel-heading" style="height: 42px;">
+                <div class="panel-title">
+                    <div class="col-xs-10">大神笔记列表</div>
+                    <div class="col-xs-2">
+                        <input type="text" class="form-control" style="height: 26px;" id="j_note_title_like" placeholder="筛选"/>
+                    </div>
+                </div>
+            </div>
             <%--<div class="panel-body">
             </div>--%>
 

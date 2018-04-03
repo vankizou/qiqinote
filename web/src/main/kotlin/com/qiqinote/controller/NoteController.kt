@@ -135,8 +135,8 @@ class NoteController @Autowired constructor(
 
     @ResponseBody
     @GetMapping("/pageOfHome.json")
-    fun pageOfHome(currPage: Int?, pageSize: Int?, navNum: Int?): ResultVO<Page<NoteHomeVO>> {
-        val page = this.noteService.page(this.justGetLoginUserId(), null, null,
+    fun pageOfHome(currPage: Int?, pageSize: Int?, navNum: Int?, titleLike: String?): ResultVO<Page<NoteHomeVO>> {
+        val page = this.noteService.page(this.justGetLoginUserId(), null, null, titleLike,
                 null, currPage ?: Page.firstPage, pageSize ?: 10, navNum ?: 3, "view_num DESC, id ASC")
         val noteList = page.data
 

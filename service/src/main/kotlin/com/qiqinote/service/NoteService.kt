@@ -24,7 +24,7 @@ interface NoteService : BaseService<NoteDao> {
 
     fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int = 0): MutableList<NoteTreeVO>
 
-    fun page(loginUserId: Long?, userId: Long?, parentId: Long?,
+    fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?,
              totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int = 10, orderBy: String?): Page<Note>
 
     fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean
