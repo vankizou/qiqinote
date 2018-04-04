@@ -5,6 +5,7 @@ import com.qiqinote.constant.DBConst
 import com.qiqinote.constant.RedisKeyEnum
 import com.qiqinote.constant.ServiceConst
 import com.qiqinote.dao.NoteDao
+import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.service.NoteDetailService
@@ -13,12 +14,14 @@ import com.qiqinote.util.EntityUtil
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
 import com.qiqinote.vo.NoteTreeVO
+import com.qiqinote.vo.NoteTreeVOAndTotalNote
 import com.qiqinote.vo.NoteViewVO
 import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 /**
  * Created by vanki on 2018/3/1 18:40.
@@ -203,22 +206,22 @@ class NoteServiceImpl @Autowired constructor(
             isMine = true
         }
 
-        var currPage = 1
+        var currPage = Page.firstPage
         val pageSize = 200
 
-        val flag = true
         var resultList: MutableList<NoteTreeVO>? = null
         var noteListTmp: MutableList<Note>?
         var totalRowTmp: Int? = null
         var voTmp: NoteTreeVO?
+        var pageTmp: Page<Note>
 
         do {
-            val page = this.page(loginUserId, userId, parentId, null,
+            pageTmp = this.page(loginUserId, userId, parentId, null,
                     totalRowTmp, currPage, pageSize, 10, "note_num DESC, title DESC")
-            noteListTmp = page.data
+            noteListTmp = pageTmp.data
             if (noteListTmp.isEmpty()) break
             if (resultList == null) {
-                totalRowTmp = page.totalRow
+                totalRowTmp = pageTmp.totalRow
                 resultList = ArrayList(totalRowTmp)
             }
 
@@ -238,9 +241,75 @@ class NoteServiceImpl @Autowired constructor(
             }
             if (noteListTmp.size < pageSize) break
             currPage++
-        } while (flag)
+        } while (true)
         return resultList ?: arrayListOf()
     }
+
+    override fun listOfNoteTreeVOByTitleLike(loginUserId: Long, titleLike: String): NoteTreeVOAndTotalNote {
+        if (StringUtil.isEmpty(titleLike.trim())) return NoteTreeVOAndTotalNote(Collections.emptyList(), 0)
+        var currPage = Page.firstPage
+        val pageSize = 200
+
+        var totalNoteList = mutableListOf<Note>()
+        var totalRowTmp: Int? = null
+        var noteListTmp: MutableList<Note>?
+        var pageTmp: Page<Note>
+        do {
+            pageTmp = this.page(loginUserId, loginUserId, null, titleLike, totalRowTmp, currPage, pageSize, 10, "note_num DESC, title DESC")
+            noteListTmp = pageTmp.data
+            if (noteListTmp.isEmpty()) break
+            if (currPage == Page.firstPage) {
+                totalRowTmp = pageTmp.totalRow
+            }
+            totalNoteList.addAll(noteListTmp)
+            if (noteListTmp.size < pageSize) break
+            currPage++
+        } while (true)
+
+        val parentIdAndNoteMap = hashMapOf<Long, LinkedHashMap<Long, Note>>()
+        totalNoteList.forEach({
+            reviewParentOfNoteTitleLike(it, parentIdAndNoteMap)
+        })
+        val resultList = mutableListOf<NoteTreeVO>()
+        buildNoteTreeVOOfNoteTitleLike(resultList, DBConst.defaultParentId, parentIdAndNoteMap)
+        return NoteTreeVOAndTotalNote(resultList, totalRowTmp ?: 0)
+    }
+
+    /**
+     * 组装数据
+     */
+    private fun buildNoteTreeVOOfNoteTitleLike(resultList: MutableList<NoteTreeVO>?, parentId: Long, parentIdAndNoteMap: HashMap<Long, LinkedHashMap<Long, Note>>) {
+        val noteMap = parentIdAndNoteMap[parentId]
+        if (noteMap == null || noteMap.isEmpty()) return
+
+        var noteTreeVOTmp: NoteTreeVO
+
+        noteMap.values.forEach({
+            noteTreeVOTmp = NoteTreeVO()
+            resultList?.add(noteTreeVOTmp)
+
+            noteTreeVOTmp.note = it
+            noteTreeVOTmp.subNoteVOList = mutableListOf()
+            buildNoteTreeVOOfNoteTitleLike(noteTreeVOTmp.subNoteVOList, it.id!!, parentIdAndNoteMap)
+        })
+    }
+
+    /**
+     * 搜索title并一直追溯到根
+     */
+    private fun reviewParentOfNoteTitleLike(note: Note?, parentIdAndNoteMap: HashMap<Long, LinkedHashMap<Long, Note>>) {
+        if (note == null) return
+
+        val parentId = note.parentId ?: DBConst.defaultParentId
+        val noteMap = parentIdAndNoteMap[parentId] ?: LinkedHashMap()
+        if (noteMap.containsKey(note.id)) return
+
+        noteMap[note.id!!] = note
+        parentIdAndNoteMap[parentId] = noteMap
+
+        reviewParentOfNoteTitleLike(this.getByIdOrIdLink(parentId), parentIdAndNoteMap)
+    }
+
 
     override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?,
                       totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int, orderBy: String?) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, totalRow, currPage, pageSize, navNum)
@@ -267,7 +336,7 @@ class NoteServiceImpl @Autowired constructor(
         this.stringRedisTemplate.opsForSet().add(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString())
     }
 
-    override fun countNoteHasContent(userId: Long) = this.noteDao.countNoteHasContent(userId)
+    override fun countNoteHasContent(loginUserId: Long?, userId: Long?) = this.noteDao.countNoteHasContent(loginUserId, userId)
 
     private fun updateNoteNum(loginUserId: Long, parentId: Long) {
         if (parentId == DBConst.defaultParentId) return

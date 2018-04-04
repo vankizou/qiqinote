@@ -25,7 +25,7 @@ interface NoteDao {
 
     fun countByParentId(parentId: Long): Int
 
-    fun countNoteHasContent(userId: Long): Int
+    fun countNoteHasContent(loginUserId: Long?, userId: Long?): Int
 
     fun getByIdOrIdLink(id: Long?, idLink: String?): Note?
 

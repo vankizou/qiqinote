@@ -5,6 +5,7 @@ import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.vo.NoteTreeVO
+import com.qiqinote.vo.NoteTreeVOAndTotalNote
 import com.qiqinote.vo.NoteViewVO
 import com.qiqinote.vo.ResultVO
 
@@ -24,6 +25,8 @@ interface NoteService : BaseService<NoteDao> {
 
     fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int = 0): MutableList<NoteTreeVO>
 
+    fun listOfNoteTreeVOByTitleLike(loginUserId: Long, titleLike: String): NoteTreeVOAndTotalNote
+
     fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?,
              totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int = 10, orderBy: String?): Page<Note>
 
@@ -33,5 +36,5 @@ interface NoteService : BaseService<NoteDao> {
 
     fun openNoteInRedis(userId: Long, noteId: Long)
 
-    fun countNoteHasContent(userId: Long): Int
+    fun countNoteHasContent(loginUserId: Long?, userId: Long?): Int
 }

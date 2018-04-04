@@ -50,10 +50,21 @@ var setting_noLogin = {
 // 树，右键菜单，笔记目录下的笔记数量，笔记私密类型
 var tree, rMenu, childNoteNumJson = {}, noteSecretTypeJson = {}, noteIdAndNoteIdLinkJson = {};
 $(document).ready(function () {
+    init();
+
+    $('#j_note_tree_title_like').keyup(function (event) {
+        if (event.keyCode != 13) return;
+        tree.destroy();
+        init();
+    });
+
+});
+
+function init() {
     $('#noteTree').css('height', $(window).height() - 88);
     var rootName = (c_noteUserAlias ? c_noteUserAlias : "TA") + "的笔记";
     if (c_myUserId && c_noteUserId == c_myUserId) {
-        rootName = "我的笔记";
+        rootName = '我的笔记';
     }
     var noteTreeNodes = [{
         id: ConstDB.defaultParentId,
@@ -68,9 +79,10 @@ $(document).ready(function () {
         $.fn.zTree.init($("#noteTree"), setting_noLogin, noteTreeNodes);
     }
     tree = $.fn.zTree.getZTreeObj("noteTree");
+    $("#noteTree_1_span").append('<span id="j_note_tree_root_name"></span>');
     rMenu = $('#rMenu');
     buildNoteTreeNodes();
-});
+}
 
 /**
  * 添加节点
@@ -304,8 +316,11 @@ function setSecretCommon(secretType) {
 function deleteNote() {
     hideRMenu();
     var node = tree.getSelectedNodes()[0];
-
-    if (!confirm("确定删除？")) return;
+    var name = "«" + node.name + "»";
+    if (node.isParent) {
+        name += "及该目录下所有笔记"
+    }
+    if (!confirm("确定删除" + name + "？")) return;
 
     var params = {
         "id": node.id
@@ -394,13 +409,16 @@ function buildNoteTreeNodes(parentId, parentNode) {
 
     var params = {
         "userId": c_noteUserId,
-        "parentId": parentId
+        "parentId": parentId,
+        "titleLike": $('#j_note_tree_title_like').val()
     }
     var fnSucc = function (data) {
         var noteTreeNodes = [];
         buildNodeJson(data['notes'], noteTreeNodes, existsNodeIdArr);
         if (noteTreeNodes.length == 0) return;
-
+        if (data["total"]) {
+            $('#j_note_tree_root_name').html("（" + data["total"] + "）")
+        }
         tree.addNodes(parentNode, noteTreeNodes);
     };
     vankiAjax(ConstAjaxUrl.Note.listOfNoteTreeVO, params, fnSucc);
@@ -429,7 +447,6 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
 
         if (noteCountNote > 0) childNoteNumJson[note['id']] = noteCountNote;
         var subNoteVOList = data[i]['subNoteVOList'];
-
         var title = note['title'];
         if (title.length > 32) title = title.substring(0, 32) + "...";
 
@@ -437,7 +454,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
             id: noteId,
             pId: note['parentId'],
             name: title,
-            open: noteCountNote > 0 && subNoteVOList ? true : false,
+            open: noteCountNote > 0 && subNoteVOList && subNoteVOList.length > 0 ? true : false,
             isParent: noteCountNote > 0 ? true : false
         });
         var countNoteContent = note['noteContentNum'];
@@ -446,7 +463,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         } else {
             delete a_note_content_json[noteId];
         }
-        if (subNoteVOList) buildNodeJson(subNoteVOList, noteTreeNodes, existsNodeIdArr);
+        if (subNoteVOList && subNoteVOList.length > 0) buildNodeJson(subNoteVOList, noteTreeNodes, existsNodeIdArr);
     }
 
 }

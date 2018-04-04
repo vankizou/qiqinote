@@ -52,6 +52,13 @@
 
 <div class="container c_body row" style="width: 100%; min-width: 1000px;">
     <div class="col-xs-3" tips="笔记树">
+        <c:if test="${suc.user.id == userId}">
+            <div>
+                <input type="text" class="form-control"
+                       style="height: 24px; margin-bottom: 5px; margin-left: 9px; width: 90%;"
+                       id="j_note_tree_title_like" placeholder="搜索..."/>
+            </div>
+        </c:if>
         <ul id="noteTree" class="ztree" style="overflow-x: scroll"></ul>
     </div>
     <div class="col-xs-9">
@@ -106,8 +113,8 @@
 
 <div id="rMenu">
     <ul>
-        <li id="m_open" onclick="openNote();"><i class="fa fa-eye"></i> 查看内容</li>
         <li id="m_add" onclick="addNote();"><i class="fa fa-plus"></i> 添加笔记</li>
+        <li id="m_open" onclick="openNote();"><i class="fa fa-eye"></i> 查看内容</li>
         <li id="m_updateTitle" onclick="updateNoteTitle();"><i class="fa fa-pencil"></i> 修改标题</li>
         <li id="m_editInCurrPage" onclick="editNote();"><i class="fa fa-edit"></i> 编辑笔记</li>
         <li id="m_del" onclick="deleteNote();"><i class="fa fa-trash-o"></i> 删除笔记</li>

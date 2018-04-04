@@ -146,16 +146,20 @@ class NoteDaoImpl @Autowired constructor(
         return this.namedParameterJdbcTemplate.queryForObject(sql, paramMap, Int::class.java) ?: 0
     }
 
-    override fun countNoteHasContent(userId: Long): Int {
+    override fun countNoteHasContent(loginUserId: Long?, userId: Long?): Int {
+        if (loginUserId == null && userId == null) return 0
+
         val paramMap = mapOf("user_id" to userId, "is_del" to DBConst.falseVal)
         val sql = StringBuilder(64)
         sql.append(NamedSQLUtil.getSelectSQL(Note::class, "COUNT(*)", paramMap))
-        sql.append(" AND note_num>0")
+        sql.append(" AND note_content_num>0")
+        this.buildSecretAndStatus(sql, loginUserId, userId)
+
         return this.namedParameterJdbcTemplate.queryForObject(sql.toString(), paramMap, Int::class.java) ?: 0
     }
 
     override fun getByIdOrIdLink(id: Long?, idLink: String?): Note? {
-        if (id == null && idLink == null) return null
+        if ((id == null || id == DBConst.defaultParentId) && idLink == null) return null
 
         val paramMap = mutableMapOf<String, Any>()
         paramMap["is_del"] = DBConst.falseVal
@@ -192,44 +196,14 @@ class NoteDaoImpl @Autowired constructor(
         val statusList = arrayListOf<Int>()
         val secretList = arrayListOf<Int>()
         /**
-         * 首页等
+         * 首页
          */
-        if (loginUserId == null || userId != loginUserId) {
-            statusList.add(DBConst.Note.statusPass)
-            secretList.add(DBConst.Note.secretOpen)
+        if ((loginUserId == null || userId != loginUserId) && userId == null) {
+            conditionSql.append(" AND note_content_num>0")
+        }
 
-            if (userId == null) {
-                conditionSql.append(" AND note_content_num>0")
-            }
-        }
-        /**
-         * 访问单人主页
-         */
-        var isMine = true
-        if (userId != null && userId != loginUserId) {
-            secretList.add(DBConst.Note.secretPwd)
-            isMine = false
-        }
-        if (!secretList.isEmpty()) {
-            conditionSql.append(" AND (")
+        this.buildSecretAndStatus(conditionSql, loginUserId, userId)
 
-            val secretSql = StringBuilder(32)
-            secretList.forEach {
-                secretSql.append(" OR secret=").append(it)
-            }
-            conditionSql.append(secretSql.substring(4))
-            conditionSql.append(")")
-        }
-        if (!statusList.isEmpty()) {
-            conditionSql.append(" AND (")
-
-            val statusSql = StringBuilder(32)
-            statusList.forEach {
-                statusSql.append(" OR status=").append(it)
-            }
-            conditionSql.append(statusSql.substring(4))
-            conditionSql.append(")")
-        }
         var totalRowDB = totalRow
         if (totalRowDB == null) {
             totalRowDB = this.namedParameterJdbcTemplate
@@ -256,7 +230,7 @@ class NoteDaoImpl @Autowired constructor(
         /**
          * 不是自己过滤部分字段
          */
-        if (!isMine) {
+        if (userId != null && userId != loginUserId) {
             resultPage.data.let {
                 it.forEach({
                     it.password = null
@@ -264,5 +238,43 @@ class NoteDaoImpl @Autowired constructor(
             }
         }
         return resultPage
+    }
+
+    private fun buildSecretAndStatus(sql: StringBuilder, loginUserId: Long?, userId: Long?) {
+        val statusList = arrayListOf<Int>()
+        val secretList = arrayListOf<Int>()
+        /**
+         * 首页等
+         */
+        if (loginUserId == null || userId != loginUserId) {
+            statusList.add(DBConst.Note.statusPass)
+            secretList.add(DBConst.Note.secretOpen)
+        }
+        /**
+         * 访问单人主页
+         */
+        if (userId != null && userId != loginUserId) {
+            secretList.add(DBConst.Note.secretPwd)
+        }
+        if (!secretList.isEmpty()) {
+            sql.append(" AND (")
+
+            val secretSql = StringBuilder(32)
+            secretList.forEach {
+                secretSql.append(" OR secret=").append(it)
+            }
+            sql.append(secretSql.substring(4))
+            sql.append(")")
+        }
+        if (!statusList.isEmpty()) {
+            sql.append(" AND (")
+
+            val statusSql = StringBuilder(32)
+            statusList.forEach {
+                statusSql.append(" OR status=").append(it)
+            }
+            sql.append(statusSql.substring(4))
+            sql.append(")")
+        }
     }
 }

@@ -39,6 +39,7 @@ var ConstAjaxUrl = {
         deleteById: ['/note/deleteById.sjson', 'POST', 'JSON'],
         getNoteVOById: ['/note/getNoteVOById.json', 'GET', 'JSON'],
         pageOfHome: ['/note/pageOfHome.json', 'GET', 'JSON'],
-        listOfNoteTreeVO: ['/note/listOfNoteTreeVO.json', 'GET', 'JSON']
+        listOfNoteTreeVO: ['/note/listOfNoteTreeVO.json', 'GET', 'JSON'],
+        totalNote: ['/note/totalNote.json', 'GET', 'JSON']
     },
 }

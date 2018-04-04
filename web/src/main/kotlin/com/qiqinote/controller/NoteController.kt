@@ -9,11 +9,9 @@ import com.qiqinote.service.NoteService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.DateUtil
 import com.qiqinote.util.EntityUtil
+import com.qiqinote.util.StringUtil
 import com.qiqinote.util.TemplateUtil
-import com.qiqinote.vo.NoteHomeVO
-import com.qiqinote.vo.NoteViewVO
-import com.qiqinote.vo.ResultVO
-import com.qiqinote.vo.UserSimpleVO
+import com.qiqinote.vo.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -193,16 +191,38 @@ class NoteController @Autowired constructor(
 
     @ResponseBody
     @GetMapping("/listOfNoteTreeVO" + WebConst.jsonSuffix)
-    fun listOfNoteTreeVO(userId: Long?, parentId: Long?): ResultVO<Any> {
+    fun listOfNoteTreeVO(userId: Long?, parentId: Long?, titleLike: String?): ResultVO<Any> {
         val loginUserId = this.justGetLoginUserId()
         if (userId == null && loginUserId == null) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
+        val parentIdTmp = parentId ?: DBConst.defaultParentId
         val userIdTmp = userId ?: loginUserId
-        val list = this.noteService.listOfNoteTreeVO(loginUserId, userIdTmp!!, parentId)
-        val totalNote = 0 //this.noteService.countNoteHasContent(userId)
+        var total = 0
+        val list: MutableList<NoteTreeVO> =
+                if (userIdTmp == loginUserId && parentIdTmp == DBConst.defaultParentId &&
+                        StringUtil.isNotEmpty(titleLike?.trim())) {
+                    val noteTreeVOOfLike = this.noteService.listOfNoteTreeVOByTitleLike(loginUserId!!, titleLike!!.trim())
+                    total = noteTreeVOOfLike.total
+                    noteTreeVOOfLike.notes
+                } else {
+                    if (parentId == DBConst.defaultParentId) {
+                        total = this.noteService.countNoteHasContent(loginUserId, userId ?: loginUserId)
+                    }
+                    this.noteService.listOfNoteTreeVO(loginUserId, userIdTmp!!, parentIdTmp)
+                }
 
-        return ResultVO(mapOf("totalNote" to totalNote, "notes" to list))
+        return ResultVO(NoteTreeVOAndTotalNote(list, total))
+    }
+
+    @ResponseBody
+    @GetMapping("/totalNote" + WebConst.jsonSuffix)
+    fun totalNote(userId: Long?): ResultVO<Any> {
+        val loginUserId = this.justGetLoginUserId()
+        if (userId == null && loginUserId == null) {
+            return ResultVO(CodeEnum.PARAM_ERROR)
+        }
+        return ResultVO(this.noteService.countNoteHasContent(loginUserId, userId ?: loginUserId))
     }
 
     @ResponseBody

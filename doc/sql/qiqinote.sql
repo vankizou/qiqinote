@@ -66,7 +66,7 @@ CREATE TABLE `note` (
   `digest` varchar(255) DEFAULT NULL COMMENT '摘要',
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `origin_url` varchar(500) DEFAULT NULL COMMENT '文章来源',
-  `status` int(2) DEFAULT '2' COMMENT '文章状态. -1待审核，0不通过，1通过，2全部通过（比如：主页）',
+  `status` int(2) DEFAULT '2' COMMENT '文章状态. -1待审核，0不通过，1通过',
   `status_description` varchar(500) DEFAULT NULL COMMENT '审核理由',
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
