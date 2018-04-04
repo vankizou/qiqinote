@@ -53,7 +53,8 @@ class PictureDaoImpl @Autowired constructor(
         if (returnPage.totalRow <= 0) return returnPage
 
         val sql = NamedSQLUtil.getSelectSQL(Picture::class, paramMap)
-        returnPage.data = this.namedParameterJdbcTemplate.query(sql, paramMap, rowMapper)
+
+        returnPage.data = this.namedParameterJdbcTemplate.query("$sql ORDER BY ID DESC", paramMap, rowMapper)
         return returnPage
     }
 }
