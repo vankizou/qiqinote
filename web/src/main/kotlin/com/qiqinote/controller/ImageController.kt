@@ -3,13 +3,13 @@ package com.qiqinote.controller
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
 import com.qiqinote.constant.WebConst
+import com.qiqinote.dto.PictureDTO
 import com.qiqinote.model.Page
 import com.qiqinote.po.Picture
 import com.qiqinote.service.PictureService
 import com.qiqinote.util.*
 import com.qiqinote.vo.ResultVO
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FilenameUtils
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
@@ -17,7 +17,6 @@ import org.springframework.core.env.get
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.io.FileInputStream
 import java.util.*
 import javax.imageio.ImageIO
 import kotlin.collections.ArrayList
@@ -81,7 +80,7 @@ class ImageController @Autowired constructor(
                 image.inputStream.close()
                 FileUtil.setFilePermission(imageFile, 644)
 
-                val isResize = resizeImg(useTypeTmp, width, imageFile)    // 图片缩放
+                val isResize = tryResizeImg(useTypeTmp, width, imageFile)    // 图片缩放
                 if (isResize) {
                     bi = ImageIO.read(imageFile)
                     width = bi.width
@@ -118,12 +117,27 @@ class ImageController @Autowired constructor(
     }
 
     @GetMapping("/page" + WebConst.needLoginJsonSuffix)
-    fun page(useType: Int?, currPage: Int?, pageSize: Int?, navNum: Int?): ResultVO<Page<Picture>> {
+    fun page(useType: Int?, currPage: Int?, pageSize: Int?, navNum: Int?): ResultVO<Page<PictureDTO>> {
         val useTypeTmp = useType ?: DBConst.Picture.useTypeNote
         val currPageTmp = currPage ?: Page.firstPage
         val pageSizeTmp = pageSize ?: 10
         val navNumTmp = navNum ?: 10
-        return ResultVO(this.pictureService.page(this.getLoginUserId(), useTypeTmp, currPageTmp, pageSizeTmp, navNumTmp))
+
+        val page = this.pictureService.page(this.getLoginUserId(), useTypeTmp, currPageTmp, pageSizeTmp, navNumTmp)
+        val resultPage = Page<PictureDTO>()
+        EntityUtil.copyValOfDiffObj(resultPage, page)
+
+        resultPage.data = page.data.let {
+            val pics = mutableListOf<PictureDTO>()
+            if (it != null) {
+                it.forEach({
+                    pics.add(PictureDTO(it))
+                })
+            }
+            pics
+        }
+
+        return ResultVO(resultPage)
     }
 
     private fun isAllowType(type: String?): Boolean {
@@ -154,13 +168,11 @@ class ImageController @Autowired constructor(
             return subDir.toString()
         }
 
-        private fun resizeImg(useType: Int?, width: Int, imageFile: File): Boolean {
-            val maxWidth: Int
-
-            when (useType) {
-                DBConst.Picture.useTypeNote -> maxWidth = 800
-                DBConst.Picture.useTypeAvatar -> maxWidth = 300
-                else -> maxWidth = 500
+        private fun tryResizeImg(useType: Int?, width: Int, imageFile: File): Boolean {
+            val maxWidth = when (useType) {
+                DBConst.Picture.useTypeNote -> 800
+                DBConst.Picture.useTypeAvatar -> 300
+                else -> 500
             }
 
             if (width <= maxWidth) return false
@@ -169,15 +181,14 @@ class ImageController @Autowired constructor(
              * TODO: 缩放图片，可以把这个操作加到消息队列里去
              */
             val absPath: String = imageFile.absolutePath
-            try {
+            return try {
                 ImageMagickUtil.resizeByWidth(maxWidth, absPath, absPath)
-                log.info("缩放图片：${imageFile.absolutePath}")
-                return true
+                log.info("缩放图片：$absPath")
+                true
             } catch (e: Exception) {
                 log.error("缩放图片失败：$absPath", e)
-                return false
+                false
             }
-
         }
     }
 }
