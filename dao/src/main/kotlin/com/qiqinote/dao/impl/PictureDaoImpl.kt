@@ -54,7 +54,8 @@ class PictureDaoImpl @Autowired constructor(
 
         val sql = NamedSQLUtil.getSelectSQL(Picture::class, paramMap)
 
-        returnPage.data = this.namedParameterJdbcTemplate.query("$sql ORDER BY ID DESC", paramMap, rowMapper)
+        returnPage.data = this.namedParameterJdbcTemplate
+                .query("$sql ORDER BY ID DESC LIMIT ${returnPage.startRow},${returnPage.pageSize}", paramMap, rowMapper)
         return returnPage
     }
 }
