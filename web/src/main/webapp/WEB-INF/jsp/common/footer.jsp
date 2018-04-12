@@ -20,7 +20,7 @@
         友情链接：
         <a href="http://www.istimer.com">不负春光</a>&nbsp;&nbsp;
         <a href="http://www.1tools.net/">工具箱</a>&nbsp;&nbsp;
-        <a href="http://www.liuy-design.com/">寂静生长</a>
+        <a href="http://www.boiiod.com/">微微笔记</a>
     </div>
 </footer>
 <!-- 尾部end -->
