@@ -79,7 +79,7 @@ class LoginInterceptor(
             if (resultVO.isSuccess()) return true
         }
 
-        WebUtil.doSignOut(request, response)
+        WebUtil.doSignOut(response)
         return false
     }
 }

@@ -30,5 +30,5 @@ interface NoteDao {
     fun getByIdOrIdLink(id: Long?, idLink: String?): Note?
 
     fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
-                        totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note>
+                        onlyNote: Boolean?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note>
 }

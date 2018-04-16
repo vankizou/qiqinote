@@ -53,8 +53,7 @@ object WebUtil {
         }
     }
 
-    fun doSignOut(request: HttpServletRequest, response: HttpServletResponse) {
+    fun doSignOut(response: HttpServletResponse) {
         CookieUtil.deleteCookie(response, WebKeyEnum.cookieRememberUser.shortName)
-        request.getSession().invalidate()
     }
 }

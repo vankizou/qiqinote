@@ -6,15 +6,15 @@ $(function () {
     $(".homeUrl").addClass("topActive");
 
     var pageSize = 20;
-    getNoteList(1, pageSize);
+    // getNoteList(1, pageSize);
 
     $('.j_page_prev_next').click(function () {
         getNoteList($(this).attr('val'), pageSize);
     });
 
     $('#j_page_jump').click(function () {
-        var val = $('#j_page_jump_val').val();
-        if (val && /^\d+$/.test(val)) getNoteList(val, pageSize);
+        var value = $('#j_page_jump_val').val();
+        if (value && /^\d+$/.test(value)) getNoteList(value, pageSize);
     });
 
     $('#j_note_title_like').keyup(function (event) {
@@ -33,7 +33,6 @@ function getNoteList(pageNo, pageSize, navNum) {
         titleLike: $('#j_note_title_like').val()
     };
     var fnSucc = function (data) {
-        console.info(data)
         var pageLast = 0;   // 尾页
         var pagePrev = 0;   // 上一页
         var pageNext = 0;   // 下一页

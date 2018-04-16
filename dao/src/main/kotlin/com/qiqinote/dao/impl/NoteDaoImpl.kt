@@ -172,7 +172,7 @@ class NoteDaoImpl @Autowired constructor(
     }
 
     override fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
-                                 totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
+                                 onlyNote: Boolean?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
         val conditionSql = StringBuilder(256)
         conditionSql.append(" WHERE ")
 
@@ -193,12 +193,10 @@ class NoteDaoImpl @Autowired constructor(
             }
         }
 
-        val statusList = arrayListOf<Int>()
-        val secretList = arrayListOf<Int>()
         /**
          * 首页
          */
-        if ((loginUserId == null || userId != loginUserId) && userId == null) {
+        if (onlyNote == true || (onlyNote == null && (loginUserId == null || userId != loginUserId) && userId == null)) {
             conditionSql.append(" AND note_content_num>0")
         }
 

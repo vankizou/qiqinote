@@ -65,6 +65,8 @@ class NoteController @Autowired constructor(
         noteVO.createDatetimeStr = DateUtil.formatDatetime(noteVO.note?.createDatetime)
         noteVO.updateDatetimeStr = DateUtil.formatDatetime(noteVO.note?.updateDatetime)
         mv.addObject("noteVO", noteVO)
+        mv.addObject("newest", this.noteService.page(loginUserId, noteVO.user?.id, null, null, "id DESC", true, null, 1, 10).data)
+        mv.addObject("hottest", this.noteService.page(loginUserId, noteVO.user?.id, null, null, "view_num DESC", true, null, 1, 10).data)
         return mv
     }
 
@@ -135,7 +137,7 @@ class NoteController @Autowired constructor(
     @GetMapping("/pageOfHome.json")
     fun pageOfHome(currPage: Int?, pageSize: Int?, navNum: Int?, titleLike: String?): ResultVO<Page<NoteHomeVO>> {
         val page = this.noteService.page(this.justGetLoginUserId(), null, null, titleLike,
-                null, currPage ?: Page.firstPage, pageSize ?: 10, navNum ?: 3, "view_num DESC, id ASC")
+                "id DESC", true, null, currPage ?: Page.firstPage, pageSize ?: 10, navNum ?: 3)
         val noteList = page.data
 
         val returnPage = Page<NoteHomeVO>()

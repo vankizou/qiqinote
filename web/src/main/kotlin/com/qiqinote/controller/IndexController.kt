@@ -25,14 +25,27 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 @RequestMapping("/")
 class IndexController @Autowired constructor(
-        private val userService: UserService
+        private val userService: UserService,
+        private val noteController: NoteController
 ) : BaseController() {
 
     @RequestMapping("/")
-    fun index() = if (this.userContext != null) "redirect:/${this.userContext!!.user.name}" else ModelAndView(WebPageEnum.index.url)
+    fun index(): Any {
+        return if (this.userContext != null) {
+            "redirect:/${this.userContext!!.user.name}"
+        } else {
+            val mv = ModelAndView(WebPageEnum.index.url)
+            mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
+            mv
+        }
+    }
 
     @RequestMapping("/index" + WebConst.htmlSuffix)
-    fun index2() = ModelAndView(WebPageEnum.index.url)
+    fun index2(): ModelAndView {
+        val mv = ModelAndView(WebPageEnum.index.url)
+        mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
+        return mv
+    }
 
     @RequestMapping("/{idOrName}")
     fun userHome(@PathVariable("idOrName") idOrName: String): ModelAndView {
@@ -107,7 +120,8 @@ class IndexController @Autowired constructor(
     @ResponseBody
     @RequestMapping("/signOut" + WebConst.jsonSuffix)
     fun signOutJson(): ResultVO<Any> {
-        WebUtil.doSignOut(this.request, this.response)
+        WebUtil.doSignOut(this.response)
+        this.request.session.invalidate()
         return ResultVO()
     }
 
@@ -116,7 +130,8 @@ class IndexController @Autowired constructor(
      */
     @RequestMapping("/signOut" + WebConst.htmlSuffix)
     fun signOutHtml(): ModelAndView {
-        WebUtil.doSignOut(this.request, this.response)
+        WebUtil.doSignOut(this.response)
+        this.request.session.invalidate()
         return ModelAndView("redirect:/")
     }
 

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
@@ -37,7 +38,8 @@
                 <div class="panel-title">
                     <div class="col-xs-10">大神笔记列表</div>
                     <div class="col-xs-2">
-                        <input type="text" class="form-control" style="height: 26px;" id="j_note_title_like" placeholder="搜索..."/>
+                        <input type="text" class="form-control" style="height: 26px;" id="j_note_title_like"
+                               placeholder="搜索..."/>
                     </div>
                 </div>
             </div>
@@ -56,24 +58,35 @@
                 </tr>
                 </thead>
                 <tbody id="j_note_list_table">
+                <c:forEach var="vo" items="${data.data}">
+                    <tr>
+                        <td><a href="/note/${vo.note.idLink}" target="_blank">${vo.note.title}</a></td>
+                        <td>
+                            <c:if test="${vo.parentNote != null}">${vo.parentNote.title}</c:if>
+                        </td>
+                        <td><a href="/${vo.user.name}" target="_blank">${vo.user.alias}</a></td>
+                        <td>${vo.note.createDatetime}</td>
+                        <td>${vo.note.viewNum}</td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
             <nav aria-label="Page navigation" class="text-center">
                 <ul class="pagination">
-                    <li><a href="javascript:;" style="font-size: 14px;" id="j_page_info"></a></li>
+                    <li><a href="javascript:;" style="font-size: 14px;" id="j_page_info">1/${data.endPage}</a></li>
                     <li title="上一页">
                         <a href="javascript:;" aria-label="Previous"
-                           id="j_page_previous" class="j_page_prev_next" val="">
+                           id="j_page_previous" class="j_page_prev_next" val="1">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li title="下一页">
-                        <a href="javascript:;" aria-label="Next" id="j_page_next" class="j_page_prev_next" val="">
+                        <a href="javascript:;" aria-label="Next" id="j_page_next" class="j_page_prev_next" val="2">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                     <li class="form-inline">
-                        &nbsp;<input type="text" class="form-control" size="2" id="j_page_jump_val"/>
+                        &nbsp;<input type="text" class="form-control" size="2" id="j_page_jump_val" value="4"/>
                         <button class="btn btn_info1" id="j_page_jump">跳转</button>
                     </li>
                 </ul>
