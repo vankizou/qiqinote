@@ -36,7 +36,7 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="height: 42px;">
                 <div class="panel-title">
-                    <div class="col-xs-10">大神笔记列表</div>
+                    <div class="col-xs-10">笔记列表</div>
                     <div class="col-xs-2">
                         <input type="text" class="form-control" style="height: 26px;" id="j_note_title_like"
                                placeholder="搜索..."/>
