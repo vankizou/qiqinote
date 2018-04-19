@@ -41,7 +41,7 @@
         <div id="j_empty_content" class="text-center"
              style="display: none; margin: 50px auto; font-size:18px; font-weight:bold;">
             笔记内容为空!&nbsp; <a href="/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}" target="_blank"
-                             class="btn btn_info1"> ${alias}的笔记树&nbsp;>></a>
+                             class="btn btn_info1"> ${isMe ? "我" : "TA"}的笔记树&nbsp;>></a>
         </div>
         <div id="layout">
             <h1 class="text-center c_title j_note_info">${noteVO.note.title}&nbsp;&nbsp;
@@ -90,12 +90,12 @@
         <div>
             <a id="j_note_info_user_url" href="/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}"
                target="_blank" class="btn btn_info1"
-               style="margin-left: 8px;">${alias}的笔记树&nbsp;>></a>
+               style="margin-left: 8px;">${isMe ? "我" : "TA"}的笔记树&nbsp;>></a>
         </div>
 
         <div>
             <section class="widget paddingall">
-                <h5 class="widget-title">${alias}的最新笔记</h5>
+                <h5 class="widget-title">${isMe ? "我" : "TA"}的最新笔记</h5>
                 <ul class="widget-list list-unstyled">
                     <c:if test="${newest != null}">
                         <c:forEach var="note" items="${newest}">
@@ -108,7 +108,7 @@
         </div>
         <div>
             <section class="widget paddingall">
-                <h5 class="widget-title">${alias}的最热笔记</h5>
+                <h5 class="widget-title">${isMe ? "我" : "TA"}的最热笔记</h5>
                 <ul class="widget-list list-unstyled">
                     <c:if test="${hottest != null}">
                         <c:forEach var="note" items="${hottest}">

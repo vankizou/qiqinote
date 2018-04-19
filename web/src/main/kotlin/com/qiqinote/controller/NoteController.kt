@@ -67,7 +67,7 @@ class NoteController @Autowired constructor(
         mv.addObject("noteVO", noteVO)
         mv.addObject("newest", this.noteService.page(loginUserId, noteVO.user?.id, null, null, "id DESC", true, null, 1, 10).data)
         mv.addObject("hottest", this.noteService.page(loginUserId, noteVO.user?.id, null, null, "view_num DESC", true, null, 1, 10).data)
-        mv.addObject("alias", if (loginUserId != null && loginUserId == noteVO.user?.id) "我" else "TA")
+        mv.addObject("isMe", loginUserId != null && loginUserId == noteVO.user?.id)
         return mv
     }
 

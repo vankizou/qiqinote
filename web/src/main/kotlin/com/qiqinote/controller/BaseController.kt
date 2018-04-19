@@ -2,12 +2,13 @@ package com.qiqinote.controller
 
 import com.qiqinote.constant.WebKeyEnum
 import com.qiqinote.dto.UserContext
-import com.qiqinote.util.CookieUtil
-import com.qiqinote.util.MD5Util
-import com.qiqinote.util.UserUtil
-import com.qiqinote.util.WebUtil
+import com.qiqinote.util.*
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.propertyeditors.CustomDateEditor
+import org.springframework.web.bind.WebDataBinder
+import org.springframework.web.bind.annotation.InitBinder
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -44,5 +45,10 @@ open class BaseController {
         if (imageCode == null) return false
         val cookieVal = CookieUtil.getCookie(request, WebKeyEnum.cookieImageCodeV.shortName) ?: return false
         return cookieVal.equals(MD5Util.getMD5(imageCode))
+    }
+
+    @InitBinder
+    private fun initBinder(binder: WebDataBinder) {
+        binder.registerCustomEditor(Date::class.java, CustomDateEditor(DateUtil.sdfDatetime, true))
     }
 }

@@ -1,6 +1,6 @@
 package com.qiqinote.util.sql
 
-import com.qiqinote.po.Note
+import com.qiqinote.po.FindPwdQuestion
 import com.qiqinote.po.User
 import org.apache.commons.lang3.StringUtils
 import kotlin.reflect.KClass
@@ -248,7 +248,7 @@ object NamedSQLUtil {
 
         println()
         println()
-        printFieldMap(Note::class)
+        printFieldMap(FindPwdQuestion::class)
     }
 
     private fun <T : Any> printFieldMap(cls: KClass<T>) {

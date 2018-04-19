@@ -9,8 +9,8 @@ import java.util.*
 object DateUtil {
     private val patternDatetime = "yyyy-MM-dd HH:mm:ss"
     private val patternDate = "yyyy-MM-dd"
-    private val sdfDatetime = SimpleDateFormat(patternDatetime)
-    private val sdfDate = SimpleDateFormat(patternDate)
+    val sdfDatetime = SimpleDateFormat(patternDatetime)
+    val sdfDate = SimpleDateFormat(patternDate)
 
     fun parseDate(dateStr: String?): Date? {
         return sdfDate.parse(dateStr ?: return null)
