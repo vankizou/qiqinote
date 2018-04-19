@@ -46,7 +46,7 @@ object UserUtil {
     fun getUCBySession(request: HttpServletRequest) = request.getSession().getAttribute(WebKeyEnum.sessionUserContext.shortName) as? UserContext
 
     fun signIn(request: HttpServletRequest, response: HttpServletResponse, userService: UserService,
-               account: String?, password: String? = null, isRemember: Int = 0, origin: Int): ResultVO<UserContext> {
+               account: String, password: String, isRemember: Int = 0, origin: Int): ResultVO<UserContext> {
         val userLoginRecord = UserLoginRecord.buildRequestInfo(request)
         userLoginRecord.origin = origin
 

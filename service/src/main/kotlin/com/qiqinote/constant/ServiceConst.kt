@@ -8,4 +8,7 @@ object ServiceConst {
     val trueVal = DBConst.trueVal
 
     val maxNoteTitleLen = 200   // 笔记标题最大长度
+
+    val findPwdQuestionNum = 3   // 密保问题数量
+    val findPwdQuestionRightMinNum = 2   // 密保问题答对最小数量
 }

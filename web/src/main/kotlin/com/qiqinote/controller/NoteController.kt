@@ -117,7 +117,7 @@ class NoteController @Autowired constructor(
         val vo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, if (id == null) idOrIdLink else null, password)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
         if (vo.needPwd == ServiceConst.trueVal) {
-            return ResultVO(CodeEnum.NOTE_PWD_ERROR)
+            return ResultVO(CodeEnum.PWD_ERROR)
         }
         // 父节点数据
         vo.parentNote = this.noteService.getByIdOrIdLink(vo.note?.parentId ?: DBConst.defaultParentId)
@@ -234,7 +234,7 @@ class NoteController @Autowired constructor(
         val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, null, password)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
-            return ResultVO(CodeEnum.NOTE_PWD_ERROR)
+            return ResultVO(CodeEnum.PWD_ERROR)
         }
         return if (detailList == null || detailList.isEmpty()) ResultVO(CodeEnum.NOTE_DOWNLOAD_FAIL) else ResultVO()
 

@@ -61,7 +61,7 @@ $(document).ready(function () {
 });
 
 function init() {
-    $('#noteTree').css('height', $(window).height() - 88);
+    $('#noteTree').css('height', $(window).height() - 110);
     var rootName = (c_noteUserAlias ? c_noteUserAlias : "TA") + "的笔记";
     if (c_myUserId && c_noteUserId == c_myUserId) {
         rootName = '我的笔记';

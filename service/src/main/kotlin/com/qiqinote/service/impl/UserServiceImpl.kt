@@ -29,25 +29,16 @@ class UserServiceImpl @Autowired constructor(
         private val userLoginRecordService: UserLoginRecordService
 ) : UserService {
 
-    override fun preSignIn(account: String?, password: String?, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?> {
-        val accounted = account?.trim()
+    override fun preSignIn(account: String, password: String, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?> {
         val passworded = password
-        if (StringUtil.isEmpty(accounted) || StringUtil.isEmpty(passworded)) {
+        if (StringUtil.isBlank(account) || StringUtil.isEmpty(passworded)) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
-        var userId = accounted?.toLongOrNull()
-        var user: User?
-        if (userId != null) {
-            user = this.getById(userId)
-        } else {
-            user = this.getByName(accounted!!)
-        }
+        val user = this.getByAccount(account)
         if (user == null || (user.password != null && passworded != PasswordUtil.getDecPwd(user.password!!))) {
             return ResultVO(CodeEnum.USER_ACCOUNT_OR_PWD_ERROR)
         }
-        if (userId == null) {
-            userId = user.id
-        }
+        val userId = user.id!!
 
         /**
          * 帐号校验成功
@@ -121,6 +112,16 @@ class UserServiceImpl @Autowired constructor(
             }
             this.userDao.updateById(oldUser.id!!, user)
             return ResultVO(oldUser.id!!)
+        }
+    }
+
+    override fun getByAccount(account: String): User? {
+        val accounted = account?.trim()
+        var userId = account.toLongOrNull()
+        return if (userId != null) {
+            this.getById(userId)
+        } else {
+            this.getByName(accounted!!)
         }
     }
 

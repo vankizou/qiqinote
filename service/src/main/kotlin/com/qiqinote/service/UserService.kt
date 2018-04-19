@@ -12,11 +12,13 @@ import com.qiqinote.vo.UserContextVO
 interface UserService : BaseService<UserDao> {
     fun upsertUser(user: User): ResultVO<Long>
 
-    fun preSignIn(account: String?, password: String?, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?>
+    fun preSignIn(account: String, password: String, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?>
 
     fun getById(id: Long): User?
 
     fun getByName(name: String): User?
+
+    fun getByAccount(account: String): User?
 
     fun getUserContextVO(user: User? = null, userId: Long? = null, name: String? = null): UserContextVO?
 }

@@ -11,7 +11,5 @@ interface FindPwdQuestionService {
 
     fun deleteOne(id: Long, loginUserId: Long): Int
 
-    fun getOne(id: Long, loginUserId: Long): FindPwdQuestion?
-
-    fun list(loginUserId: Long): MutableList<FindPwdQuestion>
+    fun list(userId: Long): MutableList<FindPwdQuestion>
 }

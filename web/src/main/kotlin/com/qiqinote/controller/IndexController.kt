@@ -80,7 +80,7 @@ class IndexController @Autowired constructor(
      */
     @ResponseBody
     @RequestMapping("/signUp" + WebConst.jsonSuffix)
-    fun signUp(name: String?, alias: String?, password: String?, imageCode: String?): ResultVO<Any?> {
+    fun signUp(name: String, alias: String, password: String, imageCode: String): ResultVO<Any?> {
         if (!this.validateImageCode(imageCode)) return ResultVO(CodeEnum.IMAGE_CODE_ERROR)
 
         var user = User()
@@ -100,7 +100,7 @@ class IndexController @Autowired constructor(
      */
     @ResponseBody
     @RequestMapping("/signIn" + WebConst.jsonSuffix)
-    fun signIn(account: String?, password: String?, isRemember: Int?, origin: Int?): ResultVO<UserContext> {
+    fun signIn(account: String, password: String, isRemember: Int?, origin: Int?): ResultVO<UserContext> {
         if (this.userContext != null) return ResultVO(this.userContext!!)
 
         val isRememberTmp = isRemember ?: 0

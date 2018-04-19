@@ -27,6 +27,9 @@ enum class CodeEnum(val code: Int, val msg: String) {
     USER_NAME_NOT_ALLOW(1002, "用户名不能是纯数字"),
     USER_ACCOUNT_OR_PWD_ERROR(1003, "帐号或密码错误"),
 
+    FIND_PWD_QUESTIONS_NUM_NOT_ENOUGH(1004, "数量不足"),
+    FIND_PWD_QUESTIONS_ANSWER_ERROR(1005, "答案错误"),
+
     /**
      * 图片相关
      */
@@ -37,7 +40,7 @@ enum class CodeEnum(val code: Int, val msg: String) {
     /**
      * 笔记相关
      */
-    NOTE_PWD_ERROR(1120, "密码错误"),
+    PWD_ERROR(1120, "密码错误"),
     NOTE_DOWNLOAD_FAIL(1121, "导出失败, 笔记内容为空"),
     NOTE_TITLE_LEN_ERROR(1122, "标题长度不符"),
 }
