@@ -55,8 +55,11 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="/${suc.user.name == null ? suc.user.id : suc.user.name}" class="myNoteUrl"><i
-                                class="fa fa-paint-brush"></i>&nbsp; 我的笔记</a></li>
+                        <li>
+                            <a href="/${suc.user.name == null ? suc.user.id : suc.user.name}" class="myNoteUrl">
+                                <i class="fa fa-paint-brush"></i>&nbsp; 我的笔记
+                            </a>
+                        </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-expanded="false">
@@ -64,24 +67,10 @@
                                 Hi. ${suc.user.alias}
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="javascript:;" style="font-weight: 700;">
-                                        <i class="fa fa-bell"></i>&nbsp; 我的ID：${suc.user.id}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/${suc.user.name == null ? suc.user.id : suc.user.name}">
-                                        <i class="fa fa-paint-brush"></i>&nbsp;我的笔记</a>
-                                </li>
-                                <li>
-                                    <a href="/user/setting.html">
-                                        <i class="fa fa-cog fa-fw"></i>&nbsp;设置</a>
-                                </li>
-                                <li>
-                                    <a href="/signOut.html">
-                                        <i class="fa fa-sign-out"></i>&nbsp; 退出
-                                    </a>
-                                </li>
+                                <li><a href="javascript:;" style="font-weight: 700;">&nbsp;<i class="fa fa-bell"></i>&nbsp;&nbsp;我的ID：${suc.user.id}</a></li>
+                                <li><a href="/${suc.user.name == null ? suc.user.id : suc.user.name}">&nbsp;<i class="fa fa-paint-brush"></i>&nbsp;&nbsp;我的笔记</a></li>
+                                <li><a href="/user/setting.html"><i class="fa fa-cog fa-fw"></i>&nbsp;&nbsp;设置</a></li>
+                                <li><a href="/signOut.html">&nbsp;<i class="fa fa-sign-out"></i>&nbsp;&nbsp;退出</a></li>
                             </ul>
                         </li>
                     </c:otherwise>

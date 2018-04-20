@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : utf-8
 
- Date: 04/20/2018 17:55:57 PM
+ Date: 04/20/2018 23:30:45 PM
 */
 
 SET NAMES utf8;
@@ -132,6 +132,7 @@ CREATE TABLE `user` (
   `qq` varchar(32) DEFAULT NULL COMMENT 'QQ',
   `weixin` varchar(64) DEFAULT NULL COMMENT '微信',
   `weibo` varchar(64) DEFAULT NULL COMMENT '微博',
+  `birthday` datetime DEFAULT NULL,
   `register_origin` int(2) DEFAULT NULL COMMENT '注册来源: 1无, 2手机号, 3微信, 4QQ, 5微博',
   `register_ip` varchar(32) DEFAULT NULL COMMENT '注册IP',
   `description` varchar(200) DEFAULT NULL COMMENT '描述',
