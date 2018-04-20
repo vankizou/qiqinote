@@ -5,7 +5,7 @@ import java.util.*
 /**
  * Created by vanki on 2018/1/18 17:41.
  */
-class FindPwdQuestion {
+class SecurityQuestion {
     var id: Long? = null
 
     var userId: Long? = null

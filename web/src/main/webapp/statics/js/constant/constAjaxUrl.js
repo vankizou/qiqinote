@@ -42,4 +42,14 @@ var ConstAjaxUrl = {
         listOfNoteTreeVO: ['/note/listOfNoteTreeVO.json', 'GET', 'JSON'],
         totalNote: ['/note/totalNote.json', 'GET', 'JSON']
     },
+
+    User: {
+        setting_html: ['/user/setting.html'],
+        info: ['/user/info.sjson', 'GET', 'JSON'],
+        updateInfo: ['/user/updateInfo.sjson', 'POST', 'JSON'],
+        updateSecurityQuestions: ['/user/updateSecurityQuestions.sjson', 'POST', 'JSON'],
+        updatePwdByOldPwd: ['/user/updatePwdByOldPwd.json', 'POST', 'JSON'],
+        updatePwdByQuestions: ['/user/updatePwdByQuestions.json', 'POST', 'JSON'],
+        listOfPwdQuestion: ['/user/listOfPwdQuestion.json', 'POST', 'JSON']
+    }
 }

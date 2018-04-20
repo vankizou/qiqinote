@@ -37,6 +37,7 @@ class UserDaoImpl @Autowired constructor(
         paramMap["qq"] = user.qq
         paramMap["weixin"] = user.weixin
         paramMap["weibo"] = user.weibo
+        paramMap["birthday"] = user.birthday
         paramMap["register_origin"] = user.registerOrigin
         paramMap["register_ip"] = user.registerIp
         paramMap["description"] = user.description
@@ -66,6 +67,7 @@ class UserDaoImpl @Autowired constructor(
         user.qq?.let { paramMap["qq"] = it }
         user.weixin?.let { paramMap["weixin"] = it }
         user.weibo?.let { paramMap["weibo"] = it }
+        user.birthday?.let { paramMap["birthday"] = it }
         user.description?.let { paramMap["description"] = it }
 
         paramMap["id"] = id

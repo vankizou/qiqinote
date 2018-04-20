@@ -17,6 +17,9 @@
 <script type="text/javascript" src="/statics/js/common/top/top.js"></script>
 <script type="text/javascript" src="/statics/js/common/top/loginRegister.js"></script>
 
+<script type="text/javascript">
+    var a_loginUserId = '${suc.user.id}'
+</script>
 
 <div class="navbar navbar-default" style="min-width: 1000px;height:60px;">
     <div class="container">
@@ -62,13 +65,23 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
-                                    <a href="javascript:;"
-                                       style="font-weight: 700;"><i
-                                            class="fa fa-bell"></i>&nbsp; 我的ID：${suc.user.id}</a>
+                                    <a href="javascript:;" style="font-weight: 700;">
+                                        <i class="fa fa-bell"></i>&nbsp; 我的ID：${suc.user.id}
+                                    </a>
                                 </li>
-                                <li><a href="/${suc.user.name == null ? suc.user.id : suc.user.name}"><i class="fa fa-paint-brush"></i>&nbsp;
-                                    我的笔记</a></li>
-                                <li><a href="/signOut.html"><i class="fa fa-sign-out"></i>&nbsp; 退出</a></li>
+                                <li>
+                                    <a href="/${suc.user.name == null ? suc.user.id : suc.user.name}">
+                                        <i class="fa fa-paint-brush"></i>&nbsp;我的笔记</a>
+                                </li>
+                                <li>
+                                    <a href="/user/setting.html">
+                                        <i class="fa fa-cog fa-fw"></i>&nbsp;设置</a>
+                                </li>
+                                <li>
+                                    <a href="/signOut.html">
+                                        <i class="fa fa-sign-out"></i>&nbsp; 退出
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </c:otherwise>
@@ -90,7 +103,7 @@
                     <label class="btn btn-default" style="background: #E1E1E1; color: #818181; border: none;">
                         <input id="j_login_is_remember" type="checkbox" checked="checked"/> 自动登录
                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#">忘记密码？</a>
+                    <a href="/user/setting.html">忘记密码？</a>
                     <input id="j_login_submit" type="submit" value="登录"/>
                 </div>
             </div>

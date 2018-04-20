@@ -1,7 +1,8 @@
 package com.qiqinote.dto
 
 import com.qiqinote.po.User
-import com.qiqinote.vo.UserSimpleVO
+import com.qiqinote.util.EntityUtil
+import java.util.*
 
 /**
  * Created by vanki on 2018/1/24 17:24.
@@ -12,21 +13,15 @@ class UserDTO() {
     var alias: String? = null
     var gender: Int? = null
     var motto: String? = null
-    var avatarInfo: PictureDTO? = null
+    var phone: String? = null
+    var email: String? = null
+    var qq: String? = null
+    var weixin: String? = null
+    var weibo: String? = null
+    var birthday: Date? = null
 
-    constructor(user: UserSimpleVO) : this() {
-        this.id = user.id
-        this.name = user.name
-        this.alias = user.alias
-        this.gender = user.gender
-        this.motto = user.motto
-    }
 
     constructor(user: User) : this() {
-        this.id = user.id
-        this.name = user.name
-        this.alias = user.alias
-        this.gender = user.gender
-        this.motto = user.motto
+        EntityUtil.copyValOfDiffObj(this, user)
     }
 }

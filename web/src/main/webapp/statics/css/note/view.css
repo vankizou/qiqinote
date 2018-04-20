@@ -21,6 +21,10 @@
     display: none;
 }
 
+.j_note_info td {
+    border: 0px solid transparent !important;
+}
+
 .c_all {
     min-width: 1000px;
 }

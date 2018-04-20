@@ -55,6 +55,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-xs-2 c_body_right j_note_info">
         <div>
             <table class="table" style="border: 0px solid transparent !important;">

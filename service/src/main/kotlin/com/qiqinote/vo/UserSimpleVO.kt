@@ -3,12 +3,10 @@ package com.qiqinote.vo
 import java.util.*
 
 /**
- * Created by vanki on 2018/3/12 14:53.
+ * Created by vanki on 2018/1/18 17:41.
  */
-open class UserSimpleVO {
+class UserSimpleVO {
     var id: Long? = null
-
-    var avatarId: Long? = null
 
     var name: String? = null
 

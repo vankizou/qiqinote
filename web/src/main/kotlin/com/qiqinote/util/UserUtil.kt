@@ -2,10 +2,10 @@ package com.qiqinote.util
 
 import com.qiqinote.constant.ServiceConst
 import com.qiqinote.constant.WebKeyEnum
+import com.qiqinote.dto.PictureDTO
 import com.qiqinote.dto.UserContext
 import com.qiqinote.po.UserLoginRecord
 import com.qiqinote.service.UserService
-import com.qiqinote.vo.ResultVO
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -46,20 +46,24 @@ object UserUtil {
     fun getUCBySession(request: HttpServletRequest) = request.getSession().getAttribute(WebKeyEnum.sessionUserContext.shortName) as? UserContext
 
     fun signIn(request: HttpServletRequest, response: HttpServletResponse, userService: UserService,
-               account: String, password: String, isRemember: Int = 0, origin: Int): ResultVO<UserContext> {
+               account: String, password: String, isRemember: Int = 0, origin: Int): Boolean {
         val userLoginRecord = UserLoginRecord.buildRequestInfo(request)
         userLoginRecord.origin = origin
 
         val resultVO = userService.preSignIn(account, password, userLoginRecord)
         val ucVO = resultVO.data
-        if (ucVO?.user == null) return ResultVO(resultVO.code, resultVO.msg)
+        if (ucVO?.user == null) return false
 
-        val uc = UserContext.build(ucVO.user!!, ucVO.avatar)
-        UserUtil.setUCInSession(request, uc)
-        if (isRemember == ServiceConst.trueVal && uc.user.id != null && password != null) {
-            UserUtil.setUserIdAndPwdInCookie(response, uc.user.id!!, password)
+        var avatar: PictureDTO? = null
+        ucVO.avatar?.let {
+            avatar = PictureDTO(it)
         }
 
-        return ResultVO(uc)
+        UserUtil.setUCInSession(request, UserContext(ucVO.user!!, avatar))
+
+        if (isRemember == ServiceConst.trueVal && ucVO.user?.id != null && password != null) {
+            UserUtil.setUserIdAndPwdInCookie(response, ucVO.user?.id!!, password)
+        }
+        return true
     }
 }

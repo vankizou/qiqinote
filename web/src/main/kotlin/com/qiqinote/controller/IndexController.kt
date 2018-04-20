@@ -4,7 +4,6 @@ import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
 import com.qiqinote.constant.WebConst
 import com.qiqinote.constant.WebPageEnum
-import com.qiqinote.dto.UserContext
 import com.qiqinote.dto.UserDTO
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.po.User
@@ -32,7 +31,7 @@ class IndexController @Autowired constructor(
     @RequestMapping("/")
     fun index(): Any {
         return if (this.userContext != null) {
-            "redirect:/${this.userContext!!.user.name}"
+            "redirect:/${this.userContext?.user!!.name}"
         } else {
             val mv = ModelAndView(WebPageEnum.index.url)
             mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
@@ -47,31 +46,27 @@ class IndexController @Autowired constructor(
         return mv
     }
 
+    @RequestMapping("/login" + WebConst.htmlSuffix)
+    fun login() = ModelAndView(WebPageEnum.login.url)
+
     @RequestMapping("/{idOrName}")
     fun userHome(@PathVariable("idOrName") idOrName: String): ModelAndView {
-        var userDTO: UserDTO? = this.userContext?.user
-        if (userDTO != null) {
-            if (idOrName.toLongOrNull() != userDTO.id && idOrName != userDTO.name) {
-                userDTO = null
+        var user = this.userContext?.user
+        if (user != null) {
+            if (idOrName.toLongOrNull() != user.id && idOrName != user.name) {
+                user = null
             }
         }
-        var user: User? = null
-        if (userDTO == null) {
-            val userId = idOrName.toLongOrNull()
-
-            if (userId == null) {
-                user = this.userService.getByName(idOrName)
-            } else {
-                user = this.userService.getById(userId)
-            }
+        if (user == null) {
+            user = this.userService.getByAccount(idOrName)
         }
-        if (userDTO == null && user == null) {
+        if (user == null) {
             throw QiqiNoteException(CodeEnum.NOT_FOUND)
         }
         val mv = ModelAndView(WebPageEnum.note_list.url)
-        mv.addObject("userId", user?.id ?: userDTO?.id ?: 0)
-        mv.addObject("userName", user?.name ?: userDTO?.name ?: "")
-        mv.addObject("userAlias", user?.alias ?: userDTO?.alias ?: "")
+        mv.addObject("userId", user?.id ?: user?.id ?: 0)
+        mv.addObject("userName", user?.name ?: user?.name ?: "")
+        mv.addObject("userAlias", user?.alias ?: user?.alias ?: "")
         return mv
     }
 
@@ -80,7 +75,7 @@ class IndexController @Autowired constructor(
      */
     @ResponseBody
     @RequestMapping("/signUp" + WebConst.jsonSuffix)
-    fun signUp(name: String, alias: String, password: String, imageCode: String): ResultVO<Any?> {
+    fun signUp(name: String, alias: String?, password: String, imageCode: String): ResultVO<Any?> {
         if (!this.validateImageCode(imageCode)) return ResultVO(CodeEnum.IMAGE_CODE_ERROR)
 
         var user = User()
@@ -100,7 +95,7 @@ class IndexController @Autowired constructor(
      */
     @ResponseBody
     @RequestMapping("/signIn" + WebConst.jsonSuffix)
-    fun signIn(account: String, password: String, isRemember: Int?, origin: Int?): ResultVO<UserContext> {
+    fun signIn(account: String, password: String, isRemember: Int?, origin: Int?): ResultVO<Any> {
         if (this.userContext != null) return ResultVO(this.userContext!!)
 
         val isRememberTmp = isRemember ?: 0
@@ -111,7 +106,7 @@ class IndexController @Autowired constructor(
         if (originTmp == DBConst.UserLoginRecord.originAutoLogin) {
             originTmp = DBConst.UserLoginRecord.originNone
         }
-        return UserUtil.signIn(this.request, this.response, this.userService, account, password, isRememberTmp, originTmp)
+        return if (UserUtil.signIn(this.request, this.response, this.userService, account, password, isRememberTmp, originTmp)) ResultVO() else ResultVO(CodeEnum.FAIL)
     }
 
     /**

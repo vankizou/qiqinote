@@ -35,7 +35,7 @@ open class BaseController {
     /**
      * 用户是否有操作权限
      */
-    protected fun isPermission(userId: Long?) = if (userId == null) false else userId.equals(userContext?.user?.id)
+    protected fun isMine(userId: Long?) = if (userId == null) false else userId == userContext?.user?.id
 
     protected fun getLoginUserId() = justGetLoginUserId()!!
 

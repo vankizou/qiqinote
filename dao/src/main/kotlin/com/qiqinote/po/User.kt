@@ -32,6 +32,8 @@ class User {
 
     var weibo: String? = null
 
+    var birthday: Date? = null
+
     var registerOrigin: Int? = null
 
     var registerIp: String? = null

@@ -70,23 +70,23 @@ function vankiMsgWindow(content, winAttrJson) {
 function vankiLayerMsgSuccGou(msg, time) {
     if (!msg) return;
     time = time ? time : 3000;
-    layer.msg(msg, {time: time, icon: 6});
+    layer.msg(msg, {time: time, icon: 1});
 }
 
 function vankiLayerMsgSuccTou(msg, time) {
     if (!msg) return;
     time = time ? time : 3000;
-    layer.msg(msg, {time: time, icon: 1});
+    layer.msg(msg, {time: time, icon: 6});
 }
 
 function vankiLayerMsgFailCha(msg, time) {
     if (!msg) return;
     time = time ? time : 3000;
-    layer.msg(msg, {time: time, icon: 5});
+    layer.msg(msg, {time: time, icon: 2});
 }
 
 function vankiLayerMsgFailTou(msg, time) {
     if (!msg) return;
     time = time ? time : 3000;
-    layer.msg(msg, {time: time, icon: 2});
+    layer.msg(msg, {time: time, icon: 5});
 }

@@ -42,8 +42,7 @@ class ImageController @Autowired constructor(
         val uploadNum = images?.size
         if (uploadNum == null || uploadNum == 0) return ResultVO(CodeEnum.IMAGE_NOT_FOUNT)
         if (uploadNum > uploadMaxNum) return ResultVO(CodeEnum.IMAGE_UPLOAD_TOO_MANY)
-        var useTypeTmp = useType
-        if (useTypeTmp == null) useTypeTmp = DBConst.Picture.useTypeNote
+        var useTypeTmp = useType ?: DBConst.Picture.useTypeNote
 
         val baseDir = File(imageBasePath)
         if (!baseDir.exists()) {

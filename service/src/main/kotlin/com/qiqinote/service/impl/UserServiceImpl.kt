@@ -9,12 +9,10 @@ import com.qiqinote.po.UserLoginRecord
 import com.qiqinote.service.PictureService
 import com.qiqinote.service.UserLoginRecordService
 import com.qiqinote.service.UserService
-import com.qiqinote.util.EntityUtil
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
 import com.qiqinote.vo.ResultVO
 import com.qiqinote.vo.UserContextVO
-import com.qiqinote.vo.UserSimpleVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -105,7 +103,9 @@ class UserServiceImpl @Autowired constructor(
              * 更新
              */
             // 性别设置只能改一次
-            oldUser.gender?.let { user.gender = null }
+            if (oldUser.gender == DBConst.User.genderFemale || oldUser.gender == DBConst.User.genderMale) {
+                user.gender = null
+            }
 
             if (StringUtil.isNotEmpty(user.password)) {
                 user.password = PasswordUtil.getEncPwd(user.password!!)
@@ -115,12 +115,16 @@ class UserServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getByAccount(account: String): User? {
+    override fun getByAccount(account: String) = this.getByAccount(account, null)
+
+    override fun getByAccount(account: String, loginUser: User?): User? {
         val accounted = account?.trim()
         var userId = account.toLongOrNull()
         return if (userId != null) {
+            if (loginUser != null && loginUser.id == userId) return loginUser
             this.getById(userId)
         } else {
+            if (loginUser != null && loginUser.name == accounted) return loginUser
             this.getByName(accounted!!)
         }
     }
@@ -149,10 +153,10 @@ class UserServiceImpl @Autowired constructor(
         if (userTmp.avatarId != null) {
             avatar = this.pictureService.getById(userTmp.avatarId!!)
         }
-        val ucVO = UserContextVO()
-        ucVO.user = EntityUtil.copyValOfDiffObj(UserSimpleVO(), userTmp)
-        ucVO.avatar = avatar
-        return ucVO
+        val uc = UserContextVO()
+        uc.user = userTmp
+        uc.avatar = avatar
+        return uc
     }
 
 }

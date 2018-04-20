@@ -96,4 +96,14 @@
 </div>
 <jsp:include page="../common/footer.jsp"></jsp:include>
 </body>
+
+<script>
+    $(function () {
+        $('#myTab a:last').tab('show');
+    })
+    $('#myTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+</script>
 </html>
