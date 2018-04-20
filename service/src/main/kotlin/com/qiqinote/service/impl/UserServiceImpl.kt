@@ -70,7 +70,7 @@ class UserServiceImpl @Autowired constructor(
         /**
          * 用户名是否存在
          */
-        if (StringUtil.isNotEmpty(user.name) && user.name != oldUser?.name) {
+        if (StringUtil.isNotBlank(user.name) && user.name != oldUser?.name) {
             val countName = this.userDao.countByName(user.name!!)
             if (countName > 0) {
                 return ResultVO(CodeEnum.USER_EXISTS)
@@ -88,7 +88,7 @@ class UserServiceImpl @Autowired constructor(
             /**
              * 设置默认值
              */
-            if (StringUtil.isEmpty(user.alias)) {
+            if (StringUtil.isBlank(user.alias)) {
                 user.alias = user.name
             }
             user.gender = user.gender ?: DBConst.User.genderSecret

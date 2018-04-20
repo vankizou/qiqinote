@@ -3,7 +3,9 @@ package com.qiqinote.dao.impl
 import com.qiqinote.constant.DBConst
 import com.qiqinote.dao.UserDao
 import com.qiqinote.po.User
+import com.qiqinote.util.StringUtil
 import com.qiqinote.util.sql.NamedSQLUtil
+import org.apache.commons.lang3.StringUtils
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -27,7 +29,7 @@ class UserDaoImpl @Autowired constructor(
         val paramMap = mutableMapOf<String, Any?>()
         paramMap["avatar_id"] = user.avatarId
         paramMap["name"] = user.name
-        paramMap["alias"] = user.alias
+        paramMap["alias"] = if (StringUtil.isBlank(user.alias)) user.name else user.alias
         paramMap["password"] = user.password
         paramMap["gender"] = user.gender
         paramMap["status"] = user.status
@@ -54,6 +56,9 @@ class UserDaoImpl @Autowired constructor(
     }
 
     override fun updateById(id: Long, user: User): Int {
+        if (StringUtil.isBlank(user.name)) user.name = null
+        if (StringUtil.isBlank(user.alias)) user.alias = null
+
         val paramMap = LinkedHashMap<String, Any?>()
         user.avatarId?.let { paramMap["avatar_id"] = it }
         user.name?.let { paramMap["name"] = it }
