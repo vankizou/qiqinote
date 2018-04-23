@@ -14,5 +14,6 @@ enum class WebPageEnum(val url: String) {
     note_edit("note/edit"),
     note_view("note/view"),
 
+    user_find_pwd("user/findPwd"),
     user_setting("user/setting")
 }

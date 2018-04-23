@@ -44,7 +44,7 @@ var ConstAjaxUrl = {
     },
 
     User: {
-        setting_html: ['/user/setting.html'],
+        setting_html: ['/user/setting.shtml'],
         info: ['/user/info.sjson', 'GET', 'JSON'],
         updateInfo: ['/user/updateInfo.sjson', 'POST', 'JSON'],
         updateSecurityQuestions: ['/user/updateSecurityQuestions.sjson', 'POST', 'JSON'],

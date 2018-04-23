@@ -8,7 +8,6 @@ import com.qiqinote.service.SecurityQuestionService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
-import com.qiqinote.util.WebUtil
 import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -28,11 +27,11 @@ class UserController @Autowired constructor(
         private val securityQuestionService: SecurityQuestionService
 ) : BaseController() {
 
-    @RequestMapping("/setting" + WebConst.htmlSuffix)
-    fun settingHtml(): ModelAndView {
-        val mv = ModelAndView(WebPageEnum.user_setting.url)
-        return mv
-    }
+    @RequestMapping("/findPwd" + WebConst.htmlSuffix)
+    fun findPwdHtml() = if (this.justGetLoginUserId() != null) ModelAndView(WebPageEnum.user_setting.url) else ModelAndView(WebPageEnum.user_find_pwd.url)
+
+    @RequestMapping("/setting" + WebConst.needLoginHtmlSuffix)
+    fun settingHtml() = ModelAndView(WebPageEnum.user_setting.url)
 
     @ResponseBody
     @GetMapping("/info" + WebConst.needLoginJsonSuffix)

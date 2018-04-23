@@ -92,7 +92,7 @@
                     <label class="btn btn-default" style="background: #E1E1E1; color: #818181; border: none;">
                         <input id="j_login_is_remember" type="checkbox" checked="checked"/> 自动登录
                     </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="/user/setting.html">忘记密码？</a>
+                    <a href="/user/findPwd.html">忘记密码？</a>
                     <input id="j_login_submit" type="submit" value="登录"/>
                 </div>
             </div>
