@@ -62,7 +62,7 @@
             <table class="table" style="border: 0px solid transparent !important;">
                 <tbody>
                 <tr>
-                    <td class="col-md-4 text-center">
+                    <td class="col-md-4 text-left">
                         <span class="label btn_info1">作者：</span>
                     </td>
                     <td class="col-md-8 text-left">
@@ -71,7 +71,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="col-md-4 text-center">
+                    <td class="col-md-4 text-left">
                         <span class="label btn_info1">创建：</span></td>
                     <td class="col-md-8 text-left">
                         <span id="j_note_info_create_datetime"
@@ -79,7 +79,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="col-md-4 text-center">
+                    <td class="col-md-4 text-left">
                         <span class="label btn_info1">更新：</span></td>
                     <td class="col-md-8 text-left">
                         <span id="j_note_info_update_datetime"
