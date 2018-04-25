@@ -24,7 +24,7 @@
 
 .home_note_editor {
     max-height: 240px;
-    overflow-y: hidden;
+    overflow-y: auto;
 }
 
 .home_note_footer {
