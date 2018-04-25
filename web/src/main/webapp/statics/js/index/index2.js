@@ -62,7 +62,7 @@ function buildHomeNote(pageNo, pageSize) {
             var userName = d['user']['name'];
             var userAlias = d['user']['alias'];
 
-            var pNoteTitle = '';
+            var pNoteTitle = '默认';
             var pNote;
             if ((pNote = d['parentNote'])) {
                 pNoteTitle = pNote['title'];
@@ -77,6 +77,7 @@ function buildHomeNote(pageNo, pageSize) {
             $('#j_home_note' + seq).show();
             $('#j_home_note' + seq + "_title").html(noteTitle);
             $('#j_home_note' + seq + "_title").attr("onclick", 'window.open("' + viewNoteUrl + '")');
+            $('#j_home_note' + seq + "_parent").html(pNoteTitle);
             $('#j_home_note' + seq + "_user").html(userAlias);
             $('#j_home_note' + seq + "_user").attr("href", viewUserUrl);
             $('#j_home_note' + seq + "_date").html(noteCreateDatetime);
