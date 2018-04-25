@@ -7,6 +7,11 @@
     padding-bottom: 10px;
     cursor: pointer;
     color: #0592d3;
+    /* 超出加三个. */
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .home_note_meta {
