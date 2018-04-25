@@ -69,7 +69,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="javascript:;" style="font-weight: 700;">&nbsp;<i class="fa fa-bell"></i>&nbsp;&nbsp;我的ID：${suc.user.id}</a></li>
                                 <li><a href="/${suc.user.name == null ? suc.user.id : suc.user.name}">&nbsp;<i class="fa fa-paint-brush"></i>&nbsp;&nbsp;我的笔记</a></li>
-                                <li><a href="/user/setting.html"><i class="fa fa-cog fa-fw"></i>&nbsp;&nbsp;设置</a></li>
+                                <li><a href="/user/setting.shtml"><i class="fa fa-cog fa-fw"></i>&nbsp;&nbsp;设置</a></li>
                                 <li><a href="/signOut.html">&nbsp;<i class="fa fa-sign-out"></i>&nbsp;&nbsp;退出</a></li>
                             </ul>
                         </li>
