@@ -1,15 +1,13 @@
 package com.qiqinote.service.impl
 
-import com.qiqinote.constant.CodeEnum
-import com.qiqinote.constant.DBConst
-import com.qiqinote.constant.RedisKeyEnum
-import com.qiqinote.constant.ServiceConst
+import com.qiqinote.constant.*
 import com.qiqinote.dao.NoteDao
 import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.service.NoteDetailService
 import com.qiqinote.service.NoteService
+import com.qiqinote.util.CookieUtil
 import com.qiqinote.util.EntityUtil
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
@@ -21,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import kotlin.collections.LinkedHashMap
 
 /**
@@ -158,7 +158,7 @@ class NoteServiceImpl @Autowired constructor(
 
     override fun getByIdOrIdLink(id: Long?, idLink: String?) = this.noteDao.getByIdOrIdLink(id, idLink)
 
-    override fun getNoteVOById(loginUserId: Long?, id: Long?, idLink: String?, password: String?): NoteViewVO? {
+    override fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest, response: HttpServletResponse): NoteViewVO? {
         if (id == null && idLink == null) return null
 
         val note = this.getByIdOrIdLink(id, idLink) ?: return null
@@ -190,9 +190,12 @@ class NoteServiceImpl @Autowired constructor(
         vo.note = note
         vo.noteDetailList = this.noteDetailService.listByNoteId(note.id!!)
 
-        if (loginUserId != note.userId && note.noteContentNum ?: 0 > 0) {
+        val cookieIdOrLink = CookieUtil.getCookie(request, WebKeyEnum.cookieNoteViewNum.shortName)
+        val isAddViewNum = cookieIdOrLink != note.id?.toString() && cookieIdOrLink != note.idLink
+        if (isAddViewNum && loginUserId != note.userId && note.noteContentNum ?: 0 > 0) {
             this.noteDao.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
         }
+        CookieUtil.setCookie(response, WebKeyEnum.cookieNoteViewNum.shortName, id?.toString() ?: idLink)
         return vo
     }
 

@@ -68,7 +68,11 @@ function buildHomeNote(pageNo, pageSize) {
                 pNoteTitle = pNote['title'];
             }
 
-            var viewNoteUrl = ConstAjaxUrl.Note.view_html[0].replace(ConstAjaxUrl.Note.view_html[1], noteIdLink);
+            var idOrIdLink = noteId + ".html";
+            if (ConstDB.Note.secretLink == d['note']['secret']) {
+                idOrIdLink = noteIdLink;
+            }
+            var viewNoteUrl = ConstAjaxUrl.Note.view_html[0].replace(ConstAjaxUrl.Note.view_html[1], idOrIdLink);
             var viewUserUrl = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], userName);
 
             var seq = Number(i) + 1;
@@ -81,18 +85,8 @@ function buildHomeNote(pageNo, pageSize) {
             $('#j_home_note' + seq + "_user").html(userAlias);
             $('#j_home_note' + seq + "_user").attr("href", viewUserUrl);
             $('#j_home_note' + seq + "_date").html(noteCreateDatetime);
-            $('#j_home_note' + seq + "_view_num").html(noteViewNum);
-
-            /*node += '<tr>'
-            node += '<td><a href="' + viewNoteUrl + '" target="_blank">' + noteTitle + '</a></td>';
-            node += '<td>' + pNoteTitle + "</td>";
-            node += '<td><a href="' + viewUserUrl + '" target="_blank">' + userAlias + '</a></td>';
-            node += '<td>' + noteCreateDatetime + "</td>";
-            node += '<td>' + noteViewNum + "</td>";
-            node += '</tr>';*/
+            $('#j_home_note' + seq + "_view_num").html(numToHumanView(noteViewNum, null, 1));
         }
-        // $('#j_note_list_table').children().remove();
-        // $('#j_note_list_table').append(node);
     };
     vankiAjax(ConstAjaxUrl.Note.pageOfHome, params, fnSucc);
 }

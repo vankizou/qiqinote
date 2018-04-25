@@ -8,6 +8,8 @@ import com.qiqinote.vo.NoteTreeVO
 import com.qiqinote.vo.NoteTreeVOAndTotalNote
 import com.qiqinote.vo.NoteViewVO
 import com.qiqinote.vo.ResultVO
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by vanki on 2018/3/1 18:40.
@@ -21,7 +23,7 @@ interface NoteService : BaseService<NoteDao> {
 
     fun getByIdOrIdLink(id: Long?, idLink: String? = null): Note?
 
-    fun getNoteVOById(loginUserId: Long?, id: Long?, idLink: String?, password: String?): NoteViewVO?
+    fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest, response: HttpServletResponse): NoteViewVO?
 
     fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int = 0): MutableList<NoteTreeVO>
 

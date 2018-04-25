@@ -37,7 +37,7 @@ class NoteController @Autowired constructor(
 
         val id = idOrIdLink.toLongOrNull()
 
-        val noteVO = this.noteService.getNoteVOById(loginUserId, id, if (id == null) idOrIdLink else null, null)
+        val noteVO = this.noteService.getNoteVOByIdOrIdLink(loginUserId, id, if (id == null) idOrIdLink else null, null, this.request, this.response)
         if (noteVO == null || noteVO.needPwd == ServiceConst.falseVal) {
             throw QiqiNoteException(CodeEnum.NOT_FOUND)
         }
@@ -55,7 +55,7 @@ class NoteController @Autowired constructor(
         val mv = ModelAndView(WebPageEnum.note_view.url)
 
         val id = idOrIdLink.toLongOrNull()
-        val noteVO = this.noteService.getNoteVOById(loginUserId, id, if (id == null) idOrIdLink else null, password)
+        val noteVO = this.noteService.getNoteVOByIdOrIdLink(loginUserId, id, if (id == null) idOrIdLink else null, password, this.request, this.response)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
 
         // 访链只能通过idLink访问
@@ -125,7 +125,8 @@ class NoteController @Autowired constructor(
     @GetMapping("/getNoteVOById" + WebConst.jsonSuffix)
     fun getNoteVOById(idOrIdLink: String, password: String?): ResultVO<Any> {
         val id = idOrIdLink.toLongOrNull()
-        val vo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, if (id == null) idOrIdLink else null, password)
+
+        val vo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, if (id == null) idOrIdLink else null, password, this.request, this.response)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
         if (vo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.PWD_ERROR)
@@ -250,7 +251,7 @@ class NoteController @Autowired constructor(
     @ResponseBody
     @RequestMapping("/download" + WebConst.jsonSuffix)
     fun downloadNote(id: Long, password: String?): ResultVO<Any> {
-        val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, null, password)
+        val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, null, password, this.request, this.response)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.PWD_ERROR)
@@ -264,7 +265,7 @@ class NoteController @Autowired constructor(
     fun doDownloadNote(id: Long, password: String?) {
         val noteTempList = TemplateUtil.getExportNoteTempList() ?: return
 
-        val noteViewVo = this.noteService.getNoteVOById(this.justGetLoginUserId(), id, null, password)
+        val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, null, password, this.request, this.response)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return

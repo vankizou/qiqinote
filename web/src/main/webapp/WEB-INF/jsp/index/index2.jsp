@@ -44,7 +44,7 @@
                         <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note1_user" target="_blank"></a></li>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note1_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note1_date"></span></li>
-                        <li><i class="fa fa fa-desktop"></i>&nbsp;<span id="j_home_note1_view_num"></span>次浏览</li>
+                        <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note1_view_num"></span>次浏览</li>
                     </ul>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                         <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note2_user" target="_blank"></a></li>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note2_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note2_date"></span></li>
-                        <li><i class="fa fa fa-desktop"></i>&nbsp;<span id="j_home_note2_view_num"></span>次浏览</li>
+                        <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note2_view_num"></span>次浏览</li>
                     </ul>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                         <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note3_user" target="_blank"></a></li>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note3_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note3_date"></span></li>
-                        <li><i class="fa fa fa-desktop"></i>&nbsp;<span id="j_home_note3_view_num"></span>次浏览</li>
+                        <li><i class="fa fa-eye"></i>&nbsp;<span id="j_home_note3_view_num"></span>次浏览</li>
                     </ul>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                         <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note4_user" target="_blank"></a></li>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note4_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note4_date"></span></li>
-                        <li><i class="fa fa fa-desktop"></i>&nbsp;<span id="j_home_note4_view_num"></span>次浏览</li>
+                        <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note4_view_num"></span>次浏览</li>
                     </ul>
                 </div>
             </div>
@@ -104,7 +104,7 @@
                         <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note5_user" target="_blank"></a></li>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note5_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note5_date"></span></li>
-                        <li><i class="fa fa fa-desktop"></i>&nbsp;<span id="j_home_note5_view_num"></span>次浏览</li>
+                        <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note5_view_num"></span>次浏览</li>
                     </ul>
                 </div>
             </div>

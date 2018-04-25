@@ -6,6 +6,7 @@ package com.qiqinote.constant
 enum class WebKeyEnum(val shortName: String) {
     cookieRememberUser("qiqicru"),
     cookieImageCodeV("qiqicicv"),
+    cookieNoteViewNum("qiqinvn"),
 
     sessionUserContext("suc"),
 }
