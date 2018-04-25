@@ -8,7 +8,7 @@ enum class WebPageEnum(val url: String) {
     _500("common/500"),
 
     login("index/login"),
-    index("index/index"),
+    index("index/index2"),
 
     note_list("note/list"),
     note_edit("note/edit"),

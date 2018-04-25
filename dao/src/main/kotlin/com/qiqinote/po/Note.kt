@@ -46,9 +46,9 @@ class Note {
 
     var statusDescription: String? = null
 
-    var updateDatetime: Date? = null;
+    var updateDatetime: Date? = null
 
-    var createDatetime: Date? = null;
+    var createDatetime: Date? = null
 
     var isDel: Int? = null
 }

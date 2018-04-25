@@ -19,6 +19,7 @@
     <title>${noteVO.note.title}-奇奇笔记</title>
     <jsp:include page="../common/common.jsp"></jsp:include>
     <jsp:include page="../common/markdown-preview.jsp"></jsp:include>
+
     <script type="text/javascript" src="/statics/js/note/view.js"></script>
 
     <link rel="stylesheet" href="/statics/css/note/view.css">
@@ -33,6 +34,7 @@
         });
     </script>
 </head>
+
 <body>
 <jsp:include page="../common/top.jsp"></jsp:include>
 <div class="container row c_all" style="margin-top: 10px; width: 100%; padding: 10px;">
@@ -57,6 +59,7 @@
     </div>
 
     <div class="col-xs-2 c_body_right j_note_info">
+
         <div>
             <table class="table" style="border: 0px solid transparent !important;">
                 <tbody>
@@ -100,7 +103,7 @@
                 <ul class="widget-list list-unstyled">
                     <c:if test="${newest != null}">
                         <c:forEach var="note" items="${newest}">
-                            <li><a href="/note/${note.idLink}"><i
+                            <li><a href="/note/${note.secret==3 ? note.idLink : "".concat(note.id).concat(".html")}"><i
                                     class="fa fa-book">&nbsp; </i>${note.title}</a></li>
                         </c:forEach>
                     </c:if>
@@ -113,7 +116,7 @@
                 <ul class="widget-list list-unstyled">
                     <c:if test="${hottest != null}">
                         <c:forEach var="note" items="${hottest}">
-                            <li><a href="/note/${note.idLink}"><i
+                            <li><a href="/note/${note.secret==3 ? note.idLink : "".concat(note.id).concat(".html")}"><i
                                     class="fa fa-book">&nbsp; </i>${note.title}</a></li>
                         </c:forEach>
                     </c:if>
@@ -123,5 +126,6 @@
     </div>
 </div>
 <jsp:include page="../common/footer.jsp"></jsp:include>
+
 </body>
 </html>

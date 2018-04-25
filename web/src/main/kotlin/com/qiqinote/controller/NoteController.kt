@@ -4,7 +4,9 @@ import com.qiqinote.constant.*
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.model.Page
 import com.qiqinote.po.Note
+import com.qiqinote.po.NoteDetail
 import com.qiqinote.po.User
+import com.qiqinote.service.NoteDetailService
 import com.qiqinote.service.NoteService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.DateUtil
@@ -27,7 +29,8 @@ import java.nio.charset.Charset
 @RequestMapping("/note")
 class NoteController @Autowired constructor(
         private val userService: UserService,
-        private val noteService: NoteService
+        private val noteService: NoteService,
+        private val noteDetailService: NoteDetailService
 ) : BaseController() {
     fun editHtml(@PathVariable("idOrIdLink") idOrIdLink: String): ModelAndView {
         val loginUserId = this.getLoginUserId()
@@ -43,6 +46,9 @@ class NoteController @Autowired constructor(
         return mv
     }
 
+    @GetMapping("/{id}" + WebConst.htmlSuffix)
+    fun viewHtml2(@PathVariable("id") id: Long, password: String?) = "forward:/note/$id?password=$password"
+
     @GetMapping("/{idOrIdLink}")
     fun viewHtml(@PathVariable("idOrIdLink") idOrIdLink: String, password: String?): ModelAndView {
         val loginUserId = this.justGetLoginUserId()
@@ -51,6 +57,11 @@ class NoteController @Autowired constructor(
         val id = idOrIdLink.toLongOrNull()
         val noteVO = this.noteService.getNoteVOById(loginUserId, id, if (id == null) idOrIdLink else null, password)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
+
+        // 访链只能通过idLink访问
+        if (id != null && noteVO.note?.secret == DBConst.Note.secretLink) {
+            throw QiqiNoteException(CodeEnum.NOT_FOUND)
+        }
 
         // 父节点数据
         noteVO.parentNote = this.noteService.getByIdOrIdLink(noteVO.note?.parentId ?: DBConst.defaultParentId)
@@ -65,8 +76,8 @@ class NoteController @Autowired constructor(
         noteVO.createDatetimeStr = DateUtil.formatDatetime(noteVO.note?.createDatetime)
         noteVO.updateDatetimeStr = DateUtil.formatDatetime(noteVO.note?.updateDatetime)
         mv.addObject("noteVO", noteVO)
-        mv.addObject("newest", this.noteService.page(loginUserId, noteVO.user?.id, null, null, "id DESC", true, null, 1, 10).data)
-        mv.addObject("hottest", this.noteService.page(loginUserId, noteVO.user?.id, null, null, "view_num DESC", true, null, 1, 10).data)
+        mv.addObject("newest", this.noteService.page(null, noteVO.user?.id, null, null, "id DESC", true, null, 1, 10).data)
+        mv.addObject("hottest", this.noteService.page(null, noteVO.user?.id, null, null, "view_num DESC", true, null, 1, 10).data)
         mv.addObject("isMe", loginUserId != null && loginUserId == noteVO.user?.id)
         return mv
     }
@@ -155,12 +166,20 @@ class NoteController @Autowired constructor(
         var userTmp: User?
         var userSimpleTmp: UserSimpleVO?
         var parentNoteIdTmp: Long?
+        var noteContents: MutableList<NoteDetail>
 
         for (note in noteList) {
             userIdTmp = note.userId ?: continue
 
             noteHomeVO = NoteHomeVO()
             noteHomeVO.note = note
+
+            /**
+             * 获取笔记详情
+             */
+            noteContents = this.noteDetailService.listByNoteId(note.id!!)
+            if (noteContents.isEmpty()) continue
+            noteHomeVO.noteContent = noteContents[0].content
 
             /**
              * 添加用户信息

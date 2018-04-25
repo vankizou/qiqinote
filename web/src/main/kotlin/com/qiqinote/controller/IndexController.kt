@@ -7,6 +7,7 @@ import com.qiqinote.constant.WebPageEnum
 import com.qiqinote.dto.UserDTO
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.po.User
+import com.qiqinote.service.NoteService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.UserUtil
 import com.qiqinote.util.WebUtil
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView
 @RequestMapping("/")
 class IndexController @Autowired constructor(
         private val userService: UserService,
+        private val noteService: NoteService,
         private val noteController: NoteController
 ) : BaseController() {
 
@@ -34,7 +36,7 @@ class IndexController @Autowired constructor(
             "redirect:/${this.userContext?.user!!.name}"
         } else {
             val mv = ModelAndView(WebPageEnum.index.url)
-            mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
+            buildHomeData(mv)
             mv
         }
     }
@@ -42,8 +44,14 @@ class IndexController @Autowired constructor(
     @RequestMapping("/index" + WebConst.htmlSuffix)
     fun index2(): ModelAndView {
         val mv = ModelAndView(WebPageEnum.index.url)
-        mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
+        buildHomeData(mv)
         return mv
+    }
+
+    private fun buildHomeData(mv: ModelAndView) {
+        mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
+        mv.addObject("newest", this.noteService.page(null, null, null, null, "id DESC", true, null, 1, 15).data)
+        mv.addObject("hottest", this.noteService.page(null, null, null, null, "view_num DESC", true, null, 1, 15).data)
     }
 
     @RequestMapping("/login" + WebConst.htmlSuffix)

@@ -105,8 +105,9 @@ function addNote() {
             vankiMsgAlertAutoClose("添加失败");
             return false;
         }
-        noteSecretTypeJson[data['id']] = data['secret'];
-        noteIdAndNoteIdLinkJson[data['id']] = data['idLink'];
+        var secret = data['secret'];
+        noteSecretTypeJson[data['id']] = secret;
+        noteIdAndNoteIdLinkJson[data['id']] = secret == ConstDB.Note.secretLink ? data['idLink'] : data['id'];
         updateDiyDom(parentNode, 1);
         tree.addNodes(parentNode, {id: data["id"], pId: pId, name: data["title"]});
     };
@@ -439,7 +440,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         var noteSecret = note['secret'];
 
         noteSecretTypeJson[noteId] = noteSecret;
-        noteIdAndNoteIdLinkJson[noteId] = note['idLink']
+        noteIdAndNoteIdLinkJson[noteId] = noteSecret == ConstDB.Note.secretLink ? note['idLink'] : note['id'];
 
         if (existsNodeIdArr.indexOf(noteId) != -1) continue;    // 节点已存在
 

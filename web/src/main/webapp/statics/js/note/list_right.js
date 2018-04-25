@@ -189,7 +189,7 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
             if (password == null) return;
         }
     }
-    var idLink = noteIdAndNoteIdLinkJson[noteId]
+    var idLink = noteIdAndNoteIdLinkJson[noteId];
     var params = {
         "idOrIdLink": idLink,
         "password": password,
@@ -208,7 +208,11 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
         }
         buildViewNoteCommonInfo(val, data['note']);
 
-        history.pushState(null, null, "/note/" + idLink);
+        if (Number(idLink)) {
+            history.pushState(null, null, "/note/" + idLink + ".html");
+        } else {
+            history.pushState(null, null, "/note/" + idLink);
+        }
 
         context = true;
     };

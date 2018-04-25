@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+a, img {
+    border: 0;
+}
+
+/* online */
+#j_note_toc_tab a, .onlineMenu h3, .onlineMenu li.tli, .newpage {
+    background: url(/statics/third/rightPop/images/float_s.gif) no-repeat;
+}
+
+#j_note_toc_content, .onlineMenu, .btmbg {
+    /*background: url(/statics/third/rightPop/images/float_bg.gif) no-repeat;*/
+    border: 1px solid grey;
+}
+
+#j_note_toc_container {
+    z-index: 9999;
+    position: fixed;
+    right: 0px;
+    top: 0;
+    margin: 150px 0 0 0;
+}
+
+* html, * html body {
+    background-image: url(about:blank);
+    background-attachment: fixed;
+}
+
+* html #j_note_toc_container {
+    position: absolute;
+    top: expression(eval(document.documentElement.scrollTop));
+}
+
+#j_note_toc_tab {
+    width: 28px;
+    float: left;
+    margin: 120px 0 0 0;
+    position: relative;
+    z-index: 9;
+}
+
+#j_note_toc_tab a {
+    display: block;
+    height: 118px;
+    line-height: 999em;
+    overflow: hidden;
+}
+
+#j_note_toc_tab a#floatShow {
+    background-position: -30px -374px;
+}
+
+#j_note_toc_tab a#floatHide {
+    background-position: 0 -374px;
+}
+
+#j_note_toc_content {
+    display: inline;
+    margin-left: -1px;
+    float: left;
+    /*width: 130px;*/
+    display: none;
+    background-position: 0 0;
+    padding: 10px 0 0 0;
+    background-color: white;
+}
