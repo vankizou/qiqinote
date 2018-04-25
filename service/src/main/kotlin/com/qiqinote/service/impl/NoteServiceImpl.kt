@@ -158,7 +158,7 @@ class NoteServiceImpl @Autowired constructor(
 
     override fun getByIdOrIdLink(id: Long?, idLink: String?) = this.noteDao.getByIdOrIdLink(id, idLink)
 
-    override fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest, response: HttpServletResponse): NoteViewVO? {
+    override fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest?, response: HttpServletResponse?): NoteViewVO? {
         if (id == null && idLink == null) return null
 
         val note = this.getByIdOrIdLink(id, idLink) ?: return null
@@ -190,12 +190,14 @@ class NoteServiceImpl @Autowired constructor(
         vo.note = note
         vo.noteDetailList = this.noteDetailService.listByNoteId(note.id!!)
 
-        val cookieIdOrLink = CookieUtil.getCookie(request, WebKeyEnum.cookieNoteViewNum.shortName)
-        val isAddViewNum = cookieIdOrLink != note.id?.toString() && cookieIdOrLink != note.idLink
-        if (isAddViewNum && loginUserId != note.userId && note.noteContentNum ?: 0 > 0) {
-            this.noteDao.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
+        if (request != null && response != null) {
+            val cookieIdOrLink = CookieUtil.getCookie(request, WebKeyEnum.cookieNoteViewNum.shortName)
+            val isAddViewNum = cookieIdOrLink != note.id?.toString() && cookieIdOrLink != note.idLink
+            if (isAddViewNum && loginUserId != note.userId && note.noteContentNum ?: 0 > 0) {
+                this.noteDao.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
+            }
+            CookieUtil.setCookie(response, WebKeyEnum.cookieNoteViewNum.shortName, id?.toString() ?: idLink)
         }
-        CookieUtil.setCookie(response, WebKeyEnum.cookieNoteViewNum.shortName, id?.toString() ?: idLink)
         return vo
     }
 

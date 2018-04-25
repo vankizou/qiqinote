@@ -23,7 +23,7 @@ interface NoteService : BaseService<NoteDao> {
 
     fun getByIdOrIdLink(id: Long?, idLink: String? = null): Note?
 
-    fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest, response: HttpServletResponse): NoteViewVO?
+    fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest? = null, response: HttpServletResponse? = null): NoteViewVO?
 
     fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int = 0): MutableList<NoteTreeVO>
 

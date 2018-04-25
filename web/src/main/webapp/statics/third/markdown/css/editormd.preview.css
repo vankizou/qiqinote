@@ -3114,7 +3114,7 @@
   text-align: left;
   font-size: 14px;
   line-height: 1.6;
-  padding: 20px;
+  padding: 10px;
   overflow: auto;
   width: 100%;
   background-color: #fff;
@@ -3550,5 +3550,5 @@ hr.editormd-page-break {
 
 .editormd-preview-active {
   width: 100%;
-  padding: 40px;
+  padding: 10px 20px;
 }

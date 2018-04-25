@@ -47,8 +47,7 @@
         </div>
         <div id="layout">
             <h1 class="text-center c_title j_note_info">${noteVO.note.title}&nbsp;&nbsp;
-                <small
-                        id="j_note_info_parent_title">${noteVO.parentNote.title}</small>
+                <small id="j_note_info_parent_title">${noteVO.parentNote.title}</small>
             </h1>
             <div id="vanki-editormd-view-note">
                 <textarea id="j_content" style="display: none;"><c:if
@@ -59,7 +58,6 @@
     </div>
 
     <div class="col-xs-2 c_body_right j_note_info">
-
         <div>
             <table class="table" style="border: 0px solid transparent !important;">
                 <tbody>
