@@ -23,6 +23,9 @@ $(function () {
         updateUserInfo();
     });
 
+    /**
+     * 头像
+     */
     $("#j_avatar_upload_form").change(function () {
         var fnImageUploadSucc = function (data) {
             var succFn = function (data) {
@@ -30,6 +33,7 @@ $(function () {
                 var d = data[0];
                 $('#j_avatar_img_preview').attr('db_id', d['id']);
                 $('#j_avatar_img_preview').attr('src', d['path']);
+                updateUserInfo();
             };
             vankiParseResponseData(data, succFn);
         };
