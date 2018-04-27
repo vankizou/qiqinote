@@ -222,7 +222,7 @@ class NoteController @Autowired constructor(
             if (pNote == null) {
                 pNote = this.noteService.getByIdOrIdLink(parentNoteIdTmp)
                 if (pNote == null) continue
-                parentNoteMap.put(parentNoteIdTmp, pNote)
+                parentNoteMap[parentNoteIdTmp] = pNote
             }
             noteHomeVO.parentNote = pNote
         }
