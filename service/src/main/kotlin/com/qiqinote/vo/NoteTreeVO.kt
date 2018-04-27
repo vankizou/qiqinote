@@ -7,5 +7,6 @@ import com.qiqinote.po.Note
  */
 class NoteTreeVO {
     var note: Note? = null
+
     var subNoteVOList: MutableList<NoteTreeVO>? = null
 }

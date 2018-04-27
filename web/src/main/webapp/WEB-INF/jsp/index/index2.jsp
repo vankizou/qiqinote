@@ -41,7 +41,14 @@
                 </div>
                 <div class="panel-footer home_note_footer">
                     <ul class="list-unstyled list-inline home_note_meta" style="height: 10px;">
-                        <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note1_user" target="_blank"></a></li>
+                        <li id="j_home_note1_user" class="home_note_cursor"><i class="fa fa-user-circle-o"></i>&nbsp;<span></span></li>
+                        <%--<li id="j_home_note1_user" class="home_note_cursor">
+                            <img src="/statics/images/common/avatar/default.jpg"
+                                 onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                                 class="img-responsive img-circle center-block" width="21" height="21"
+                                 style="float: left;">
+                            &nbsp;<span></span>
+                        </li>--%>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note1_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note1_date"></span></li>
                         <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note1_view_num"></span>次浏览</li>
@@ -56,7 +63,14 @@
                 </div>
                 <div class="panel-footer home_note_footer">
                     <ul class="list-unstyled list-inline home_note_meta" style="height: 10px;">
-                        <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note2_user" target="_blank"></a></li>
+                        <li id="j_home_note2_user" class="home_note_cursor"><i class="fa fa-user-circle-o"></i>&nbsp;<span></span></li>
+                        <%--<li id="j_home_note2_user" class="home_note_cursor">
+                            <img src="/statics/images/common/avatar/default.jpg"
+                                 onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                                 class="img-responsive img-circle center-block" width="21" height="21"
+                                 style="float: left;">
+                            &nbsp;<span></span>
+                        </li>--%>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note2_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note2_date"></span></li>
                         <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note2_view_num"></span>次浏览</li>
@@ -71,7 +85,14 @@
                 </div>
                 <div class="panel-footer home_note_footer">
                     <ul class="list-unstyled list-inline home_note_meta" style="height: 10px;">
-                        <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note3_user" target="_blank"></a></li>
+                        <li id="j_home_note3_user" class="home_note_cursor"><i class="fa fa-user-circle-o"></i>&nbsp;<span></span></li>
+                        <%--<li id="j_home_note3_user" class="home_note_cursor">
+                            <img src="/statics/images/common/avatar/default.jpg"
+                                 onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                                 class="img-responsive img-circle center-block" width="21" height="21"
+                                 style="float: left;">
+                            &nbsp;<span></span>
+                        </li>--%>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note3_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note3_date"></span></li>
                         <li><i class="fa fa-eye"></i>&nbsp;<span id="j_home_note3_view_num"></span>次浏览</li>
@@ -86,7 +107,14 @@
                 </div>
                 <div class="panel-footer home_note_footer">
                     <ul class="list-unstyled list-inline home_note_meta" style="height: 10px;">
-                        <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note4_user" target="_blank"></a></li>
+                        <li id="j_home_note4_user" class="home_note_cursor"><i class="fa fa-user-circle-o"></i>&nbsp;<span></span></li>
+                        <%--<li id="j_home_note4_user" class="home_note_cursor">
+                            <img src="/statics/images/common/avatar/default.jpg"
+                                 onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                                 class="img-responsive img-circle center-block" width="21" height="21"
+                                 style="float: left;">
+                            &nbsp;<span></span>
+                        </li>--%>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note4_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note4_date"></span></li>
                         <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note4_view_num"></span>次浏览</li>
@@ -101,7 +129,14 @@
                 </div>
                 <div class="panel-footer home_note_footer">
                     <ul class="list-unstyled list-inline home_note_meta" style="height: 10px;">
-                        <li><i class="fa fa-user-circle-o"></i>&nbsp;<a id="j_home_note5_user" target="_blank"></a></li>
+                        <li id="j_home_note5_user" class="home_note_cursor"><i class="fa fa-user-circle-o"></i>&nbsp;<span></span></li>
+                        <%--<li id="j_home_note5_user" class="home_note_cursor">
+                            <img src="/statics/images/common/avatar/default.jpg"
+                                 onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                                 class="img-responsive img-circle center-block" width="21" height="21"
+                                 style="float: left;">
+                            &nbsp;<span></span>
+                        </li>--%>
                         <li><i class="fa fa-book"></i>&nbsp;<span id="j_home_note5_parent" target="_blank"></span></li>
                         <li><i class="fa fa-calendar"></i>&nbsp;<span id="j_home_note5_date"></span></li>
                         <li><i class="fa fa fa-eye"></i>&nbsp;<span id="j_home_note5_view_num"></span>次浏览</li>
@@ -119,7 +154,8 @@
                         </a>
                     </li>
                     <li title="下一页">
-                        <a href="javascript:void(0);" aria-label="Next" id="j_page_next" class="j_page_prev_next" val="2">
+                        <a href="javascript:void(0);" aria-label="Next" id="j_page_next" class="j_page_prev_next"
+                           val="2">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -133,7 +169,8 @@
 
         <div class="col-xs-3">
             <div>
-                <input id="j_note_title_like" type="text" class="form-control" placeholder="搜索..." style="width: 100%; min-width: 280px; margin-bottom: 10px;">
+                <input id="j_note_title_like" type="text" class="form-control" placeholder="搜索..."
+                       style="width: 100%; min-width: 280px; margin-bottom: 10px;">
             </div>
             <div>
                 <section class="widget paddingall">
@@ -142,7 +179,8 @@
                         <c:if test="${hottest != null}">
                             <c:forEach var="note" items="${hottest}">
                                 <li>
-                                    <a target="_blank" href="/note/${note.secret==3 ? note.idLink : "".concat(note.id).concat(".html")}"><i
+                                    <a target="_blank"
+                                       href="/note/${note.secret==3 ? note.idLink : "".concat(note.id).concat(".html")}"><i
                                             class="fa fa-book">&nbsp; </i>${note.title}</a></li>
                             </c:forEach>
                         </c:if>
@@ -156,7 +194,8 @@
                         <c:if test="${newest != null}">
                             <c:forEach var="note" items="${newest}">
                                 <li>
-                                    <a target="_blank" href="/note/${note.secret==3 ? note.idLink : "".concat(note.id).concat(".html")}"><i
+                                    <a target="_blank"
+                                       href="/note/${note.secret==3 ? note.idLink : "".concat(note.id).concat(".html")}"><i
                                             class="fa fa-book">&nbsp; </i>${note.title}</a></li>
                             </c:forEach>
                         </c:if>

@@ -59,17 +59,24 @@
 
     <div class="col-xs-2 c_body_right j_note_info">
         <div>
+            <div style="margin-bottom: 10px;">
+                <div id="j_user_info" class="text-center" style="margin-bottom: 10px; cursor: pointer;" title="作者主页"
+                     onclick="window.open('/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}');">
+                    <div>
+                        <img id="j_user_info_avatar"
+                             src="${noteVO.user.avatar != null ? noteVO.user.avatar.path : "/statics/images/common/avatar/default.jpg"}"
+                             onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                             class="img-responsive img-circle center-block" width="150" height="150"
+                             style="border: 1px solid lightgrey"/>
+                    </div>
+                    <div style="margin: 5px 0; font-size: 18px;">
+                        <span id="j_user_info_alias">${noteVO.user.alias}</span>
+                    </div>
+                </div>
+                <pre class="text-center" id="j_user_info_motto">${noteVO.user.motto}</pre>
+            </div>
             <table class="table" style="border: 0px solid transparent !important;">
                 <tbody>
-                <tr>
-                    <td class="col-md-4 text-left">
-                        <span class="label btn_info1">作者：</span>
-                    </td>
-                    <td class="col-md-8 text-left">
-                        <span id="j_note_info_user_alias"
-                              class="label label_info1">${noteVO.user.alias}</span>
-                    </td>
-                </tr>
                 <tr>
                     <td class="col-md-4 text-left">
                         <span class="label btn_info1">创建：</span></td>
@@ -89,11 +96,11 @@
                 </tbody>
             </table>
         </div>
-        <div>
+        <%--<div>
             <a id="j_note_info_user_url" href="/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}"
                target="_blank" class="btn btn_info1"
                style="margin-left: 8px;">${isMe ? "我" : "TA"}的笔记树&nbsp;>></a>
-        </div>
+        </div>--%>
 
         <div>
             <section class="widget paddingall">

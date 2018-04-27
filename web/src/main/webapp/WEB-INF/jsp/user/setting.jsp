@@ -1,12 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
   User: vanki
-  Date: 2017/5/25
+  Date: 2018/4/20
   Time: 14:09
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>设置-奇奇笔记</title>
@@ -31,6 +32,22 @@
     <!-- 选项卡面板 -->
     <div id="j_settingTabContent" class="tab-content">
         <div class="tab-pane fade" id="userInfo">
+
+            <div class="text-center">
+                <img id="j_avatar_img_preview"
+                     src="${suc.avatar != null ? suc.avatar.path : "/statics/images/common/avatar/default.jpg"}"
+                     onerror="this.src='/statics/images/common/avatar/default.jpg'"
+                     class="img-responsive img-circle center-block" width="150" height="150"
+                     style="border: 1px solid lightgrey"
+                     db_id=""/>
+                <form id="j_avatar_upload_form" enctype="multipart/form-data">
+                    <input name="useType" value="2" hidden="hidden">
+                    <input id="j_avatar_file" name="images" type="file" class="btn-xs"
+                           accept="image/png,image/jpg,image/jpeg,image/gif"
+                           style="margin: 20px 0 20px 130px;"/>
+                </form>
+            </div>
+
             <table class="table">
                 <tbody>
                 <tr>
@@ -48,6 +65,10 @@
 
                         <span style="color: red; font-size: 10px; display: none;" id="j_user_gender_alt">&nbsp;&nbsp;* 只能更改一次</span>
                     </td>
+                </tr>
+                <tr>
+                    <td class="textRightAndVMiddle">生日：</td>
+                    <td><input id="j_user_birthday" type="text" class="form-control layui-input" placeholder="生日" readonly="readonly"></td>
                 </tr>
                 <tr>
                     <td class="textRightAndVMiddle">手机：</td>
@@ -78,7 +99,7 @@
                 <tr>
                     <td></td>
                     <td class="text-right">
-                        <button class="btn btn-info" id="j_user_submit">提交</button>
+                        <button class="btn btn-info" id="j_user_submit">保存</button>
                     </td>
                 </tr>
                 </tbody>
@@ -121,7 +142,7 @@
                     </td>
                     <td class="text-right">
                         <button class="btn btn-info" id="j_question_view_answer">查看答案</button>
-                        <button class="btn btn-info" id="j_question_submit">提交新答案</button>
+                        <button class="btn btn-info" id="j_question_submit">保存新答案</button>
                     </td>
                 </tr>
                 </tbody>
@@ -227,5 +248,17 @@
 
 <jsp:include page="../common/footer.jsp"></jsp:include>
 </body>
+
+<script type="text/javascript">
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#j_user_birthday' //指定元素
+        });
+    });
+
+</script>
 
 </html>

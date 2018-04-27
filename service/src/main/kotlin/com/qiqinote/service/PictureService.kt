@@ -8,7 +8,7 @@ import com.qiqinote.po.Picture
  * Created by vanki on 2018/1/24 18:47.
  */
 interface PictureService : BaseService<PictureDao> {
-    fun add(picture: Picture): Int
+    fun add(picture: Picture): Long
 
     fun getById(id: Long): Picture?
 

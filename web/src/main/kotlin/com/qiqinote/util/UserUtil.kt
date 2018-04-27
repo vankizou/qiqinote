@@ -46,9 +46,13 @@ object UserUtil {
     fun getUCBySession(request: HttpServletRequest) = request.getSession().getAttribute(WebKeyEnum.sessionUserContext.shortName) as? UserContext
 
     fun signIn(request: HttpServletRequest, response: HttpServletResponse, userService: UserService,
-               account: String, password: String, isRemember: Int = 0, origin: Int): Boolean {
-        val userLoginRecord = UserLoginRecord.buildRequestInfo(request)
-        userLoginRecord.origin = origin
+               account: String, password: String, isRemember: Int, origin: Int?, imageDomain: String): Boolean {
+        var userLoginRecord: UserLoginRecord? = null
+
+        origin?.let {
+            userLoginRecord = UserLoginRecord.buildRequestInfo(request)
+            userLoginRecord!!.origin = origin
+        }
 
         val resultVO = userService.preSignIn(account, password, userLoginRecord)
         val ucVO = resultVO.data
@@ -56,7 +60,7 @@ object UserUtil {
 
         var avatar: PictureDTO? = null
         ucVO.avatar?.let {
-            avatar = PictureDTO(it)
+            avatar = PictureDTO(imageDomain, it)
         }
 
         UserUtil.setUCInSession(request, UserContext(ucVO.user!!, avatar))

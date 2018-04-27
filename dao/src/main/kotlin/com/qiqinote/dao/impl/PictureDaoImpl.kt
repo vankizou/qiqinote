@@ -7,7 +7,9 @@ import com.qiqinote.po.Picture
 import com.qiqinote.util.sql.NamedSQLUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -20,7 +22,7 @@ class PictureDaoImpl @Autowired constructor(
 ) : PictureDao {
     private val rowMapper = BeanPropertyRowMapper(Picture::class.java)
 
-    override fun insert(picture: Picture): Int {
+    override fun insert(picture: Picture): Long {
         val paramMap = mutableMapOf<String, Any?>()
         paramMap["uuid"] = picture.uuid
         paramMap["user_id"] = picture.userId
@@ -34,7 +36,10 @@ class PictureDaoImpl @Autowired constructor(
         paramMap["create_datetime"] = Date()
         paramMap["is_del"] = DBConst.falseVal
 
-        return this.namedParameterJdbcTemplate.update(NamedSQLUtil.getInsertSQL(Picture::class, paramMap), paramMap)
+        val key = GeneratedKeyHolder()
+        val status = this.namedParameterJdbcTemplate
+                .update(NamedSQLUtil.getInsertSQL(Picture::class, paramMap), MapSqlParameterSource(paramMap), key)
+        return if (status > 0) key.key!!.toLong() else 0
     }
 
     override fun getById(id: Long): Picture? {

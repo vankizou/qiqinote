@@ -16,7 +16,11 @@
 <link rel="stylesheet" href="/statics/third/dialog/css/ui-dialog.css">
 <script type="text/javascript" src="/statics/third/dialog/dist/dialog-min.js"></script>
 <%------------%>
+
 <script type="text/javascript" src="/statics/third/layer/layer.js"></script>
+<link href="/statics/third/layui-2.2.6/css/layui.css" rel="stylesheet" type="text/css" media="all">
+<script type="text/javascript" src="/statics/third/layui-2.2.6/layui.js"></script>
+
 
 <%--<script type="text/javascript" src="/statics/third/bootstrap/js/bootstrap.min.js"></script>
 <link href="/statics/third/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">

@@ -15,7 +15,7 @@ class PictureServiceImpl @Autowired constructor(
         private val pictureDao: PictureDao
 ) : PictureService {
 
-    override fun add(picture: Picture): Int {
+    override fun add(picture: Picture): Long {
         if (StringUtil.isEmpty(picture.uuid) || picture.userId == null || picture.useType == null) {
             return 0
         }

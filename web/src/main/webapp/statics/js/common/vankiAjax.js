@@ -38,7 +38,7 @@ var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop
 
         if (failFun) failFun(data, ajaxContext);
     }
-}
+};
 
 var vankiParseResponseData = function (data, succFn, failFn, is_pop) {
     if (typeof data == 'string') data = eval('(' + data + ')');
@@ -62,4 +62,4 @@ var vankiParseResponseData = function (data, succFn, failFn, is_pop) {
 
         if (failFn) failFn(data);
     }
-}
+};

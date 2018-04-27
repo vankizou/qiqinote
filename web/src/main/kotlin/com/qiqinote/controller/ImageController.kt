@@ -28,14 +28,14 @@ import kotlin.collections.ArrayList
 @RequestMapping("/image")
 class ImageController @Autowired constructor(
         private val pictureService: PictureService,
-        private val env: Environment
+        private val environment: Environment
 ) : BaseController() {
     private val uploadMaxNum = 20
     private val imageAllowTypeList = arrayListOf<String>()
 
-    private val imageAllowType = env["qiqinote.image.allow.type"]
-    private val imageBasePath = env["qiqinote.image.basepath"]
-    private val imageDomain = env["qiqinote.image.domain"]
+    private val imageAllowType = environment["qiqinote.image.allow.type"]
+    private val imageBasePath = environment["qiqinote.image.basepath"]
+    private val imageDomain = environment["qiqinote.image.domain"]
 
     @PostMapping("/uploadMulti" + WebConst.needLoginJsonSuffix)
     fun uploadMulti(@RequestParam images: Array<MultipartFile>?, useType: Int?): ResultVO<MutableList<Picture>> {
@@ -101,6 +101,7 @@ class ImageController @Autowired constructor(
                 val result = this.pictureService.add(pic)
                 if (result > 0) {
                     log.info("上传图片，路径：$imageRelationPath")
+                    pic.id = result
                     pic.path = imageDomain + pic.path
                     picList.add(pic)
                 }
@@ -128,11 +129,9 @@ class ImageController @Autowired constructor(
 
         resultPage.data = page.data.let {
             val pics = mutableListOf<PictureDTO>()
-            if (it != null) {
-                it.forEach({
-                    pics.add(PictureDTO(it))
-                })
-            }
+            it.forEach({
+                pics.add(PictureDTO(imageDomain, it))
+            })
             pics
         }
 
@@ -170,7 +169,7 @@ class ImageController @Autowired constructor(
         private fun tryResizeImg(useType: Int?, width: Int, imageFile: File): Boolean {
             val maxWidth = when (useType) {
                 DBConst.Picture.useTypeNote -> 800
-                DBConst.Picture.useTypeAvatar -> 300
+                DBConst.Picture.useTypeAvatar -> 400
                 else -> 500
             }
 

@@ -14,7 +14,7 @@
 }
 
 .c_body_right {
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .j_note_info {
@@ -23,6 +23,7 @@
 
 .j_note_info td {
     border: 0px solid transparent !important;
+    padding: 5px 0px !important;
 }
 
 .c_all {
@@ -31,17 +32,12 @@
 
 .btn_info1 {
     color: #fff;
-    background: #0593d3;
-}
-
-.btn_info1:hover {
-    color: #fff !important;
-    background: #337cbb;
+    background: #4aafdc;
 }
 
 .label_info1 {
     color: #fff;
-    background: #0593d3;
+    background: #4aafdc;
 }
 
 .widget {

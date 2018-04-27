@@ -61,6 +61,10 @@ function buildHomeNote(pageNo, pageSize) {
 
             var userName = d['user']['name'];
             var userAlias = d['user']['alias'];
+            /*var userAvatar;
+            if (d['user']['avatar']) {
+                userAvatar = d['user']['avatar']['path'];
+            }*/
 
             var pNoteTitle = '默认';
             var pNote;
@@ -82,8 +86,13 @@ function buildHomeNote(pageNo, pageSize) {
             $('#j_home_note' + seq + "_title").html(noteTitle);
             $('#j_home_note' + seq + "_title").attr("onclick", 'window.open("' + viewNoteUrl + '")');
             $('#j_home_note' + seq + "_parent").html(pNoteTitle);
-            $('#j_home_note' + seq + "_user").html(userAlias);
-            $('#j_home_note' + seq + "_user").attr("href", viewUserUrl);
+
+            /*if (userAvatar) {
+                $('#j_home_note' + seq + "_user img").attr("src", userAvatar);
+            }*/
+
+            $('#j_home_note' + seq + "_user span").html(userAlias);
+            $('#j_home_note' + seq + "_user").attr("onclick", 'window.open("' + viewUserUrl + '")');
             $('#j_home_note' + seq + "_date").html(noteCreateDatetime);
             $('#j_home_note' + seq + "_view_num").html(numToHumanView(noteViewNum, null, 1));
         }

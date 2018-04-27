@@ -5,6 +5,8 @@ import com.qiqinote.service.UserService
 import com.qiqinote.util.UserUtil
 import com.qiqinote.util.WebUtil
 import org.apache.log4j.Logger
+import org.springframework.core.env.Environment
+import org.springframework.core.env.get
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 import javax.servlet.http.HttpServletRequest
@@ -15,7 +17,8 @@ import javax.servlet.http.HttpServletResponse
  */
 @Component
 class LoginInterceptor(
-        private val userService: UserService
+        private val userService: UserService,
+        private val env: Environment
 ) : HandlerInterceptor {
     private val log = Logger.getLogger(LoginInterceptor::class.java)
     private val excludeSuffixs = mutableListOf<String>()
@@ -75,7 +78,7 @@ class LoginInterceptor(
 
         userIdAndPwd?.let {
             val isSuccess = UserUtil.signIn(request, response, userService, userIdAndPwd[0],
-                    userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin)
+                    userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin, env["qiqinote.image.domain"])
             if (isSuccess) return true
         }
 

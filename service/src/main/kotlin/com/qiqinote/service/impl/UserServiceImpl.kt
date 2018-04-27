@@ -27,7 +27,7 @@ class UserServiceImpl @Autowired constructor(
         private val userLoginRecordService: UserLoginRecordService
 ) : UserService {
 
-    override fun preSignIn(account: String, password: String, userLoginRecord: UserLoginRecord): ResultVO<UserContextVO?> {
+    override fun preSignIn(account: String, password: String, userLoginRecord: UserLoginRecord?): ResultVO<UserContextVO?> {
         val passworded = password
         if (StringUtil.isBlank(account) || StringUtil.isEmpty(passworded)) {
             return ResultVO(CodeEnum.PARAM_ERROR)
@@ -41,8 +41,10 @@ class UserServiceImpl @Autowired constructor(
         /**
          * 帐号校验成功
          */
-        userLoginRecord.userId = userId
-        this.userLoginRecordService.add(userLoginRecord)
+        userLoginRecord?.let {
+            userLoginRecord.userId = userId
+            this.userLoginRecordService.add(userLoginRecord)
+        }
 
         val ucVO = this.getUserContextVO(user)
         return ResultVO(ucVO)

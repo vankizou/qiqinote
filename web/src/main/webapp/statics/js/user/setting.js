@@ -23,6 +23,21 @@ $(function () {
         updateUserInfo();
     });
 
+    $("#j_avatar_upload_form").change(function () {
+        var fnImageUploadSucc = function (data) {
+            var succFn = function (data) {
+                if (data.length < 1) return;
+                var d = data[0];
+                $('#j_avatar_img_preview').attr('db_id', d['id']);
+                $('#j_avatar_img_preview').attr('src', d['path']);
+            };
+            vankiParseResponseData(data, succFn);
+        };
+        vankiUploadImageMulti("j_avatar_upload_form", "j_avatar_file", fnImageUploadSucc, null, 1, 5);
+
+        $("#j_avatar_upload_form").submit();
+    });
+
 
     /**
      * 密保问题
@@ -99,7 +114,7 @@ function updatePwdByQuestions() {
         "questions[2].id": answerId3,
         "questions[2].answer": answer3
     };
-    
+
     var fnSucc = function () {
         vankiLayerMsgSuccGou("密码修改成功")
         window.location = "/login.html";
@@ -246,21 +261,28 @@ function buildQuestions(isPopPwdError) {
 function updateUserInfo() {
     var alias = $('#j_user_alias').val();
     var gender = $('input[name="j_user_gender"]:checked').val();
+    var birthday = $('#j_user_birthday').val();
     var phone = $('#j_user_phone').val();
     var email = $('#j_user_email').val();
     var qq = $('#j_user_qq').val();
     var weixin = $('#j_user_weixin').val();
     var weibo = $('#j_user_weibo').val();
     var motto = $('#j_user_motto').val();
+    var avatarId = $('#j_avatar_img_preview').attr('db_id');
 
     if (motto && motto.length > 120) {
-        vankiLayerMsgFailTou("话在于精，不在于多，格言再精简精简")
+        vankiLayerMsgFailTou("话在于精，不在于多，格言再精简精简");
         return
+    }
+    if (birthday) {
+        birthday += " 00:00:00";
     }
 
     var param = {
+        avatarId: avatarId,
         alias: alias,
         gender: gender,
+        birthday: birthday,
         phone: phone,
         email: email,
         qq: qq,
@@ -280,6 +302,7 @@ function buildUserInfo() {
     var fnSucc = function (data) {
         var alias = data['alias'];
         var gender = data['gender'];
+        var birthday = data['birthday'];
         var phone = data['phone'];
         var email = data['email'];
         var qq = data['qq'];
@@ -296,6 +319,10 @@ function buildUserInfo() {
             $('#j_user_gender_alt').hide()
         } else {
             $('#j_user_gender_alt').show()
+        }
+        if (birthday) {
+            birthday = birthday.split(" ")[0]
+            $('#j_user_birthday').val(birthday)
         }
         if (phone) {
             $('#j_user_phone').val(phone)

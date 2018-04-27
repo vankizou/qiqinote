@@ -15,8 +15,9 @@
     border: 0px solid transparent !important;
 }
 
-#userInfo table {
+#userInfo {
     width: 400px;
+    margin: 0 auto;
 }
 
 #questions table {

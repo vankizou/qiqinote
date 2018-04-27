@@ -1,15 +1,16 @@
 package com.qiqinote.controller
 
 import com.qiqinote.constant.*
-import com.qiqinote.dto.UserContext
 import com.qiqinote.po.SecurityQuestion
 import com.qiqinote.po.User
 import com.qiqinote.service.SecurityQuestionService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
+import com.qiqinote.util.UserUtil
 import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.env.get
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -44,8 +45,9 @@ class UserController @Autowired constructor(
         user.password = null
         val result = this.userService.upsertUser(user)
         if (result.isSuccess()) {
-            val newUser = this.userService.getById(this.getLoginUserId())
-            this.request.session.setAttribute(WebKeyEnum.sessionUserContext.shortName, UserContext(newUser!!, this.userContext?.avatar))
+            UserUtil.signIn(this.request, this.response, this.userService,
+                    this.userContext?.user?.name!!, PasswordUtil.getDecPwd(this.userContext?.user?.password!!), DBConst.trueVal,
+                    null, env["qiqinote.image.domain"])
         }
         return result
     }

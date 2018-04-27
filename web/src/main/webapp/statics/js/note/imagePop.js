@@ -115,7 +115,7 @@ function initUploadImageFun() {
         if (uploadImageLayerIndex) layer.close(uploadImageLayerIndex);
         vankiParseResponseData(data, succFn);
     };
-    vankiUploadImageMulti(ConstDB.Picture.useTypeNote, "j_imageUploadForm", "j_images", fnImageUploadSucc, null, 20, 5);
+    vankiUploadImageMulti("j_imageUploadForm", "j_images", fnImageUploadSucc, null, 20, 5);
 
     $("#j_imageUploadForm").change(function () {
         $("#j_imageUploadForm").submit();

@@ -5,11 +5,6 @@ package com.qiqinote.constant
  */
 object WebConst {
     /**
-     * 图片路径前缀
-     */
-    const val imagePrefix = "http://img.qiqinote.com/"
-
-    /**
      * html后缀, 跳转页面
      */
     const val htmlSuffix = ".html"

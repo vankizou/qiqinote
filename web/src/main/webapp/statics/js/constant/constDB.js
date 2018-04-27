@@ -34,4 +34,6 @@ var ConstDB = {
     
     User: {
     }
-}
+};
+
+var defaultAvatar = "/statics/images/common/avatar/default.jpg";

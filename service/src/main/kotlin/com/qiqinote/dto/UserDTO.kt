@@ -7,21 +7,34 @@ import java.util.*
 /**
  * Created by vanki on 2018/1/24 17:24.
  */
-class UserDTO() {
+class UserDTO {
     var id: Long? = null
+
     var name: String? = null
+
     var alias: String? = null
+
     var gender: Int? = null
+
     var motto: String? = null
+
     var phone: String? = null
+
     var email: String? = null
+
     var qq: String? = null
+
     var weixin: String? = null
+
     var weibo: String? = null
+
     var birthday: Date? = null
 
+    var avatarId: Long? = null
 
-    constructor(user: User) : this() {
+    var avatar: PictureDTO? = null
+
+    constructor(user: User) {
         EntityUtil.copyValOfDiffObj(this, user)
     }
 }

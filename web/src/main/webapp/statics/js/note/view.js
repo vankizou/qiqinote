@@ -42,11 +42,16 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
                 $('#j_note_info_parent_title').html(data['parentNote']['title']);
             }
             if (data['user']) {
-                $('#j_note_info_user_alias').html(data['user']['alias']);
+                $('#j_user_info').attr('onclick', "window.open('/" + data['user']['name'] + "')");
+                $('#j_user_info_alias').html(data['user']['alias']);
+                $('#j_user_info_motto').html(data['user']['motto']);
+
+                if (data['user']['avatar']) {
+                    $('#j_user_info_avatar').html(data['user']['avatar']['path']);
+                }
             }
-            $('#j_note_info_create_datetime').html(data['createDatetimeStr']);
-            $('#j_note_info_update_datetime').html(data['updateDatetimeStr']);
-            $('#j_note_info_user_url').attr('href', '/user/' + data['user']['name']);
+            $('#j_note_info_create_datetime').html(data['note']['createDatetime']);
+            $('#j_note_info_update_datetime').html(data['note']['updateDatetime']);
 
             if (!vankiEditor) fnInitVankiEditor(val);
         } else {

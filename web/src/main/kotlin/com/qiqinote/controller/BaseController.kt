@@ -6,6 +6,7 @@ import com.qiqinote.util.*
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.propertyeditors.CustomDateEditor
+import org.springframework.core.env.Environment
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.InitBinder
 import java.util.*
@@ -22,6 +23,8 @@ open class BaseController {
     protected lateinit var request: HttpServletRequest
     @Autowired
     protected lateinit var response: HttpServletResponse
+    @Autowired
+    protected lateinit var env: Environment
 
     protected var userContext: UserContext? = null
         get() {

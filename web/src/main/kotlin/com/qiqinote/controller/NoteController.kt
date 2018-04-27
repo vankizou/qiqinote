@@ -1,6 +1,8 @@
 package com.qiqinote.controller
 
 import com.qiqinote.constant.*
+import com.qiqinote.dto.PictureDTO
+import com.qiqinote.dto.UserDTO
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.model.Page
 import com.qiqinote.po.Note
@@ -8,6 +10,7 @@ import com.qiqinote.po.NoteDetail
 import com.qiqinote.po.User
 import com.qiqinote.service.NoteDetailService
 import com.qiqinote.service.NoteService
+import com.qiqinote.service.PictureService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.DateUtil
 import com.qiqinote.util.EntityUtil
@@ -15,6 +18,7 @@ import com.qiqinote.util.StringUtil
 import com.qiqinote.util.TemplateUtil
 import com.qiqinote.vo.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.env.get
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -30,7 +34,8 @@ import java.nio.charset.Charset
 class NoteController @Autowired constructor(
         private val userService: UserService,
         private val noteService: NoteService,
-        private val noteDetailService: NoteDetailService
+        private val noteDetailService: NoteDetailService,
+        private val pictureService: PictureService
 ) : BaseController() {
     fun editHtml(@PathVariable("idOrIdLink") idOrIdLink: String): ModelAndView {
         val loginUserId = this.getLoginUserId()
@@ -69,8 +74,12 @@ class NoteController @Autowired constructor(
         // 用户
         if (noteVO.note?.userId != null) {
             val user = this.userService.getById(noteVO.note?.userId!!)
-            user?.let {
-                noteVO.user = EntityUtil.copyValOfDiffObj(UserSimpleVO(), it)
+            user?.let { noteVO.user = UserDTO(it) }
+            user?.avatarId?.let {
+                val pic = this.pictureService.getById(it)
+                if (pic != null) {
+                    noteVO.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
+                }
             }
         }
         noteVO.createDatetimeStr = DateUtil.formatDatetime(noteVO.note?.createDatetime)
@@ -134,13 +143,15 @@ class NoteController @Autowired constructor(
         // 父节点数据
         vo.parentNote = this.noteService.getByIdOrIdLink(vo.note?.parentId ?: DBConst.defaultParentId)
 
-        vo.createDatetimeStr = DateUtil.formatDate(vo.note?.createDatetime)
-        vo.updateDatetimeStr = DateUtil.formatDate(vo.note?.updateDatetime)
         // 用户
         if (vo.note?.userId != null) {
             val user = this.userService.getById(vo.note?.userId!!)
-            if (user != null) {
-                vo.user = EntityUtil.copyValOfDiffObj(UserSimpleVO(), user)
+            user?.let { vo.user = UserDTO(it) }
+            user?.avatarId?.let {
+                val pic = this.pictureService.getById(it)
+                if (pic != null) {
+                    vo.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
+                }
             }
         }
         return ResultVO(vo)
@@ -160,12 +171,14 @@ class NoteController @Autowired constructor(
 
         if (noteList.isEmpty()) return ResultVO(returnPage)
 
-        val userTmpMap = hashMapOf<Long, UserSimpleVO>()
+        val imageDomain = env["qiqinote.image.domain"]
+
+        val userTmpMap = hashMapOf<Long, UserDTO>()
         val parentNoteMap = hashMapOf<Long, Note>()
         var noteHomeVO: NoteHomeVO
         var userIdTmp: Long?
         var userTmp: User?
-        var userSimpleTmp: UserSimpleVO?
+        var userDTOTmp: UserDTO?
         var parentNoteIdTmp: Long?
         var noteContents: MutableList<NoteDetail>
 
@@ -185,15 +198,19 @@ class NoteController @Autowired constructor(
             /**
              * 添加用户信息
              */
-            userSimpleTmp = userTmpMap[userIdTmp]
-            if (userSimpleTmp == null) {
+            userDTOTmp = userTmpMap[userIdTmp]
+            if (userDTOTmp == null) {
                 userTmp = this.userService.getById(userIdTmp)
                 if (userTmp == null) continue
 
-                userSimpleTmp = EntityUtil.copyValOfDiffObj(UserSimpleVO(), userTmp)
-                userTmpMap.put(userIdTmp, userSimpleTmp)
+                userDTOTmp = UserDTO(userTmp)
+                userTmpMap[userIdTmp] = userDTOTmp
             }
-            noteHomeVO.user = userSimpleTmp
+            userDTOTmp.avatarId?.let {
+                val pic = this.pictureService.getById(it)
+                userDTOTmp.avatar = if (pic != null) PictureDTO(imageDomain, pic) else null
+            }
+            noteHomeVO.user = userDTOTmp
             returnList.add(noteHomeVO)
 
             /**

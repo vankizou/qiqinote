@@ -22,6 +22,14 @@
     margin-right: 10px;
 }
 
+.home_note_meta li img {
+    border: 1px solid lightgrey
+}
+
+.home_note_cursor {
+    cursor: pointer;
+}
+
 .home_note_editor {
     max-height: 240px;
     overflow-y: auto;
