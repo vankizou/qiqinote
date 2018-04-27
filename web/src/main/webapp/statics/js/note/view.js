@@ -47,7 +47,7 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
                 $('#j_user_info_motto').html(data['user']['motto']);
 
                 if (data['user']['avatar']) {
-                    $('#j_user_info_avatar').html(data['user']['avatar']['path']);
+                    $('#j_user_info_avatar').attr('src', data['user']['avatar']['path']);
                 }
             }
             $('#j_note_info_create_datetime').html(data['note']['createDatetime']);
