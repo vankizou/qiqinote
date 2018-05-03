@@ -44,7 +44,13 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
             if (data['user']) {
                 $('#j_user_info').attr('onclick', "window.open('/" + data['user']['name'] + "')");
                 $('#j_user_info_alias').html(data['user']['alias']);
-                $('#j_user_info_motto').html(data['user']['motto']);
+
+                var motto = data['user']['motto'];
+                if (motto) {
+                    $('#j_user_info_motto').html(motto);
+                } else {
+                    $('#j_user_info_motto').html("空的！");
+                }
 
                 if (data['user']['avatar']) {
                     $('#j_user_info_avatar').attr('src', data['user']['avatar']['path']);

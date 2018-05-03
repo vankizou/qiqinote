@@ -1,5 +1,6 @@
 package com.qiqinote.util.sql
 
+import com.qiqinote.po.Comment
 import com.qiqinote.po.SecurityQuestion
 import com.qiqinote.po.User
 import org.apache.commons.lang3.StringUtils
@@ -248,7 +249,7 @@ object NamedSQLUtil {
 
         println()
         println()
-        printFieldMap(SecurityQuestion::class)
+        printFieldMap(Comment::class)
     }
 
     private fun <T : Any> printFieldMap(cls: KClass<T>) {
@@ -257,8 +258,8 @@ object NamedSQLUtil {
 
         println("val paramMap = mutableMapOf<String, Any?>()")
         props.forEach({
-            //            println("""paramMap["${fieldToDBField(it.name)}"] = $clsName.${it.name}""")
-            println("""$clsName.${it.name}?.let{paramMap["${fieldToDBField(it.name)}"] = it}""")
+                        println("""paramMap["${fieldToDBField(it.name)}"] = $clsName.${it.name}""")
+//            println("""$clsName.${it.name}?.let{paramMap["${fieldToDBField(it.name)}"] = it}""")
         })
     }
 }

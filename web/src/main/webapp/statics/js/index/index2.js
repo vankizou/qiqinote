@@ -47,7 +47,6 @@ function buildHomeNote(pageNo, pageSize) {
 
         $('.home_note').hide();
 
-        var node = '';
         var datas = data['data'];
         for (var i in datas) {
             var d = datas[i];
@@ -95,6 +94,9 @@ function buildHomeNote(pageNo, pageSize) {
             $('#j_home_note' + seq + "_user").attr("onclick", 'window.open("' + viewUserUrl + '")');
             $('#j_home_note' + seq + "_date").html(noteCreateDatetime);
             $('#j_home_note' + seq + "_view_num").html(numToHumanView(noteViewNum, null, 1));
+        }
+        if (pageCurr <= 1 && (!datas || datas.length == 0)) {
+            vankiLayerMsgFailTou("未找到相关笔记");
         }
     };
     vankiAjax(ConstAjaxUrl.Note.pageOfHome, params, fnSucc);

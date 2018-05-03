@@ -11,7 +11,6 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<!doctype html>
 <html>
 <head>
     <meta name="keywords" content="${noteVO.note.keyword}">
@@ -73,7 +72,7 @@
                         <span id="j_user_info_alias">${noteVO.user.alias}</span>
                     </div>
                 </div>
-                <pre class="text-center" id="j_user_info_motto">${noteVO.user.motto}</pre>
+                <pre class="text-center" id="j_user_info_motto">${noteVO.user.motto == null || "".equals(noteVO.user.motto) ? "空的！" : noteVO.user.motto}</pre>
             </div>
             <table class="table" style="border: 0px solid transparent !important;">
                 <tbody>
