@@ -29,7 +29,7 @@ object UserUtil {
                 .append(DateUtil.formatDatetime(date))
                 .toString()
         value = PasswordUtil.getEncPwd(value)
-        CookieUtil.setCookie(response, WebKeyEnum.cookieRememberUser.shortName, value, 60 * 60 * 24 * 3650)
+        CookieUtil.setCookie(response, WebKeyEnum.cookieRememberUser.shortName, value)
     }
 
     fun getUserIdAndPwdByCookie(request: HttpServletRequest): Array<String>? {

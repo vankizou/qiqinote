@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse
  * Created by vanki on 2018/1/24 14:57.
  */
 object CookieUtil {
-    fun setCookie(response: HttpServletResponse?, name: String, value: String?) = setCookie(response, name, value, -1)
+    fun setCookie(response: HttpServletResponse?, name: String, value: String?) = setCookie(response, name, value, 60 * 60 * 24 * 3650)
 
     fun setCookie(response: HttpServletResponse?, name: String, value: String?, maxAge: Int): Boolean {
         if (value == null) return false
