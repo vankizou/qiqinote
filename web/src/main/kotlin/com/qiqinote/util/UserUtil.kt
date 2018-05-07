@@ -4,6 +4,7 @@ import com.qiqinote.constant.ServiceConst
 import com.qiqinote.constant.WebKeyEnum
 import com.qiqinote.dto.PictureDTO
 import com.qiqinote.dto.UserContext
+import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.po.UserLoginRecord
 import com.qiqinote.service.UserService
 import java.util.*
@@ -28,16 +29,20 @@ object UserUtil {
                 .append(DateUtil.formatDatetime(date))
                 .toString()
         value = PasswordUtil.getEncPwd(value)
-        CookieUtil.setCookie(response, WebKeyEnum.cookieRememberUser.shortName, value)
+        CookieUtil.setCookie(response, WebKeyEnum.cookieRememberUser.shortName, value, 60 * 60 * 24 * 3650)
     }
 
     fun getUserIdAndPwdByCookie(request: HttpServletRequest): Array<String>? {
         var value: String? = CookieUtil.getCookie(request, WebKeyEnum.cookieRememberUser.shortName)
         if (StringUtil.isEmpty(value)) return null
 
-        value = PasswordUtil.getDecPwd(value?.trim() ?: "")
-        val loginInfos = value.split(userRememberCookieDelim)
-        if (loginInfos.isEmpty() || loginInfos.size < 4) return null
+        try {
+            value = PasswordUtil.getDecPwd(value?.trim() ?: "")
+        } catch (e: Exception) {
+            return null
+        }
+        val loginInfos = value?.split(userRememberCookieDelim)
+        if (loginInfos == null || loginInfos.isEmpty() || loginInfos.size < 4) return null
         return arrayOf(loginInfos[1], loginInfos[2])
     }
 
@@ -56,7 +61,10 @@ object UserUtil {
 
         val resultVO = userService.preSignIn(account, password, userLoginRecord)
         val ucVO = resultVO.data
-        if (ucVO?.user == null) return false
+        if (ucVO?.user == null) {
+            throw QiqiNoteException(resultVO)
+            return false
+        }
 
         var avatar: PictureDTO? = null
         ucVO.avatar?.let {

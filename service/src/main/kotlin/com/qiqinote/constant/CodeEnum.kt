@@ -43,4 +43,14 @@ enum class CodeEnum(val code: Int, val msg: String) {
     PWD_ERROR(1120, "密码错误"),
     NOTE_DOWNLOAD_FAIL(1121, "导出失败, 笔记内容为空"),
     NOTE_TITLE_LEN_ERROR(1122, "标题长度不符"),
+
+    ;
+
+    companion object {
+        fun getByCode(code: Int): CodeEnum? {
+            val values = CodeEnum.values()
+            values.forEach { if (it.code == code) return it }
+            return null
+        }
+    }
 }

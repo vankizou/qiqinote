@@ -25,14 +25,13 @@ class ExceptionHandler {
             log.error(ex.codeEnum)
 
             return when (ex.codeEnum) {
-                CodeEnum.NOT_LOGIN -> {
-                    WebUtil.printResponseData(response, ResultVO(ex.codeEnum))
-                    null
-                }
                 CodeEnum.NOT_LOGIN_HTML -> ModelAndView(WebPageEnum.login.url)
                 CodeEnum.NOT_FOUND -> "redirect:/404.html"
                 CodeEnum.SYSTEM_ERROR -> "redirect:/500.html"
-                else -> "redirect:/500.html"
+                else -> {
+                    WebUtil.printResponseData(response, ResultVO(ex.codeEnum))
+                    null
+                }
             }
         } else if (ex is IllegalArgumentException) {
             log.error("参数异常", ex)
