@@ -50,9 +50,9 @@ class IndexController @Autowired constructor(
     }
 
     private fun buildHomeData(mv: ModelAndView) {
-        mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
-        mv.addObject("newest", this.noteService.page(null, null, null, null, "id DESC", true, null, 1, 15).data)
-        mv.addObject("hottest", this.noteService.page(null, null, null, null, "view_num DESC", true, null, 1, 15).data)
+//        mv.addObject("data", this.noteController.pageOfHome(1, 20, 3, null).data!!)
+        mv.addObject("newest", this.noteService.page(null, null, null, null, "id DESC", false, null, 1, 15).data)
+        mv.addObject("hottest", this.noteService.page(null, null, null, null, "view_num DESC", false, null, 1, 15).data)
     }
 
     @RequestMapping("/login" + WebConst.htmlSuffix)

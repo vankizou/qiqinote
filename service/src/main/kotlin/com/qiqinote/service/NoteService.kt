@@ -30,7 +30,7 @@ interface NoteService : BaseService<NoteDao> {
     fun listOfNoteTreeVOByTitleLike(loginUserId: Long, titleLike: String): NoteTreeVOAndTotalNote
 
     fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?, orderBy: String?,
-             onlyNote: Boolean?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int = 10): Page<Note>
+             isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int = 10): Page<Note>
 
     fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean
 

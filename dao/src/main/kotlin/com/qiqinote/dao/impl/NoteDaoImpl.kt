@@ -153,7 +153,7 @@ class NoteDaoImpl @Autowired constructor(
         val sql = StringBuilder(64)
         sql.append(NamedSQLUtil.getSelectSQL(Note::class, "COUNT(*)", paramMap))
         sql.append(" AND note_content_num>0")
-        this.buildSecretAndStatus(sql, loginUserId, userId)
+        this.buildSecretAndStatus(sql, loginUserId, userId, true)
 
         return this.namedParameterJdbcTemplate.queryForObject(sql.toString(), paramMap, Int::class.java) ?: 0
     }
@@ -172,7 +172,7 @@ class NoteDaoImpl @Autowired constructor(
     }
 
     override fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
-                                 onlyNote: Boolean?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
+                                 isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
         val conditionSql = StringBuilder(256)
         conditionSql.append(" WHERE ")
 
@@ -196,11 +196,11 @@ class NoteDaoImpl @Autowired constructor(
         /**
          * 首页
          */
-        if (onlyNote == true || (onlyNote == null && (loginUserId == null || userId != loginUserId) && userId == null)) {
+        if (!isTree || ((loginUserId == null || userId != loginUserId) && userId == null)) {
             conditionSql.append(" AND note_content_num>0")
         }
 
-        this.buildSecretAndStatus(conditionSql, loginUserId, userId)
+        this.buildSecretAndStatus(conditionSql, loginUserId, userId, isTree ?: false)
 
         var totalRowDB = totalRow
         if (totalRowDB == null) {
@@ -238,7 +238,7 @@ class NoteDaoImpl @Autowired constructor(
         return resultPage
     }
 
-    private fun buildSecretAndStatus(sql: StringBuilder, loginUserId: Long?, userId: Long?) {
+    private fun buildSecretAndStatus(sql: StringBuilder, loginUserId: Long?, userId: Long?, isTree: Boolean) {
         val statusList = arrayListOf<Int>()
         val secretList = arrayListOf<Int>()
         /**
@@ -251,7 +251,7 @@ class NoteDaoImpl @Autowired constructor(
         /**
          * 访问单人主页
          */
-        if (userId != null && userId != loginUserId) {
+        if (userId != null && userId != loginUserId && isTree) {
             secretList.add(DBConst.Note.secretPwd)
         }
         if (!secretList.isEmpty()) {

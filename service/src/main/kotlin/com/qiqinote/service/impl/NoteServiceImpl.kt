@@ -222,7 +222,7 @@ class NoteServiceImpl @Autowired constructor(
 
         do {
             pageTmp = this.page(loginUserId, userId, parentId, null,
-                    "note_num DESC, title DESC", false, totalRowTmp, currPage, pageSize)
+                    "note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
             noteListTmp = pageTmp.data
             if (noteListTmp.isEmpty()) break
             if (resultList == null) {
@@ -261,7 +261,7 @@ class NoteServiceImpl @Autowired constructor(
         var pageTmp: Page<Note>
         do {
             pageTmp = this.page(loginUserId, loginUserId, null, titleLike,
-                    "note_num DESC, title DESC", false, totalRowTmp, currPage, pageSize)
+                    "note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
             noteListTmp = pageTmp.data
             if (noteListTmp.isEmpty()) break
             if (currPage == Page.firstPage) {
@@ -318,7 +318,7 @@ class NoteServiceImpl @Autowired constructor(
 
 
     override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?, orderBy: String?,
-                      onlyNote: Boolean?, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, onlyNote, totalRow, currPage, pageSize, navNum)
+                      isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, totalRow, currPage, pageSize, navNum)
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
         if (DBConst.defaultParentId == noteId) {
