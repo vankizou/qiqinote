@@ -72,17 +72,16 @@ class NoteController @Autowired constructor(
         // 用户
         if (noteVO.note?.userId != null) {
             val user = this.userService.getById(noteVO.note?.userId!!)
+            if (StringUtil.isBlank(user?.motto)) {
+                user?.motto = this.wordService.random()
+            }
+            user?.let { noteVO.user = UserDTO(it) }
             user?.avatarId?.let {
                 val pic = this.pictureService.getById(it)
                 if (pic != null) {
                     noteVO.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
                 }
             }
-            if (StringUtil.isBlank(user?.motto)) {
-                user?.motto = this.wordService.random()
-            }
-
-            user?.let { noteVO.user = UserDTO(it) }
         }
         noteVO.createDatetimeStr = DateUtil.formatDatetime(noteVO.note?.createDatetime)
         noteVO.updateDatetimeStr = DateUtil.formatDatetime(noteVO.note?.updateDatetime)
@@ -148,17 +147,16 @@ class NoteController @Autowired constructor(
         // 用户
         if (vo.note?.userId != null) {
             val user = this.userService.getById(vo.note?.userId!!)
+            if (StringUtil.isBlank(user?.motto)) {
+                user?.motto = this.wordService.random()
+            }
+            user?.let { vo.user = UserDTO(it) }
             user?.avatarId?.let {
                 val pic = this.pictureService.getById(it)
                 if (pic != null) {
                     vo.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
                 }
             }
-            if (StringUtil.isBlank(user?.motto)) {
-                user?.motto = this.wordService.random()
-            }
-
-            user?.let { vo.user = UserDTO(it) }
         }
         return ResultVO(vo)
     }
