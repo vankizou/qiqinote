@@ -18,10 +18,12 @@ class WordDaoImpl @Autowired constructor(
     private val rowMapper = BeanPropertyRowMapper(Word::class.java)
 
     override fun insert(word: Word): Int {
-        if (StringUtil.isBlank(word.from) || StringUtil.isBlank(word.word) || word.word!!.length > 500) return 0
+        if (StringUtil.isBlank(word.type) ||
+                StringUtil.isBlank(word.from) ||
+                StringUtil.isBlank(word.word) || word.word!!.length > 500) return 0
 
-        val paramMap = mapOf("word" to word.word, "from" to word.from)
-        val sql = "INSERT IGNORE word(`from`, `word`) VALUES(:from, :word)"
+        val paramMap = mapOf("word" to word.word!!.trim(), "from" to word.from!!.trim(), "type" to word.type?.trim())
+        val sql = "INSERT IGNORE word(`type`, `from`, `word`) VALUES(:type, :from, :word)"
 
         return this.namedParameterJdbcTemplate.update(sql, paramMap)
     }
