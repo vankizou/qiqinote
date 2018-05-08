@@ -74,20 +74,18 @@
                 </div>
                 <pre class="text-center" id="j_user_info_motto">${noteVO.user.motto == null || "".equals(noteVO.user.motto) ? "空的！" : noteVO.user.motto}</pre>
             </div>
-            <table class="table" style="border: 0px solid transparent !important;">
+            <table class="table" style="border: 0px solid transparent !important; margin-top: 25px;">
                 <tbody>
                 <tr>
-                    <td class="col-md-4 text-left">
-                        <span class="label btn_info1">创建：</span></td>
-                    <td class="col-md-8 text-left">
+                    <td class="text-left">
+                        <span class="label btn_info1">创建：</span>
                         <span id="j_note_info_create_datetime"
                               class="label label_info1">${noteVO.createDatetimeStr}</span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="col-md-4 text-left">
-                        <span class="label btn_info1">更新：</span></td>
-                    <td class="col-md-8 text-left">
+                    <td class="text-left">
+                        <span class="label btn_info1">更新：</span>
                         <span id="j_note_info_update_datetime"
                               class="label label_info1">${noteVO.updateDatetimeStr}</span>
                     </td>

@@ -36,6 +36,7 @@
         <junit.version>4.12</junit.version>
         <spring-boot-starter-log4j.version>1.3.8.RELEASE</spring-boot-starter-log4j.version>
         <spring-data-redis.version>2.0.3.RELEASE</spring-data-redis.version>
+        <thrift.version>0.9.0</thrift.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

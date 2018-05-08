@@ -8,10 +8,7 @@ import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.po.User
-import com.qiqinote.service.NoteDetailService
-import com.qiqinote.service.NoteService
-import com.qiqinote.service.PictureService
-import com.qiqinote.service.UserService
+import com.qiqinote.service.*
 import com.qiqinote.util.DateUtil
 import com.qiqinote.util.EntityUtil
 import com.qiqinote.util.StringUtil
@@ -35,7 +32,8 @@ class NoteController @Autowired constructor(
         private val userService: UserService,
         private val noteService: NoteService,
         private val noteDetailService: NoteDetailService,
-        private val pictureService: PictureService
+        private val pictureService: PictureService,
+        private val wordService: WordService
 ) : BaseController() {
     fun editHtml(@PathVariable("idOrIdLink") idOrIdLink: String): ModelAndView {
         val loginUserId = this.getLoginUserId()
@@ -74,13 +72,17 @@ class NoteController @Autowired constructor(
         // 用户
         if (noteVO.note?.userId != null) {
             val user = this.userService.getById(noteVO.note?.userId!!)
-            user?.let { noteVO.user = UserDTO(it) }
             user?.avatarId?.let {
                 val pic = this.pictureService.getById(it)
                 if (pic != null) {
                     noteVO.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
                 }
             }
+            if (StringUtil.isBlank(user?.motto)) {
+                user?.motto = this.wordService.random()
+            }
+
+            user?.let { noteVO.user = UserDTO(it) }
         }
         noteVO.createDatetimeStr = DateUtil.formatDatetime(noteVO.note?.createDatetime)
         noteVO.updateDatetimeStr = DateUtil.formatDatetime(noteVO.note?.updateDatetime)
@@ -146,13 +148,17 @@ class NoteController @Autowired constructor(
         // 用户
         if (vo.note?.userId != null) {
             val user = this.userService.getById(vo.note?.userId!!)
-            user?.let { vo.user = UserDTO(it) }
             user?.avatarId?.let {
                 val pic = this.pictureService.getById(it)
                 if (pic != null) {
                     vo.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
                 }
             }
+            if (StringUtil.isBlank(user?.motto)) {
+                user?.motto = this.wordService.random()
+            }
+
+            user?.let { vo.user = UserDTO(it) }
         }
         return ResultVO(vo)
     }
