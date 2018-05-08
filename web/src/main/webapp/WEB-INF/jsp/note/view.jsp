@@ -40,7 +40,7 @@
     <div id="j_empty_content" class="text-center"
          style="display: none; margin: 50px auto; font-size:18px; font-weight:bold;">
         笔记内容为空!&nbsp; <a href="/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}" target="_blank"
-                         class="btn btn_info1"> ${isMe ? "我" : "TA"}的笔记树&nbsp;>></a>
+                         class="btn_info1"> ${isMe ? "我" : "TA"}的笔记树&nbsp;>></a>
     </div>
 
     <div>
@@ -69,7 +69,7 @@
                                  class="img-responsive img-circle center-block" width="150" height="150"
                                  style="border: 1px solid lightgrey"/>
                         </div>
-                        <div style="margin: 5px 0; font-size: 18px;">
+                        <div style="margin: 8px 0; font-size: 18px;">
                             <span id="j_user_info_alias">${noteVO.user.alias}</span>
                         </div>
                     </div>
