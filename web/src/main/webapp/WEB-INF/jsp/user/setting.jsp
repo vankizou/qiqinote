@@ -93,7 +93,7 @@
                 <tr>
                     <td class="textRightAndVMiddle">格言：</td>
                     <td>
-                        <textarea id="j_user_motto" class="form-control" placeholder="人生格言"></textarea>
+                        <textarea id="j_user_motto" class="form-control" placeholder="（若不填，则会随机展示）"></textarea>
                     </td>
                 </tr>
                 <tr>
