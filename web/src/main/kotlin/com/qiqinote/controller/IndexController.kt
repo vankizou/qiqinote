@@ -73,9 +73,9 @@ class IndexController @Autowired constructor(
             throw QiqiNoteException(CodeEnum.NOT_FOUND)
         }
         val mv = ModelAndView(WebPageEnum.note_list.url)
-        mv.addObject("userId", user?.id ?: user?.id ?: 0)
-        mv.addObject("userName", user?.name ?: user?.name ?: "")
-        mv.addObject("userAlias", user?.alias ?: user?.alias ?: "")
+        mv.addObject("userId", user.id ?: user.id ?: 0)
+        mv.addObject("userName", user.name ?: user.name ?: "")
+        mv.addObject("userAlias", user.alias ?: user.alias ?: "")
         return mv
     }
 
