@@ -81,16 +81,23 @@
                     <tbody>
                     <tr>
                         <td class="text-left">
-                            <span class="label btn_info1">创建：</span>
-                            <span id="j_note_info_create_datetime"
-                                  class="label label_info1">${noteVO.createDatetimeStr}</span>
+                            <span class="btn_info1">浏览：</span>
+                            <span id="j_note_info_view_num"
+                                  class="label_info1">${noteVO.note.viewNum}</span>
                         </td>
                     </tr>
                     <tr>
                         <td class="text-left">
-                            <span class="label btn_info1">更新：</span>
+                            <span class="btn_info1">创建：</span>
+                            <span id="j_note_info_create_datetime"
+                                  class="label_info1">${noteVO.createDatetimeStr}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <span class="btn_info1">更新：</span>
                             <span id="j_note_info_update_datetime"
-                                  class="label label_info1">${noteVO.updateDatetimeStr}</span>
+                                  class="label_info1">${noteVO.updateDatetimeStr}</span>
                         </td>
                     </tr>
                     </tbody>

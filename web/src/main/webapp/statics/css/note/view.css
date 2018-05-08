@@ -31,13 +31,15 @@
 }
 
 .btn_info1 {
-    color: #fff;
-    background: #4aafdc;
+    color: grey;
+    font-size: 14px;
+    /*background: #4aafdc;*/
 }
 
 .label_info1 {
-    color: #fff;
-    background: #4aafdc;
+    color: grey;
+    font-size: 14px;
+    /*background: #4aafdc;*/
 }
 
 .widget {
