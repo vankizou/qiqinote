@@ -2,6 +2,7 @@ package com.qiqinote.dao.impl
 
 import com.qiqinote.dao.WordDao
 import com.qiqinote.po.Word
+import com.qiqinote.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -16,11 +17,11 @@ class WordDaoImpl @Autowired constructor(
 ) : WordDao {
     private val rowMapper = BeanPropertyRowMapper(Word::class.java)
 
-    override fun insert(word: String): Int {
-        if (word.length > 500) return 0
+    override fun insert(word: Word): Int {
+        if (StringUtil.isBlank(word.from) || StringUtil.isBlank(word.word) || word.word!!.length > 500) return 0
 
-        val paramMap = mapOf("word" to word)
-        val sql = "INSERT IGNORE word(word) VALUES(:word)"
+        val paramMap = mapOf("word" to word.word, "from" to word.from)
+        val sql = "INSERT IGNORE word(`from`, `word`) VALUES(:from, :word)"
 
         return this.namedParameterJdbcTemplate.update(sql, paramMap)
     }

@@ -1,6 +1,8 @@
 package com.qiqinote.service.impl
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.qiqinote.dao.WordDao
+import com.qiqinote.po.Word
 import com.qiqinote.service.WordService
 import com.qiqinote.util.HttpUtil
 import com.qiqinote.util.StringUtil
@@ -15,12 +17,21 @@ class WordServiceImpl @Autowired constructor(
         private val wordDao: WordDao
 ) : WordService {
     override fun random(): String {
-        val word = HttpUtil.doGet("http://api.hitokoto.cn/?encode=text")
-        if (StringUtil.isBlank(word)) {
-            return this.wordDao.random()
-        } else {
-            this.wordDao.insert(word!!)
+        val wordStr = HttpUtil.doGet("http://api.hitokoto.cn")
+        var w: String? = null
+        wordStr?.let {
+            val wordNode = jacksonObjectMapper().readTree(wordStr)
+
+            val from = wordNode.path("from").asText()
+            val word = wordNode.path("hitokoto").asText()
+
+            val wordObj = Word()
+            wordObj.from = from
+            wordObj.word = word
+            this.wordDao.insert(wordObj)
+
+            w = word
         }
-        return word
+        return if (StringUtil.isBlank(w)) this.wordDao.random() else w!!
     }
 }

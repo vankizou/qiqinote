@@ -8,6 +8,8 @@ import java.util.*
 class Word {
     var id: Long? = null
 
+    var from: String? = null
+
     var word: String? = null
 
     var createDatetime: Date? = null
