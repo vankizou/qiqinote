@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : utf-8
 
- Date: 05/08/2018 11:08:16 AM
+ Date: 05/08/2018 15:47:52 PM
 */
 
 SET NAMES utf8;
@@ -164,7 +164,7 @@ CREATE TABLE `user_login_record` (
   `connection` varchar(32) DEFAULT NULL,
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=299 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=305 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `word`
@@ -172,10 +172,11 @@ CREATE TABLE `user_login_record` (
 DROP TABLE IF EXISTS `word`;
 CREATE TABLE `word` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `from` varchar(100) NOT NULL,
   `word` varchar(500) NOT NULL,
   `create_datetime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `word` (`word`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
