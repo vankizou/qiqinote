@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : utf-8
 
- Date: 05/08/2018 15:47:52 PM
+ Date: 05/08/2018 16:24:54 PM
 */
 
 SET NAMES utf8;
@@ -140,7 +140,7 @@ CREATE TABLE `user` (
   `is_del` int(2) DEFAULT '0' COMMENT '是否删除. 0否, 1是. 默认0',
   PRIMARY KEY (`id`),
   KEY `索引` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1025 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1026 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `user_login_record`
@@ -164,7 +164,7 @@ CREATE TABLE `user_login_record` (
   `connection` varchar(32) DEFAULT NULL,
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=305 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=306 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Table structure for `word`
@@ -172,11 +172,12 @@ CREATE TABLE `user_login_record` (
 DROP TABLE IF EXISTS `word`;
 CREATE TABLE `word` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) NOT NULL,
   `from` varchar(100) NOT NULL,
   `word` varchar(500) NOT NULL,
   `create_datetime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `word` (`word`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
