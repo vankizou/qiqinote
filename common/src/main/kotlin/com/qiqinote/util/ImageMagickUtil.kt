@@ -58,12 +58,12 @@ object ImageMagickUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-//        resizeByHeight(253, "/Users/vanki/Documents/company/lofficiel/data/1/111.jpg", "/Users/vanki/Documents/company/lofficiel/data/1/111_1.jpg");
+        resizeByWidth(800, "/Users/vanki/Downloads/sz/C28FD84D4ABC3AD9114E63A8373B1162.jpg", "/Users/vanki/Downloads/sz/1.jpg");
+        resizeByWidth(600, "/Users/vanki/Downloads/sz/C28FD84D4ABC3AD9114E63A8373B1162.jpg", "/Users/vanki/Downloads/sz/2.jpg");
     }
 
     /**
      * 根据宽度缩放图片
-
      * @param width    缩放后的图片宽度
      * *
      * @param srcPath  源图片路径
