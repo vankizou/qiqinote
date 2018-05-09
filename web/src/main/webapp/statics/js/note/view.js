@@ -56,6 +56,7 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
                     $('#j_user_info_avatar').attr('src', data['user']['avatar']['path']);
                 }
             }
+            $('#j_note_info_view_num').html(data['note']['viewNum']);
             $('#j_note_info_create_datetime').html(data['note']['createDatetime']);
             $('#j_note_info_update_datetime').html(data['note']['updateDatetime']);
 

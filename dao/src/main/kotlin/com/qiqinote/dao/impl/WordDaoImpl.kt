@@ -34,4 +34,11 @@ class WordDaoImpl @Autowired constructor(
         val list = this.namedParameterJdbcTemplate.query(sql, rowMapper)
         return if (list.isEmpty()) "每天进步一点点！" else list[0].word!!
     }
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+
+        }
+    }
 }
