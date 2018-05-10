@@ -107,7 +107,7 @@ function addNote() {
         }
         var secret = data['secret'];
         noteSecretTypeJson[data['id']] = secret;
-        noteIdAndNoteIdLinkJson[data['id']] = secret == ConstDB.Note.secretLink ? data['idLink'] : data['id'];
+        noteIdAndNoteIdLinkJson[data['id']] = data['idLink'];
         updateDiyDom(parentNode, 1);
         tree.addNodes(parentNode, {id: data["id"], pId: pId, name: data["title"]});
     };
@@ -307,7 +307,16 @@ function setSecretCommon(secretType) {
         var secretStr = buildViewSecretStr(secretType, params['note.password']);
         $('#j_note_info_secret').html(secretStr);
         $('#j_note_info_edit_secret').val(secretType);
-    }
+
+        /**
+         * 修改地址栏链接
+         */
+        if (secretType == ConstDB.Note.secretLink && noteIdAndNoteIdLinkJson[node.id]) {
+            history.pushState(null, null, "/note/" + noteIdAndNoteIdLinkJson[node.id]);
+        } else {
+            history.pushState(null, null, "/note/" + node.id + ".html");
+        }
+    };
     vankiAjax(ConstAjaxUrl.Note.updateById, params, fnSucc);
 }
 
@@ -440,7 +449,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         var noteSecret = note['secret'];
 
         noteSecretTypeJson[noteId] = noteSecret;
-        noteIdAndNoteIdLinkJson[noteId] = noteSecret == ConstDB.Note.secretLink ? note['idLink'] : note['id'];
+        noteIdAndNoteIdLinkJson[noteId] = note['idLink'];
 
         if (existsNodeIdArr.indexOf(noteId) != -1) continue;    // 节点已存在
 

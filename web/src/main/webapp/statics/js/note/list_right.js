@@ -194,7 +194,7 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
         "idOrIdLink": idLink,
         "password": password,
         "is_pop": false,
-    }
+    };
     var context;
     var fnSucc = function (data) {
         var noteDetailList = data['noteDetailList'];
@@ -208,10 +208,10 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
         }
         buildViewNoteCommonInfo(val, data['note']);
 
-        if (Number(idLink)) {
-            history.pushState(null, null, "/note/" + idLink + ".html");
+        if (data['note']['secret'] == ConstDB.Note.secretLink) {
+            history.pushState(null, null, "/note/" + data['note']['idLink']);
         } else {
-            history.pushState(null, null, "/note/" + idLink);
+            history.pushState(null, null, "/note/" + data['note']['id'] + ".html");
         }
 
         context = true;
