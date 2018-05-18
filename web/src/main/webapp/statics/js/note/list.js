@@ -61,7 +61,11 @@ $(document).ready(function () {
 });
 
 function init() {
-    $('#noteTree').css('height', $(window).height() - 110);
+    if ($('#j_note_tree_title_like').length) {
+        $('#noteTree').css('height', $(window).height() - 110);
+    } else {
+        $('#noteTree').css('height', $(window).height() - 80);
+    }
     var rootName = (c_noteUserAlias ? c_noteUserAlias : "TA") + "的笔记";
     if (c_myUserId && c_noteUserId == c_myUserId) {
         rootName = '我的笔记';
@@ -193,7 +197,7 @@ function beforeDrop(treeId, treeNodes, targetNode, moveType) {
         if (beforeDragPNode && beforeDragPNode.id > -1) { // 旧的笔记目录中笔记数量要减一
             updateDiyDom(beforeDragPNode, -1);
         }
-    }
+    };
     vankiAjax(ConstAjaxUrl.Note.updateById, params, fnSucc);
     // buildNoteTreeNodes(null, targetNode);
     return true;
@@ -421,7 +425,7 @@ function buildNoteTreeNodes(parentId, parentNode) {
         "userId": c_noteUserId,
         "parentId": parentId,
         "titleLike": $('#j_note_tree_title_like').val()
-    }
+    };
     var fnSucc = function (data) {
         var noteTreeNodes = [];
         buildNodeJson(data['notes'], noteTreeNodes, existsNodeIdArr);
