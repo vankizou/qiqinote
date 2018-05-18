@@ -43,6 +43,7 @@ var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop
 var vankiParseResponseData = function (data, succFn, failFn, is_pop) {
     if (typeof data == 'string') data = eval('(' + data + ')');
     var code = data['code'];
+
     if (code == ConstStatusCode.CODE_200[0]) {
         if (succFn) succFn(data['data']);
     } else {

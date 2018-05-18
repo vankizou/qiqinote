@@ -222,7 +222,7 @@ class NoteServiceImpl @Autowired constructor(
 
         do {
             pageTmp = this.page(loginUserId, userId, parentId, null,
-                    "note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
+                    "secret DESC, note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
             noteListTmp = pageTmp.data
             if (noteListTmp.isEmpty()) break
             if (resultList == null) {
@@ -261,7 +261,7 @@ class NoteServiceImpl @Autowired constructor(
         var pageTmp: Page<Note>
         do {
             pageTmp = this.page(loginUserId, loginUserId, null, titleLike,
-                    "note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
+                    "secret DESC, note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
             noteListTmp = pageTmp.data
             if (noteListTmp.isEmpty()) break
             if (currPage == Page.firstPage) {

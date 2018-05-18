@@ -241,7 +241,7 @@ function beforeRename(treeId, treeNode, newName, isCancel) {
         setTimeout(function () {
             tree.cancelEditName();
         }, 0);
-        vankiMsgAlertAutoClose(ConstStatusCode.CODE_1102[1]);
+        // vankiMsgAlertAutoClose(ConstStatusCode.CODE_1102[1]);
         return false;
     }
     var params = {
