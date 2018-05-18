@@ -59,7 +59,7 @@
                        id="j_note_tree_title_like" placeholder="搜索..."/>
             </div>
         </c:if>
-        <ul id="noteTree" class="ztree" style=""></ul>
+        <ul id="noteTree" class="ztree" style="overflow: auto;"></ul>
     </div>
     <div class="col-xs-9">
         <div tips="笔记内容">
