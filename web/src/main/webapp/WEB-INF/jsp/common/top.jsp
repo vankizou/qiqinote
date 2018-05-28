@@ -70,7 +70,7 @@
                                          width="34" height="34" style="float: left;">--%>
                                 &nbsp;Hi. ${suc.user.alias}
                                 <span id="j_total_unread_num">
-                                    &nbsp;<span class="badge" style="background-color: lightsalmon;"></span>
+                                    &nbsp;<span class="badge" style="background-color: lightsalmon;transform: scale(0.8)"></span>
                                 </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
@@ -82,7 +82,7 @@
                                     <a href="/comment/unread.shtml">
                                         &nbsp;<i class="fa fa-commenting"></i>&nbsp;&nbsp;未读评论
                                         &nbsp;
-                                        <span class="badge" style="background-color: lightsalmon;"></span>
+                                        <span class="badge" style="background-color: lightsalmon;transform: scale(0.8)"></span>
                                     </a>
                                 </li>
                                 <li><a href="/user/setting.shtml"><i class="fa fa-cog fa-fw"></i>&nbsp;&nbsp;设置</a></li>

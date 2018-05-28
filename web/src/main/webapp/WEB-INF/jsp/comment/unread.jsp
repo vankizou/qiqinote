@@ -41,7 +41,7 @@
                 <div class="comment_view_title">
                     <span class="comment_view_user_alias"></span>
                     <span class="comment_view_time"></span>
-                    <span><a class="comment_view_title"></a></span>
+                    <span><a class="comment_view_title" target="_blank"></a></span>
                     <span class="comment_view_type_str"></span>
                 </div>
                 <div class="comment_view_content">
