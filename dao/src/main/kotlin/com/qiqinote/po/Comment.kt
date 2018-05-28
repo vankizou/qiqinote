@@ -5,8 +5,10 @@ import java.util.*
 /**
  * Created by vanki on 2018/5/2 14:28.
  */
-class Comment {
+open class Comment {
     var id: Long? = null
+
+    var rootId: Long? = null
 
     var parentId: Long? = null
 
@@ -14,9 +16,11 @@ class Comment {
 
     var type: Int? = null
 
-    var targetId: String? = null
+    var targetId: Long? = null
 
-    var targetUserId: String? = null
+    var targetUri: String? = null
+
+    var targetUserId: Long? = null
 
     var fromUserId: Long? = null
 

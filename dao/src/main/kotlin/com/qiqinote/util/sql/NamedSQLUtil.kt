@@ -217,7 +217,7 @@ object NamedSQLUtil {
         println("getAndCondition: \n" + getAndCondition(map))
 
         println()
-        println("getDBField: \n" + getDBField(User::class))
+        println("getDBField: \n" + getDBField(Comment::class))
 
         println()
         println("getDeleteSQL: \n" + getDeleteSQL("user", map))

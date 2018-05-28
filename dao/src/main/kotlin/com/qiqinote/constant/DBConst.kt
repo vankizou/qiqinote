@@ -9,6 +9,10 @@ object DBConst {
     val defaultParentId = -1L
     val firstSequence = 0
 
+    object Comment {
+        val typeNote = 1    /* 评论类型. 笔记 */
+    }
+
     object Picture {
         val useTypeNote = 1       /* 笔记 */
         val useTypeAvatar = 2     /* 头像 */

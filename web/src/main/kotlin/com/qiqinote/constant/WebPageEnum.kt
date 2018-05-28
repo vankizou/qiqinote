@@ -10,6 +10,8 @@ enum class WebPageEnum(val url: String) {
     login("index/login"),
     index("index/index2"),
 
+    comment_unread("comment/unread"),
+
     note_list("note/list"),
     note_edit("note/edit"),
     note_view("note/view"),

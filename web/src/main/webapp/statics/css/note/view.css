@@ -86,3 +86,136 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/*　主评论 */
+.note_comment {
+    /*width: 50%;*/
+    /*margin: 0 auto;*/
+}
+
+.comment_view_ul {
+    list-style: none;
+}
+
+.comment_view_ul li {
+    margin-top: 30px;
+}
+
+.comment_view_user_info {
+    text-decoration: none;
+    cursor: pointer;
+    float: left;
+    margin-right: 10px;
+}
+
+.comment_view_title .comment_view_user_alias {
+    font-weight: bold;
+    margin-right: 8px;
+    color: darkslategrey;
+}
+
+.comment_view_title .comment_view_time {
+    color: darkgrey;
+    font-size: 11px;
+    margin-right: 8px;
+}
+
+.comment_view_title .comment_view_reply {
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.comment_view_content {
+    margin-top: 6px;
+}
+
+.comment_view_content .comment_view_content_data {
+    margin-bottom: 6px;
+}
+
+.comment_view_content .comment_view_content_reply {
+    margin-left: 60px;
+    cursor: pointer;
+    color: green;
+}
+
+.comment_view_load_more_root {
+    margin-left: 20px;
+    cursor: pointer;
+    display: none;
+}
+
+.comment_view_content_delete {
+    color: darkgrey;
+    cursor: pointer;
+    /*display: none;*/
+}
+
+/* 子评论 */
+.comment_view_content_sub {
+    margin: 5px 0px 0px 60px;
+}
+
+.comment_view_ul_sub {
+    list-style: none;
+
+}
+
+.comment_view_ul_sub li {
+    margin-top: 20px;
+    display: none;
+}
+
+.comment_view_user_info_sub {
+    text-decoration: none;
+    cursor: pointer;
+    float: left;
+    margin-right: 10px;
+}
+
+.comment_view_title_sub .comment_view_user_alias_sub {
+    font-weight: bold;
+    margin-right: 8px;
+    color: darkslategrey;
+}
+
+.comment_view_title_sub .comment_view_time_sub {
+    color: darkgrey;
+    font-size: 11px;
+    margin-right: 8px;
+}
+
+.comment_view_content_sub .comment_view_content_data_sub {
+    margin-bottom: 5px;
+}
+
+.comment_view_content_sub .comment_view_content_reply_sub {
+    cursor: pointer;
+    color: green;
+}
+
+.comment_view_content_sub .comment_view_load_more {
+    display: none;
+}
+
+/* 取消回复 */
+#j_note_comment_retry_cancel {
+    vertical-align: bottom;
+    cursor: pointer;
+    display: none;
+}
+
+.comment_view_load_more {
+    margin: 20px 0px 0px 20px;
+    cursor: pointer;
+}
+
+.comment_view_content_delete_sub {
+    color: darkgrey;
+    cursor: pointer;
+    /*display: none;*/
+}
+
+.badge {
+    transform: scale(0.8);
+}

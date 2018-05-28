@@ -6,6 +6,8 @@ $(function () {
     $('#j_login_register').click(function () {
         popLoginRegister();
     });
+
+    rebuildUnreadInfo();
 });
 
 /**
@@ -19,4 +21,40 @@ function popLoginRegister() {
         css: {width: '500px'},
         onOverlayClick: $.unblockUI
     });
+}
+
+/**
+ * 未读数据
+ */
+function rebuildUnreadInfo() {
+    // 评论未读数
+    var noteCommentUnread = unreadNumOfComment();
+
+    // 总未读数
+    var totalUnread = noteCommentUnread;
+
+    if (totalUnread) {
+        $("#j_total_unread_num").find(".badge").html(totalUnread);
+    } else {
+        $("#j_total_unread_num").find(".badge").html("");
+    }
+    if (noteCommentUnread) {
+        $("#j_commend_unread_num").find(".badge").html(noteCommentUnread);
+        $("#j_commend_unread_num").show();
+    } else {
+        $("#j_commend_unread_num").hide();
+    }
+}
+
+// 评论未读
+function unreadNumOfComment() {
+    var params = {
+        "type": ConstDB.Comment.typeNote
+    };
+    var num = 0;
+    var fnSucc = function(data) {
+        num = data;
+    };
+    vankiAjax(ConstAjaxUrl.Comment.unreadNum, params, fnSucc, null, null, false);
+    return num
 }

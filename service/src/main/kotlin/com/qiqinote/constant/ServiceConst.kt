@@ -11,4 +11,6 @@ object ServiceConst {
 
     val findPwdQuestionNum = 3   // 密保问题数量
     val findPwdQuestionRightMinNum = 2   // 密保问题答对最小数量
+
+    val adminUserId = 1L
 }

@@ -178,6 +178,7 @@ class NoteServiceImpl @Autowired constructor(
                 pwdNote.id = note.id
                 pwdNote.idLink = note.idLink
                 pwdNote.title = note.title
+                pwdNote.userId = note.userId
 
                 val noteVo = NoteViewVO()
                 noteVo.needPwd = ServiceConst.trueVal

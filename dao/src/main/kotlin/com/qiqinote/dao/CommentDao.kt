@@ -1,5 +1,7 @@
 package com.qiqinote.dao
 
+import com.qiqinote.dto.TargetCommentDTO
+import com.qiqinote.dto.UserUnreadCommentDTO
 import com.qiqinote.po.Comment
 
 /**
@@ -8,11 +10,19 @@ import com.qiqinote.po.Comment
 interface CommentDao {
     fun create(comment: Comment): Long
 
-    fun updateSubNum(id: Long, subNum: Int): Int
+    fun updateSubNumByRootId(id: Long): Int
 
     fun delete(id: Long): Int
 
     fun getById(id: Long): Comment?
 
-    fun list(targetId: Long, parentId: Long): MutableList<Comment>
+    fun countRoot(type: Int, targetId: Long): Int
+
+    fun listOfUserUnreadCommentDTO(type: Int, ids: MutableList<Long>): MutableList<UserUnreadCommentDTO>
+
+    fun listOfUserUnreadCommentDTO(type: Int, ids: MutableSet<String>): MutableList<UserUnreadCommentDTO>
+
+    fun listOfTargetCommentDTO(type: Int, targetId: Long, rootId: Long, orderBy: String?, currPage: Int, pageSize: Int): MutableList<TargetCommentDTO>
+
+    fun listOfTargetCommentDTO(ids: List<Long>): MutableList<TargetCommentDTO>
 }

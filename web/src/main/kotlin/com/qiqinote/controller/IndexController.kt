@@ -7,6 +7,7 @@ import com.qiqinote.constant.WebPageEnum
 import com.qiqinote.dto.UserDTO
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.po.User
+import com.qiqinote.service.CommentService
 import com.qiqinote.service.NoteService
 import com.qiqinote.service.UserService
 import com.qiqinote.util.UserUtil
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView
 class IndexController @Autowired constructor(
         private val userService: UserService,
         private val noteService: NoteService,
+        private val commentService: CommentService,
         private val noteController: NoteController
 ) : BaseController() {
 
@@ -73,9 +75,9 @@ class IndexController @Autowired constructor(
             throw QiqiNoteException(CodeEnum.NOT_FOUND)
         }
         val mv = ModelAndView(WebPageEnum.note_list.url)
-        mv.addObject("userId", user.id ?: user.id ?: 0)
-        mv.addObject("userName", user.name ?: user.name ?: "")
-        mv.addObject("userAlias", user.alias ?: user.alias ?: "")
+        mv.addObject("userId", user.id ?: 0)
+        mv.addObject("userName", user.name ?: "")
+        mv.addObject("userAlias", user.alias ?: "")
         return mv
     }
 

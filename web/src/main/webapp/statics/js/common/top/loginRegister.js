@@ -58,7 +58,8 @@ $(function () {
             isRemember: isRemember ? 1 : 0
         };
         var fnSucc = function () {
-            window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], account);
+            // window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], account);
+            window.location.reload();
         };
         vankiAjax(ConstAjaxUrl.Index.signIn, params, fnSucc);
     };
@@ -119,7 +120,8 @@ $(function () {
             });
             $('#btn_close_msg').click(function () {
                 layer.close(regSuccLayerIndex);
-                window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], data['name']||data['id']);
+                // window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], data['name']||data['id']);
+                window.location.reload();
             });
         };
         var fnFail = function (data) {

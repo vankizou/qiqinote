@@ -9,13 +9,22 @@ var ConstAjaxUrl = {
         error500_html: ["/500.html"]
     },
 
+    Comment: {
+        create: ["/comment/create.sjson", "POST", "JSON"],
+        delete: ["/comment/delete.sjson", "POST", "JSON"],
+        countRoot: ["/comment/countRoot.json", "GET", "JSON"],
+        listOfTarget: ["/comment/listOfTarget.json", "GET", "JSON"],
+        pageOfUnread: ["/comment/pageOfUnread.sjson", "GET", "JSON"],
+        unreadNum: ["/comment/unreadNum.sjson", "GET", "JSON"]
+    },
+
     Image: {
         uploadMulti: ["/image/uploadMulti.sjson"],
         page: ["/image/page.sjson"]
     },
 
     ImageCode: {
-        getImageCode: ["/imagecode/getImageCode.json"],
+        getImageCode: ["/imagecode/getImageCode.json"]
     },
 
     Index: {
@@ -24,7 +33,7 @@ var ConstAjaxUrl = {
         signUp: ["/signUp.json", "POST", "JSON"],
         signIn: ["/signIn.json", "POST", "JSON"],
         signOut: ["/signOut.json", "POST", "JSON"],
-        signOut_html: ["/signOut.html"],
+        signOut_html: ["/signOut.html"]
     },
 
     Note: {
@@ -52,4 +61,4 @@ var ConstAjaxUrl = {
         updatePwdByQuestions: ['/user/updatePwdByQuestions.json', 'POST', 'JSON'],
         listOfPwdQuestion: ['/user/listOfPwdQuestion.json', 'POST', 'JSON']
     }
-}
+};

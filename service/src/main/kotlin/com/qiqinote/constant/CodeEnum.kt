@@ -43,6 +43,13 @@ enum class CodeEnum(val code: Int, val msg: String) {
     PWD_ERROR(1120, "密码错误"),
     NOTE_DOWNLOAD_FAIL(1121, "导出失败, 笔记内容为空"),
     NOTE_TITLE_LEN_ERROR(1122, "标题长度不符"),
+    NOTE_NOT_FOUND(1123, "笔记不存在"),
+
+
+    /**
+     * 评论相关
+     */
+    COMMENT_TYPE_ERROR(1140, "不存在的评论类型")
 
     ;
 

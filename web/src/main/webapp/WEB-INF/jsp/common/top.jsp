@@ -69,12 +69,22 @@
                                          alt="${suc.user.alias}" class="img-responsive img-circle center-block"
                                          width="34" height="34" style="float: left;">--%>
                                 &nbsp;Hi. ${suc.user.alias}
+                                <span id="j_total_unread_num">
+                                    &nbsp;<span class="badge" style="background-color: lightsalmon;"></span>
+                                </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="javascript:void(0);" style="font-weight: 700;">&nbsp;<i
                                         class="fa fa-bell"></i>&nbsp;&nbsp;我的ID：${suc.user.id}</a></li>
                                 <li><a href="/${suc.user.name == null ? suc.user.id : suc.user.name}">&nbsp;<i
                                         class="fa fa-paint-brush"></i>&nbsp;&nbsp;我的笔记</a></li>
+                                <li id="j_commend_unread_num" style="display: none;">
+                                    <a href="/comment/unread.shtml">
+                                        &nbsp;<i class="fa fa-commenting"></i>&nbsp;&nbsp;未读评论
+                                        &nbsp;
+                                        <span class="badge" style="background-color: lightsalmon;"></span>
+                                    </a>
+                                </li>
                                 <li><a href="/user/setting.shtml"><i class="fa fa-cog fa-fw"></i>&nbsp;&nbsp;设置</a></li>
                                 <li><a href="/signOut.html">&nbsp;<i class="fa fa-sign-out"></i>&nbsp;&nbsp;退出</a></li>
                             </ul>

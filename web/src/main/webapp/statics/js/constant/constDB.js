@@ -5,6 +5,10 @@
 var ConstDB = {
     defaultParentId: -1,
 
+    Comment: {
+        typeNote: 1
+    },
+
     Picture: {
         useTypeNote: 1,
         useTypeAvatar: 2,
@@ -37,3 +41,5 @@ var ConstDB = {
 };
 
 var defaultAvatar = "/statics/images/common/avatar/default.jpg";
+
+var a_adminUserId = 1;

@@ -70,7 +70,7 @@ class NoteController @Autowired constructor(
         noteVO.parentNote = this.noteService.getByIdOrIdLink(noteVO.note?.parentId ?: DBConst.defaultParentId)
 
         // 用户
-        if (noteVO.note?.userId != null) {
+        if (noteVO.needPwd != ServiceConst.trueVal && noteVO.note?.userId != null) {
             val user = this.userService.getById(noteVO.note?.userId!!)
             if (StringUtil.isBlank(user?.motto)) {
                 user?.motto = this.wordService.random()
