@@ -1,10 +1,8 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 140.143.225.238(腾讯云北京)
  Source Server Type    : MySQL
  Source Server Version : 50721
- Source Host           : 140.143.225.238
  Source Database       : qiqinote
 
  Target Server Type    : MySQL
