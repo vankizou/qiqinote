@@ -10,6 +10,7 @@ $(function () {
     } else if (!startContent) {
         $('#j_empty_content').show();
         $('.j_note_info').hide();
+        $('#j_note_comment').hide();
     } else {
         fnInitVankiEditor();
         $('#j_empty_content').hide();

@@ -57,7 +57,7 @@
                 </c:if></textarea>
                 </div>
             </div>
-            <div style="margin: 50px 0px 0px 20px; width: 88%; padding: 10px;">
+            <div id="j_note_comment" style="margin: 50px 0px 0px 20px; width: 88%; padding: 10px;">
                 <div class="note_comment">
                     <div id="j_note_comment_view">
                         <ul id="j_comment_view_ul" class="comment_view_ul">
