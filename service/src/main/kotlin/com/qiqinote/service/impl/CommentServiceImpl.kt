@@ -173,7 +173,7 @@ class CommentServiceImpl @Autowired constructor(
         opt.removeRange(startIndex, lastIndex)
 
         result.data = this.commentDao.listOfUserUnreadCommentDTO(type, ids)
-        result.data?.let { it.forEach { buildAvatarBasePath(it) } }
+        result.data.let { it.forEach { buildAvatarBasePath(it) } }
         return result
     }
 
@@ -181,10 +181,10 @@ class CommentServiceImpl @Autowired constructor(
      * 构建头像全路径
      */
     private fun buildAvatarBasePath(dto: TargetCommentDTO) {
-        if (dto.fromUserAvatar != null) {
+        if (dto.fromUserAvatar != null && !dto.fromUserAvatar!!.startsWith(imageDomain)) {
             dto.fromUserAvatar = imageDomain + dto.fromUserAvatar
         }
-        if (dto.parent?.fromUserAvatar != null) {
+        if (dto.parent?.fromUserAvatar != null && !dto.parent?.fromUserAvatar!!.startsWith(imageDomain)) {
             dto.fromUserAvatar = imageDomain + dto.fromUserAvatar
         }
     }
