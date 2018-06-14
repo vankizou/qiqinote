@@ -15,7 +15,7 @@ var ConstAjaxUrl = {
         countRoot: ["/comment/countRoot.json", "GET", "JSON"],
         listOfTarget: ["/comment/listOfTarget.json", "GET", "JSON"],
         pageOfUnread: ["/comment/pageOfUnread.sjson", "GET", "JSON"],
-        unreadNum: ["/comment/unreadNum.sjson", "GET", "JSON"]
+        unreadNum: ["/comment/unreadNum.json", "GET", "JSON"]
     },
 
     Image: {

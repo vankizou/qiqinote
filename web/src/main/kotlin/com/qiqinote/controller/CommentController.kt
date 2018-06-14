@@ -46,6 +46,6 @@ class CommentController @Autowired constructor(
     fun pageOfUnread(type: Int, pageSize: Int) = ResultVO(this.commentService.pageOfUnread(this.getLoginUserId(), type, pageSize))
 
     @ResponseBody
-    @GetMapping("/unreadNum" + WebConst.needLoginJsonSuffix)
-    fun unreadNum(type: Int) = ResultVO(this.commentService.unreadNum(this.getLoginUserId(), type))
+    @GetMapping("/unreadNum" + WebConst.jsonSuffix)
+    fun unreadNum(type: Int) = ResultVO(if (this.justGetLoginUserId() == null) 0 else this.commentService.unreadNum(this.getLoginUserId(), type))
 }
