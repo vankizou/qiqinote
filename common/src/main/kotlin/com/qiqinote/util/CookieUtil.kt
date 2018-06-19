@@ -1,5 +1,7 @@
 package com.qiqinote.util
 
+import java.net.URLDecoder
+import java.net.URLEncoder
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -12,7 +14,7 @@ object CookieUtil {
 
     fun setCookie(response: HttpServletResponse?, name: String, value: String?, maxAge: Int): Boolean {
         if (value == null) return false
-        val cookie = Cookie(name, value)
+        val cookie = Cookie(name, URLEncoder.encode(value, "UTF-8"))
         cookie.maxAge = maxAge
         cookie.path = "/"
         response?.addCookie(cookie)
@@ -23,7 +25,7 @@ object CookieUtil {
         val cookieList = listCookie(request)
 
         cookieList?.iterator()?.forEach {
-            if (name.equals(it.name)) return it.value
+            if (name == it.name) return URLDecoder.decode(it.value ?: "", "UTF-8")
         }
         return null
     }
