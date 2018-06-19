@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.ModelAndView
+import java.net.URLEncoder
 
 /**
  * Created by vanki on 2018/1/24 14:29.
@@ -36,7 +37,7 @@ class IndexController @Autowired constructor(
     @RequestMapping("/")
     fun index(): Any {
         return if (this.userContext != null) {
-            "redirect:/${this.userContext?.user!!.name}"
+            "redirect:/${URLEncoder.encode(this.userContext?.user!!.name, "UTF-8")}"
         } else {
             val mv = ModelAndView(WebPageEnum.index.url)
             buildHomeData(mv)
