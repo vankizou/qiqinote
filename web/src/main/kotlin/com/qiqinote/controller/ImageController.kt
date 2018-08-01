@@ -168,9 +168,9 @@ class ImageController @Autowired constructor(
 
         private fun tryResizeImg(useType: Int?, width: Int, imageFile: File): Boolean {
             val maxWidth = when (useType) {
-                DBConst.Picture.useTypeNote -> 600
+                DBConst.Picture.useTypeNote -> 700
                 DBConst.Picture.useTypeAvatar -> 200
-                else -> 500
+                else -> 600
             }
 
             if (width <= maxWidth) return false
