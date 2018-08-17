@@ -62,7 +62,6 @@ object UserUtil {
         val resultVO = userService.preSignIn(account, password, userLoginRecord)
         val ucVO = resultVO.data
         if (ucVO?.user == null) {
-            throw QiqiNoteException(resultVO)
             return false
         }
 

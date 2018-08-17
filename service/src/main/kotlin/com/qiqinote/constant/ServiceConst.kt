@@ -13,4 +13,6 @@ object ServiceConst {
     val findPwdQuestionRightMinNum = 2   // 密保问题答对最小数量
 
     val adminUserId = 1L
+
+    val cacheNullValue = "cacheNullValue"
 }

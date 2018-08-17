@@ -30,7 +30,7 @@ import kotlin.collections.LinkedHashMap
 class NoteServiceImpl @Autowired constructor(
         private val noteDao: NoteDao,
         private val noteDetailService: NoteDetailService,
-        private val stringRedisTemplate: StringRedisTemplate
+        private val redisTemplate: StringRedisTemplate
 ) : NoteService {
     private val maxTitleLen = 200
     private val defaultPwd = ""
@@ -100,6 +100,7 @@ class NoteServiceImpl @Autowired constructor(
             if (note.parentId != null && note.parentId != DBConst.defaultParentId) {
                 this.updateNoteNum(loginUserId, note.parentId!!)
             }
+//            this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, note.parentId!!))
         }
         return ResultVO(id)
     }
@@ -142,6 +143,7 @@ class NoteServiceImpl @Autowired constructor(
             updateNoteNum(loginUserId, oldParentId)
             updateNoteNum(loginUserId, newParentId)
         }
+//        this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, note.parentId!!))
         return ResultVO(status)
     }
 
@@ -152,6 +154,8 @@ class NoteServiceImpl @Autowired constructor(
 
         this.updateNoteNum(loginUserId, old.parentId ?: DBConst.defaultParentId)
         this.closeNoteInRedis(loginUserId, id)
+
+//        this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, old.parentId!!))
 
         return ResultVO()
     }
@@ -319,13 +323,41 @@ class NoteServiceImpl @Autowired constructor(
 
 
     override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?, orderBy: String?,
-                      isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int) = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, totalRow, currPage, pageSize, navNum)
+                      isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
+        /**
+         * 笔记树添加缓存
+         */
+        /*var ops: BoundValueOperations<String, String>? = null
+        if (userId != null && isTree && currPage == 1) {
+            ops = this.redisTemplate.boundValueOps(this.buildNoteTreeRedisKey(loginUserId == userId, userId,
+                    parentId ?: DBConst.defaultParentId))
+            val cache = ops.get()
+            if (StringUtil.isNotBlank(cache)) {
+                if (cache == ServiceConst.cacheNullValue) return Page()
+
+                val page = JSON.parseObject(cache, Page::class.java)
+
+                val page2 = Page<Note>(page.currPage, page.pageSize, page.totalRow, page.navSize)
+                page2.data = JSON.parseArray(JSON.toJSONString(page.data), Note::class.java) as MutableList<Note>
+                return page2
+            }
+        }*/
+
+        val result = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, totalRow, currPage, pageSize, navNum)
+        /*if (ops != null) {
+            ops.set(JSON.toJSONString(result), RedisKeyEnum.kvNoteTreePage_.time, RedisKeyEnum.kvNoteTreePage_.timeUnit)
+        }*/
+        return result
+    }
+
+    private fun buildNoteTreeRedisKey(isMine: Boolean, userId: Long, parentId: Long) =
+            RedisKeyEnum.kvNoteTreePage_.name + "${if (isMine) 1 else 0}_${userId}_${parentId}"
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
         if (DBConst.defaultParentId == noteId) {
             return true
         }
-        return this.stringRedisTemplate.opsForSet()
+        return this.redisTemplate.opsForSet()
                 .isMember(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString()) ?: false
     }
 
@@ -333,14 +365,14 @@ class NoteServiceImpl @Autowired constructor(
         if (DBConst.defaultParentId == noteId) {
             return
         }
-        this.stringRedisTemplate.opsForSet().remove(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString())
+        this.redisTemplate.opsForSet().remove(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString())
     }
 
     override fun openNoteInRedis(userId: Long, noteId: Long) {
         if (DBConst.defaultParentId == noteId) {
             return
         }
-        this.stringRedisTemplate.opsForSet().add(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString())
+        this.redisTemplate.opsForSet().add(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString())
     }
 
     override fun countNoteHasContent(loginUserId: Long?, userId: Long?) = this.noteDao.countNoteHasContent(loginUserId, userId)
