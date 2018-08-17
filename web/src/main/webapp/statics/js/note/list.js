@@ -375,6 +375,8 @@ function openNote(noteId, treeNode) {
         noteId = node.id;
         if (!noteId) return;
     }
+    // 加载过的子集则不再重复加载
+    if (treeNode['children'] && treeNode['children'].length > 0) return;
 
     var flag = viewNote(noteId, "请输入密码", false);
     if (flag) {
