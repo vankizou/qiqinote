@@ -10,6 +10,7 @@ import com.qiqinote.po.User
 import com.qiqinote.service.CommentService
 import com.qiqinote.service.NoteService
 import com.qiqinote.service.UserService
+import com.qiqinote.util.RequestUtil
 import com.qiqinote.util.UserUtil
 import com.qiqinote.util.WebUtil
 import com.qiqinote.vo.ResultVO
@@ -94,6 +95,7 @@ class IndexController @Autowired constructor(
         user.name = name
         user.alias = alias
         user.password = password
+        user.registerIp = RequestUtil.getRequestIP(request)
 
         val result = this.userService.upsertUser(user)
         if (!result.isSuccess()) return ResultVO(result.code, result.msg)
