@@ -200,7 +200,7 @@ class NoteDaoImpl @Autowired constructor(
             conditionSql.append(" AND note_content_num>0")
         }
 
-        this.buildSecretAndStatus(conditionSql, loginUserId, userId, isTree ?: false)
+        this.buildSecretAndStatus(conditionSql, loginUserId, userId, isTree)
 
         var totalRowDB = totalRow
         if (totalRowDB == null) {

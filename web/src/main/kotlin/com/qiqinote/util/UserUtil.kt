@@ -41,8 +41,8 @@ object UserUtil {
         } catch (e: Exception) {
             return null
         }
-        val loginInfos = value?.split(userRememberCookieDelim)
-        if (loginInfos == null || loginInfos.isEmpty() || loginInfos.size < 4) return null
+        val loginInfos = value.split(userRememberCookieDelim)
+        if (loginInfos.isEmpty() || loginInfos.size < 4) return null
         return arrayOf(loginInfos[1], loginInfos[2])
     }
 
@@ -72,7 +72,7 @@ object UserUtil {
 
         UserUtil.setUCInSession(request, UserContext(ucVO.user!!, avatar))
 
-        if (isRemember == ServiceConst.trueVal && ucVO.user?.id != null && password != null) {
+        if (isRemember == ServiceConst.trueVal && ucVO.user?.id != null) {
             UserUtil.setUserIdAndPwdInCookie(response, ucVO.user?.id!!, password)
         }
         return true

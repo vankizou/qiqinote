@@ -120,14 +120,14 @@ class UserServiceImpl @Autowired constructor(
     override fun getByAccount(account: String) = this.getByAccount(account, null)
 
     override fun getByAccount(account: String, loginUser: User?): User? {
-        val accounted = account?.trim()
+        val accounted = account.trim()
         var userId = account.toLongOrNull()
         return if (userId != null) {
             if (loginUser != null && loginUser.id == userId) return loginUser
             this.getById(userId)
         } else {
             if (loginUser != null && loginUser.name == accounted) return loginUser
-            this.getByName(accounted!!)
+            this.getByName(accounted)
         }
     }
 
