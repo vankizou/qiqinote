@@ -92,7 +92,7 @@ CREATE TABLE `note_detail` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
   `note_id` bigint(20) DEFAULT NULL COMMENT '笔记id',
-  `content` mediumtext COMMENT '笔记内容',
+  `content` text COMMENT '笔记内容',
   `type` int(2) DEFAULT '1' COMMENT '类型. 1普通笔记, 2Markdown',
   `sequence` int(11) DEFAULT NULL COMMENT '序号',
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
