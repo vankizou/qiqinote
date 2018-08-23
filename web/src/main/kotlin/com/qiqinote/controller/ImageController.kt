@@ -36,6 +36,9 @@ class ImageController @Autowired constructor(
     private val imageAllowType = environment["qiqinote.image.allow.type"]
     private val imageBasePath = environment["qiqinote.image.basepath"]
     private val imageDomain = environment["qiqinote.image.domain"]
+    private val imageSizeNote = environment["qiqinote.image.size.note"].toInt()
+    private val imageSizeAvatar = environment["qiqinote.image.size.avatar"].toInt()
+    private val imageSizeOther = environment["qiqinote.image.size.other"].toInt()
 
     @PostMapping("/uploadMulti" + WebConst.needLoginJsonSuffix)
     fun uploadMulti(@RequestParam images: Array<MultipartFile>?, useType: Int?): ResultVO<MutableList<Picture>> {
@@ -79,7 +82,7 @@ class ImageController @Autowired constructor(
                 image.inputStream.close()
                 FileUtil.setFilePermission(imageFile, 644)
 
-                val isResize = tryResizeImg(useTypeTmp, width, imageFile)    // 图片缩放
+                val isResize = tryResizeImg(useTypeTmp, width, imageFile, imageSizeNote, imageSizeAvatar, imageSizeOther)    // 图片缩放
                 if (isResize) {
                     bi = ImageIO.read(imageFile)
                     width = bi.width
@@ -166,11 +169,11 @@ class ImageController @Autowired constructor(
             return subDir.toString()
         }
 
-        private fun tryResizeImg(useType: Int?, width: Int, imageFile: File): Boolean {
+        private fun tryResizeImg(useType: Int?, width: Int, imageFile: File, noteSize: Int, avatarSize: Int, otherSize: Int): Boolean {
             val maxWidth = when (useType) {
-                DBConst.Picture.useTypeNote -> 700
-                DBConst.Picture.useTypeAvatar -> 200
-                else -> 600
+                DBConst.Picture.useTypeNote -> noteSize
+                DBConst.Picture.useTypeAvatar -> avatarSize
+                else -> otherSize
             }
 
             if (width <= maxWidth) return false
