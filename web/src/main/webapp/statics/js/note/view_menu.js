@@ -1,37 +1,30 @@
-$(function() {
-    var panel = document.getElementById('panel'),
-        menu = document.getElementById('menu'),
-        showcode = document.getElementById('showcode'),
-        selectFx = document.getElementById('selections-fx'),
-        selectPos = document.getElementById('selections-pos'),
-        // demo defaults
-        effect = 'mfb-zoomin',
-        pos = 'mfb-component--br';
+$(function () {
+    $('.mfb-component__button--main').click(function () {
+        var title = $(this).attr("title");
 
-    // showcode.addEventListener('click', _toggleCode);
-    // selectFx.addEventListener('change', switchEffect);
-    // selectPos.addEventListener('change', switchPos);
+        if (title == '评论') {
+            $('#j_note_comment_content').focus();
+        } else if (title == '下载') {
+            downloadNote(c_noteId, c_noteIdLink, c_pwd)
+        }
+    });
 
-    function _toggleCode() {
-        panel.classList.toggle('viewCode');
-    }
-
-    /*function switchEffect(e){
-        effect = this.options[this.selectedIndex].value;
-        renderMenu();
-    }
-
-    function switchPos(e){
-        pos = this.options[this.selectedIndex].value;
-        renderMenu();
-    }*/
-
-    function renderMenu() {
-        menu.style.display = 'none';
-        // ?:-)
-        setTimeout(function() {
-            menu.style.display = 'block';
-            menu.className = pos + effect;
-        },1);
+    function downloadNote(noteId, noteIdLink, password) {
+        var params = {
+            is_pop: false,
+            id: noteId,
+            idLink: noteIdLink,
+            password: password
+        };
+        var fnSucc = function (data) {
+            window.location = "/note/download.json?id=" + noteId + "&idLink=" + noteIdLink + "&password=" + password;
+        };
+        var fnFail = function (data) {
+            if (data['code'] != ConstStatusCode.CODE_1100[0]) return;
+            var tempPwd = prompt("请输入密码");
+            if (tempPwd == null) return false;
+            downloadNote(tempPwd);
+        };
+        vankiAjax(ConstAjaxUrl.Note.preDownload, params, fnSucc, fnFail);
     }
 });

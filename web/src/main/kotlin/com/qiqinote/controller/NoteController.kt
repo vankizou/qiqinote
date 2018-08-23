@@ -16,7 +16,6 @@ import com.qiqinote.util.TemplateUtil
 import com.qiqinote.vo.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.get
-import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -59,7 +58,8 @@ class NoteController @Autowired constructor(
         val mv = ModelAndView(WebPageEnum.note_view.url)
 
         val id = idOrIdLink.toLongOrNull()
-        val noteVO = this.noteService.getNoteVOByIdOrIdLink(loginUserId, id, if (id == null) idOrIdLink else null, password, this.request, this.response)
+        val noteVO = this.noteService.getNoteVOByIdOrIdLink(loginUserId, id,
+                if (id == null) idOrIdLink else null, password, this.request, this.response)
                 ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
 
         // 访链只能通过idLink访问
@@ -271,9 +271,9 @@ class NoteController @Autowired constructor(
     }
 
     @ResponseBody
-    @RequestMapping("/download" + WebConst.jsonSuffix)
-    fun downloadNote(id: Long, password: String?): ResultVO<Any> {
-        val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, null, password)
+    @RequestMapping("/preDownload" + WebConst.jsonSuffix)
+    fun downloadNote(id: Long, idLink: String?, password: String?): ResultVO<Any> {
+        val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, idLink, password)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.PWD_ERROR)
@@ -283,11 +283,11 @@ class NoteController @Autowired constructor(
     }
 
     @ResponseBody
-    @RequestMapping("/doDownload" + WebConst.jsonSuffix)
-    fun doDownloadNote(id: Long, password: String?) {
+    @RequestMapping("/download" + WebConst.jsonSuffix)
+    fun doDownloadNote(id: Long, idLink: String?, password: String?) {
         val noteTempList = TemplateUtil.getExportNoteTempList() ?: return
 
-        val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, null, password)
+        val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, idLink, password)
         val detailList = noteViewVo?.noteDetailList
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return

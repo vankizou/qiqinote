@@ -1,0 +1,19 @@
+#menu {
+    margin-bottom: 40px;
+}
+
+#menu a {
+    width: 46px;
+    height: 46px;
+    background-color: #0592d3;
+}
+
+#menu a:hover {
+    /*color: white;*/
+}
+
+#menu i {
+    line-height: 46px;
+    margin-left: 15px;
+    font-size: 18px;
+}

@@ -20,5 +20,4 @@ class NoteViewVO {
     var updateDatetimeStr: String? = null
     var parentNote: Note? = null
     var user: UserDTO? = null
-
 }

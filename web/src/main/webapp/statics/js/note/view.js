@@ -33,6 +33,8 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
             val = data['noteDetailList'][0]['content'];
         }
         if (val) {
+            c_pwd = data['note']['password'];
+
             $('#j_empty_content').hide();
             $('.j_note_info').show();
 
@@ -86,6 +88,6 @@ function fnInitVankiEditor(val) {
         taskList: true,
         tex: true,  // 默认不解析
         flowChart: true,  // 默认不解析
-        sequenceDiagram: true,  // 默认不解析
+        sequenceDiagram: true  // 默认不解析
     });
 }

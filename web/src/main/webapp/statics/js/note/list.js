@@ -600,17 +600,18 @@ function downloadNote(password) {
     var node = tree.getSelectedNodes()[0];
     if (!node) return;
     var noteId = node.id;
+    var idLink = noteIdAndNoteIdLinkJson[noteId];
 
     password = password ? password : openedPwdJson[noteId];
     var params = {
         is_pop: false,
         id: noteId,
+        idLink: idLink,
         password: password
     };
     var fnSucc = function (data) {
-        console.info("noteId = " + noteId + ", currPwd = " + password)
         openedPwdJson[noteId] = password;
-        window.location = "/note/doDownload.json?id=" + noteId + "&password=" + password;
+        window.location = "/note/download.json?id=" + noteId + "&idLink=" + idLink + "&password=" + password;
     };
     var fnFail = function (data) {
         if (data['code'] != ConstStatusCode.CODE_1100[0]) return;
@@ -618,7 +619,7 @@ function downloadNote(password) {
         if (tempPwd == null) return false;
         downloadNote(tempPwd);
     };
-    vankiAjax(ConstAjaxUrl.Note.download, params, fnSucc, fnFail);
+    vankiAjax(ConstAjaxUrl.Note.preDownload, params, fnSucc, fnFail);
 }
 
 /*================右键菜单==================*/

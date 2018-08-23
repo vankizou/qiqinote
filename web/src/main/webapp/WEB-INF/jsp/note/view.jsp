@@ -21,14 +21,22 @@
 
     <script type="text/javascript" src="/statics/js/note/view.js"></script>
     <script type="text/javascript" src="/statics/js/note/view_comment.js"></script>
-
     <link rel="stylesheet" href="/statics/css/note/view.css">
+
+    <script type="text/javascript" src="/statics/third/float/dist/lib/modernizr.touch.js"></script>
+    <script type="text/javascript" src="/statics/third/float/dist/mfb.js"></script>
+    <script type="text/javascript" src="/statics/js/note/view_menu.js"></script>
+    <link rel="stylesheet" href="/statics/third/float/dist/mfb.css">
+    <link rel="stylesheet" href="/statics/css/note/view_menu.css">
+    <%--<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">--%>
+    <%--<link rel="stylesheet" href="/statics/third/float/css/index.css">--%>
 
     <script type="text/javascript">
         var c_noteUserId = '${noteVO.note.userId}';
         var c_noteId = '${noteVO.note.id}';
         var c_noteIdLink = '${noteVO.note.idLink}';
         var c_isNeedPwd = '${noteVO.needPwd}';
+        var c_pwd = '${noteVO.note.password}';
 
         $(function () {
             changeFooterMarginTop(10);
@@ -51,8 +59,11 @@
                 <h1 class="text-center c_title j_note_info">${noteVO.note.title}&nbsp;&nbsp;
                     <small id="j_note_info_parent_title">${noteVO.parentNote.title}</small>
                 </h1>
+
                 <div id="vanki-editormd-view-note">
-                    <textarea id="j_content" style="display: none;"><c:if test="${!empty noteVO.noteDetailList && !empty noteVO.noteDetailList[0].content}">${noteVO.noteDetailList[0].content}</c:if></textarea>
+                    <textarea id="j_content" style="display: none;"><c:if
+                            test="${!empty noteVO.noteDetailList && !empty noteVO.noteDetailList[0].content}">${noteVO.noteDetailList[0].content}
+                    </c:if></textarea>
                 </div>
             </div>
             <div id="j_note_comment" style="margin: 50px 0px 0px 20px; width: 88%; padding: 10px;">
@@ -219,6 +230,41 @@
     </div>
 </div>
 
+<ul id="menu" class="mfb-component--bl mfb-zoomin" data-mfb-toggle="click">
+    <li class="mfb-component__wrap">
+        <a href="#" class="mfb-component__button--main" title="回到顶部">
+            <i class="fa fa-arrow-up"></i>
+        </a>
+        <%--<ul class="mfb-component__list">
+            <li>
+                <a href="#" data-mfb-label="View on Github" class="mfb-component__button--child">
+                    <i class="mfb-component__child-icon ion-social-github"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-mfb-label="Follow me on Github" class="mfb-component__button--child">
+                    <i class="mfb-component__child-icon ion-social-octocat"></i>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" data-mfb-label="Share on Twitter" class="mfb-component__button--child">
+                    <i class="mfb-component__child-icon ion-social-twitter"></i>
+                </a>
+            </li>
+        </ul>--%>
+    </li>
+    <li class="mfb-component__wrap">
+        <a class="mfb-component__button--main" title="评论">
+            <i class="fa fa-commenting"></i>
+        </a>
+    </li>
+    <li class="mfb-component__wrap">
+        <a class="mfb-component__button--main" title="下载">
+            <i class="fa fa-cloud-download"></i>
+        </a>
+    </li>
+</ul>
 
 <jsp:include page="../common/footer.jsp"></jsp:include>
 

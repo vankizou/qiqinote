@@ -38,8 +38,7 @@ var ConstAjaxUrl = {
 
     Note: {
         view_html: ['/note/${id}', '${id}'],
-        download: ['/note/download.json'],
-        doDownload: ['/note/doDownload.json'],
+        preDownload: ['/note/preDownload.json'],
 
         add: ['/note/add.sjson', 'POST', 'JSON'],
         updateById: ['/note/updateById.sjson', 'POST', 'JSON'],

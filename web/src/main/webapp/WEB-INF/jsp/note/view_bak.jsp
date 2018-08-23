@@ -21,13 +21,8 @@
 
     <script type="text/javascript" src="/statics/js/note/view.js"></script>
     <script type="text/javascript" src="/statics/js/note/view_comment.js"></script>
-    <link rel="stylesheet" href="/statics/css/note/view.css">
 
-    <script type="text/javascript" src="/statics/third/float/dist/lib/modernizr.touch.js"></script>
-    <script type="text/javascript" src="/statics/third/float/dist/mfb.js"></script>
-    <script type="text/javascript" src="/statics/js/note/view_menu.js"></script>
-    <link rel="stylesheet" href="/statics/third/float/dist/mfb.css">
-    <%--<link rel="stylesheet" href="/statics/third/float/css/index.css">--%>
+    <link rel="stylesheet" href="/statics/css/note/view.css">
 
     <script type="text/javascript">
         var c_noteUserId = '${noteVO.note.userId}';
@@ -56,28 +51,8 @@
                 <h1 class="text-center c_title j_note_info">${noteVO.note.title}&nbsp;&nbsp;
                     <small id="j_note_info_parent_title">${noteVO.parentNote.title}</small>
                 </h1>
-
-                <ul id="menu" class="mfb-component--tl mfb-zoomin" data-mfb-toggle="hover" data-mfb-state="open">
-                    <li class="mfb-component__wrap">
-                        <a href="#" class="mfb-component__button--main">
-                            <i class="mfb-component__main-icon--resting ion-plus-round"></i>
-                            <i class="mfb-component__main-icon--active ion-close-round"></i>
-                        </a>
-                        <%--<ul class="mfb-component__list">
-                            <li id="j_note_toc_container">
-                                &lt;%&ndash;<a href="#" data-mfb-label="Child Button 1" class="mfb-component__button--child">
-                                    &lt;%&ndash;<i class="mfb-component__child-icon ion-social-github"></i>&ndash;%&gt;
-                                </a>&ndash;%&gt;
-                            </li>
-                        </ul>--%>
-                        <div id="j_note_toc_container" class="mfb-component__list"></div>
-                    </li>
-                </ul>
-
                 <div id="vanki-editormd-view-note">
-                    <textarea id="j_content" style="display: none;"><c:if
-                            test="${!empty noteVO.noteDetailList && !empty noteVO.noteDetailList[0].content}">${noteVO.noteDetailList[0].content}
-                    </c:if></textarea>
+                    <textarea id="j_content" style="display: none;"><c:if test="${!empty noteVO.noteDetailList && !empty noteVO.noteDetailList[0].content}">${noteVO.noteDetailList[0].content}</c:if></textarea>
                 </div>
             </div>
             <div id="j_note_comment" style="margin: 50px 0px 0px 20px; width: 88%; padding: 10px;">
