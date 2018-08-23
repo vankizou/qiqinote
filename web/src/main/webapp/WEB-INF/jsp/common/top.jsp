@@ -36,7 +36,7 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-ex-collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" >
                 <li class="text-align">
                     <a href="/index.html" class="homeUrl"><i class="fa fa-home"></i>&nbsp; 主页</a>
                 </li>
