@@ -53,7 +53,7 @@
                          class="btn_info1"> ${isMe ? "我" : "TA"}的笔记树&nbsp;>></a>
     </div>
 
-    <div>
+    <div id="j_note_info" <c:if test="${empty noteVO.noteDetailList}">style="display: none;"</c:if>>
         <div class="col-xs-9">
             <div id="layout">
                 <h1 class="text-center c_title j_note_info">${noteVO.note.title}&nbsp;&nbsp;
@@ -95,7 +95,8 @@
                                         <div class="comment_view_content_sub">
                                             <ul class="comment_view_ul_sub">
                                                 <li id="j_comment_view_ul_sub_li_default">
-                                                    <a class="comment_view_user_info_sub" title="访问主页" target="_blank">
+                                                    <a class="comment_view_user_info_sub" title="访问主页"
+                                                       target="_blank">
                                                         <img src=""
                                                              onerror="this.src='/statics/images/common/avatar/default.jpg'"
                                                              class="img-circle center-block" width="45" height="45"
@@ -149,7 +150,8 @@
         <div class="col-xs-3 c_body_right j_note_info">
             <div>
                 <div style="margin-bottom: 10px;">
-                    <div id="j_user_info" class="text-center" style="margin-bottom: 10px; cursor: pointer;" title="作者主页"
+                    <div id="j_user_info" class="text-center" style="margin-bottom: 10px; cursor: pointer;"
+                         title="作者主页"
                          onclick="window.open('/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}');">
                         <div>
                             <img id="j_user_info_avatar"
@@ -227,44 +229,44 @@
                 </section>
             </div>
         </div>
+
+        <ul id="menu" class="mfb-component--bl mfb-zoomin" data-mfb-toggle="click" style="display: none;">
+            <li class="mfb-component__wrap">
+                <a href="#" class="mfb-component__button--main" title="回到顶部">
+                    <i class="fa fa-arrow-up"></i>
+                </a>
+                <%--<ul class="mfb-component__list">
+                    <li>
+                        <a href="#" data-mfb-label="View on Github" class="mfb-component__button--child">
+                            <i class="mfb-component__child-icon ion-social-github"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-mfb-label="Follow me on Github" class="mfb-component__button--child">
+                            <i class="mfb-component__child-icon ion-social-octocat"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" data-mfb-label="Share on Twitter" class="mfb-component__button--child">
+                            <i class="mfb-component__child-icon ion-social-twitter"></i>
+                        </a>
+                    </li>
+                </ul>--%>
+            </li>
+            <li class="mfb-component__wrap">
+                <a class="mfb-component__button--main" title="评论">
+                    <i class="fa fa-commenting"></i>
+                </a>
+            </li>
+            <li class="mfb-component__wrap">
+                <a class="mfb-component__button--main" title="下载">
+                    <i class="fa fa-cloud-download"></i>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
-
-<ul id="menu" class="mfb-component--bl mfb-zoomin" data-mfb-toggle="click">
-    <li class="mfb-component__wrap">
-        <a href="#" class="mfb-component__button--main" title="回到顶部">
-            <i class="fa fa-arrow-up"></i>
-        </a>
-        <%--<ul class="mfb-component__list">
-            <li>
-                <a href="#" data-mfb-label="View on Github" class="mfb-component__button--child">
-                    <i class="mfb-component__child-icon ion-social-github"></i>
-                </a>
-            </li>
-            <li>
-                <a href="#" data-mfb-label="Follow me on Github" class="mfb-component__button--child">
-                    <i class="mfb-component__child-icon ion-social-octocat"></i>
-                </a>
-            </li>
-
-            <li>
-                <a href="#" data-mfb-label="Share on Twitter" class="mfb-component__button--child">
-                    <i class="mfb-component__child-icon ion-social-twitter"></i>
-                </a>
-            </li>
-        </ul>--%>
-    </li>
-    <li class="mfb-component__wrap">
-        <a class="mfb-component__button--main" title="评论">
-            <i class="fa fa-commenting"></i>
-        </a>
-    </li>
-    <li class="mfb-component__wrap">
-        <a class="mfb-component__button--main" title="下载">
-            <i class="fa fa-cloud-download"></i>
-        </a>
-    </li>
-</ul>
 
 <jsp:include page="../common/footer.jsp"></jsp:include>
 

@@ -1,4 +1,6 @@
 $(function () {
+    menuDisplay();
+
     $('.mfb-component__button--main').click(function () {
         var title = $(this).attr("title");
 
@@ -26,5 +28,16 @@ $(function () {
             downloadNote(tempPwd);
         };
         vankiAjax(ConstAjaxUrl.Note.preDownload, params, fnSucc, fnFail);
+    }
+
+    /**
+     * 边距过小不显示悬浮
+     */
+    function menuDisplay() {
+        if ($('#j_note_info .col-xs-9').offset().left < 42 || $(window).height() < 320) {
+            $('#menu').hide();
+        } else {
+            $('#menu').show();
+        }
     }
 });

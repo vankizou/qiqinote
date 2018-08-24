@@ -37,6 +37,7 @@ function fnGetNoteVo(noteIdOrIdLink, msg) {
 
             $('#j_empty_content').hide();
             $('.j_note_info').show();
+            $('#j_note_info').show();
 
             /**
              * 密码的不能一次性获取完数据
