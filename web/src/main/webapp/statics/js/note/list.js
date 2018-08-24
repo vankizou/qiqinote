@@ -43,12 +43,19 @@ var setting_noLogin = {
         beforeExpand: beforeExpand,
         // onDblClick: onDblClick,
         onClick: onDblClick,
-        onRightClick: onRightClick,
+        onRightClick: onRightClick
     }
-}
+};
 
 // 树，右键菜单，笔记目录下的笔记数量，笔记私密类型
 var tree, rMenu, childNoteNumJson = {}, noteSecretTypeJson = {}, noteIdAndNoteIdLinkJson = {};
+
+// 保存已经打开过的节点的密码
+var openedPwdJson = {};
+
+// 无内容的nodeId
+var noDetailNodeId = [];
+
 $(document).ready(function () {
     init();
 
@@ -359,11 +366,11 @@ function onDblClick(event, treeId, treeNode) {
     if (treeNode.id != ConstDB.defaultParentId && treeNode.isParent) {
         if (treeNode.open) {
             tree.expandNode(treeNode, false, null, null, null);
-            beforeCollapse(treeId, treeNode)
+            beforeCollapse(treeId, treeNode);
             return;
         } else {
             tree.expandNode(treeNode, true, null, null, null);
-            beforeExpand(treeId, treeNode)
+            beforeExpand(treeId, treeNode);
         }
     }
     openNote(treeNode.id, treeNode);
@@ -375,10 +382,12 @@ function openNote(noteId, treeNode) {
         noteId = node.id;
         if (!noteId) return;
     }
+
+    var flag = viewNote(noteId, "请输入密码", false);
+
     // 加载过的子集则不再重复加载
     if (treeNode['children'] && treeNode['children'].length > 0) return;
 
-    var flag = viewNote(noteId, "请输入密码", false);
     if (flag) {
         buildNoteTreeNodes(treeNode.id, treeNode);
     }
@@ -392,9 +401,6 @@ function beforeCollapse(treeId, treeNode) {
     }
     return (nodeId != ConstDB.defaultParentId && treeNode.collapse != false);
 }
-
-// 保存已经打开过的节点的密码
-var openedPwdJson = {};
 
 function beforeExpand(treeId, treeNode) {
     if (c_noteUserId == c_myUserId) {

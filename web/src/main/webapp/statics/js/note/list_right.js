@@ -68,6 +68,8 @@ $(function () {
             "noteDetailList[0].content": content
         };
         var fnSucc = function (countNoteCount) {
+            delete noDetailNodeId[noteId];
+
             vankiEditor.previewing();
             hideMarkdownCloseIcon();
             vankiMsgAlertAutoClose("保存成功");
@@ -156,6 +158,8 @@ function buildMarkdownEdit(val, heightDiff) {
                     "noteDetailList[0].content": content
                 };
                 var fnSucc = function () {
+                    delete noDetailNodeId[noteId];
+
                     vankiMsgAlertAutoClose("保存成功");
                 };
                 vankiAjax(ConstAjaxUrl.Note.updateById, params, fnSucc);
@@ -186,12 +190,15 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
             password = prompt(msgIfNeedPwd);
             if (password == null) return;
         }
+    } else if (noteId in noDetailNodeId) {
+        // 无内容，不请求
+        return
     }
     var idLink = noteIdAndNoteIdLinkJson[noteId];
     var params = {
         "idOrIdLink": idLink,
         "password": password,
-        "is_pop": false,
+        "is_pop": false
     };
     var context;
     var fnSucc = function (data) {
@@ -203,6 +210,7 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
             if (!(val = noteDetailList[0]['content'])) val = "";
         } else {
             $('#j_curr_note_detail_id').val("");
+            noDetailNodeId[noteId] = noteId
         }
         buildViewNoteCommonInfo(val, data['note']);
 
