@@ -210,7 +210,14 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
             if (!(val = noteDetailList[0]['content'])) val = "";
         } else {
             $('#j_curr_note_detail_id').val("");
-            noDetailNodeId[noteId] = noteId
+
+            /**
+             * 没有内容的笔记下次将不再请求
+             */
+            console.info(data);
+            if (data['note']['noteNum']) {
+                noDetailNodeId[noteId] = noteId
+            }
         }
         buildViewNoteCommonInfo(val, data['note']);
 
