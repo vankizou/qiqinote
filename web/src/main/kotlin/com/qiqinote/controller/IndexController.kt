@@ -63,7 +63,10 @@ class IndexController @Autowired constructor(
     fun login() = ModelAndView(WebPageEnum.login.url)
 
     @RequestMapping("/{idOrName}")
-    fun userHome(@PathVariable("idOrName") idOrName: String): ModelAndView {
+    fun userHome(@PathVariable("idOrName") idOrName: String) = this.userHome(idOrName, "")
+
+    @RequestMapping("/{idOrName}/{search}")
+    fun userHome(@PathVariable("idOrName") idOrName: String, @PathVariable("search") search: String): ModelAndView {
         var user = this.userContext?.user
         if (user != null) {
             if (idOrName.toLongOrNull() != user.id && idOrName != user.name) {
@@ -80,6 +83,7 @@ class IndexController @Autowired constructor(
         mv.addObject("userId", user.id ?: 0)
         mv.addObject("userName", user.name ?: "")
         mv.addObject("userAlias", user.alias ?: "")
+        mv.addObject("search", search)
         return mv
     }
 

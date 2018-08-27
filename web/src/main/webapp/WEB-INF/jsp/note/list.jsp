@@ -38,6 +38,7 @@
         var c_myUserId = '${suc.user.id}';
         var c_noteUserId = '${userId}';
         var c_noteUserAlias = '${userAlias}';
+        var c_search = '${search}';
         var basePath = '<%=basePath%>';
 
         $(function () {
@@ -56,7 +57,8 @@
             <div>
                 <input type="text" class="form-control"
                        style="height: 24px; margin-bottom: 5px; margin-left: 9px; width: 90%;"
-                       id="j_note_tree_title_like" placeholder="搜索..."/>
+                       id="j_note_tree_title_like" placeholder="搜索..."
+                       value="${search}"/>
             </div>
         </c:if>
         <ul id="noteTree" class="ztree" style="overflow: auto;"></ul>
@@ -121,7 +123,8 @@
         <hr id="m_hr1" style="height:1px;border:none;border-top:1px solid #555555;"/>
         <li id="m_secret_open" onclick="setSecretOpen();" title="所有人可见（不关联下级）"><i class="fa fa-share"></i> 设置公开</li>
         <li id="m_secret_pwd" onclick="setSecretPwd();" title="密码访问内容（不关联下级）"><i class="fa fa-key"></i> 设置密码</li>
-        <li id="m_secret_private" onclick="setSecretPrivate();" title="只能自己访问（不关联下级）"><i class="fa fa-user-o"></i> 设置私密</li>
+        <li id="m_secret_private" onclick="setSecretPrivate();" title="只能自己访问（不关联下级）"><i class="fa fa-user-o"></i> 设置私密
+        </li>
         <li id="m_secret_link" onclick="setSecretLink();" title="知道链接即可访问（不关联下级）"><i class="fa fa-link"></i> 设置访链</li>
         <hr id="m_hr2" style="height:1px;border:none;border-top:1px solid #555555;"/>
         <li id="m_download" onclick="downloadNote();"><i class="fa fa-download"></i> 下载笔记</li>

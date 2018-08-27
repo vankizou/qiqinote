@@ -183,6 +183,8 @@ var currPwd;    // 密码
 function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
     if (noteId == ConstDB.defaultParentId) return;
 
+    if (!msgIfNeedPwd) msgIfNeedPwd = "请输入密码";
+
     var secretType = noteSecretTypeJson[noteId];
     var password;
     if (c_myUserId != c_noteUserId && (secretType == ConstDB.Note.secretPwd || isNeedPwd)) {
@@ -214,7 +216,6 @@ function viewNote(noteId, msgIfNeedPwd, isNeedPwd) {
             /**
              * 没有内容的笔记下次将不再请求
              */
-            console.info(data);
             if (data['note']['noteNum']) {
                 noDetailNodeId[noteId] = noteId
             }

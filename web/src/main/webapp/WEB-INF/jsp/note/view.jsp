@@ -232,7 +232,7 @@
 
         <ul id="menu" class="mfb-component--bl mfb-zoomin" data-mfb-toggle="click" style="display: none;">
             <li class="mfb-component__wrap">
-                <a href="#" class="mfb-component__button--main" title="回到顶部">
+                <a class="mfb-component__button--main" title="回到顶部" href="#">
                     <i class="fa fa-arrow-up"></i>
                 </a>
                 <%--<ul class="mfb-component__list">
@@ -262,6 +262,13 @@
             <li class="mfb-component__wrap">
                 <a class="mfb-component__button--main" title="下载">
                     <i class="fa fa-cloud-download"></i>
+                </a>
+            </li>
+
+            <li id="j_menu_update" class="mfb-component__wrap" style="display: none;">
+                <a class="mfb-component__button--main" title="修改" href="/${noteVO.user.name}/${noteVO.note.title}" target="_blank">
+                    <%--<i class="fa fa-font"></i>--%>
+                    <i class="fa fa-pencil"></i>
                 </a>
             </li>
         </ul>

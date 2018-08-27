@@ -56,7 +56,7 @@ var openedPwdJson = {};
 // 无内容的nodeId
 var noDetailNodeId = [];
 
-$(document).ready(function () {
+$(function () {
     init();
 
     $('#j_note_tree_title_like').keyup(function (event) {
@@ -454,6 +454,9 @@ function buildNoteTreeNodes(parentId, parentNode) {
  */
 function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
     if (!data) return;
+
+    var openNoteId;
+
     for (var i in data) {
         var note = data[i]['note'];
 
@@ -470,6 +473,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         if (noteCountNote > 0) childNoteNumJson[note['id']] = noteCountNote;
         var subNoteVOList = data[i]['subNoteVOList'];
         var title = note['title'];
+        if (title == c_search) openNoteId = noteId;
         if (title.length > 32) title = title.substring(0, 32) + "...";
 
         noteTreeNodes.push({
@@ -487,7 +491,9 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         }
         if (subNoteVOList && subNoteVOList.length > 0) buildNodeJson(subNoteVOList, noteTreeNodes, existsNodeIdArr);
     }
-
+    if (openNoteId) {
+        window.onload = viewNote(openNoteId);
+    }
 }
 
 /**
