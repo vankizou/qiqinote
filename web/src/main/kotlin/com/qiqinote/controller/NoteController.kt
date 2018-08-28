@@ -90,6 +90,11 @@ class NoteController @Autowired constructor(
         mv.addObject("newest", this.noteService.page(null, noteVO.user?.id, null, null, "id DESC", false, null, 1, 10).data)
         mv.addObject("hottest", this.noteService.page(null, noteVO.user?.id, null, null, "view_num DESC", false, null, 1, 10).data)
         mv.addObject("isMe", loginUserId != null && loginUserId == noteVO.user?.id)
+
+        val userName = noteVO.user?.name
+        var title = noteVO.note?.title
+        if (title != null) title = title.split("/", limit = 2)[0]
+        mv.addObject("searchLink", if (StringUtil.isAnyBlank(userName, title)) "/" else "/$userName/$title")
         return mv
     }
 

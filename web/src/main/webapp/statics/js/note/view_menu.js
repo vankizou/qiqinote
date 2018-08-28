@@ -38,10 +38,6 @@ $(function () {
             $('#menu').hide();
         } else {
             $('#menu').show();
-
-            if (a_loginUserId && a_loginUserId == c_noteUserId) {
-                $("#j_menu_update").show();
-            }
         }
     }
 });

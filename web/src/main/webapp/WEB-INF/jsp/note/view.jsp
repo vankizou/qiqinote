@@ -265,12 +265,14 @@
                 </a>
             </li>
 
-            <li id="j_menu_update" class="mfb-component__wrap" style="display: none;">
-                <a class="mfb-component__button--main" title="修改" href="/${noteVO.user.name}/${noteVO.note.title}" target="_blank">
-                    <%--<i class="fa fa-font"></i>--%>
-                    <i class="fa fa-pencil"></i>
-                </a>
-            </li>
+            <c:if test="${isMe}">
+                <li class="mfb-component__wrap">
+                    <a class="mfb-component__button--main" title="修改" href="${searchLink}" target="_blank">
+                            <%--<i class="fa fa-font"></i>--%>
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                </li>
+            </c:if>
         </ul>
     </div>
 </div>

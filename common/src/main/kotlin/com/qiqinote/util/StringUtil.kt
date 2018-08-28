@@ -18,6 +18,8 @@ object StringUtil {
 
     fun isNotBlank(str: String?) = StringUtils.isNotBlank(str)
 
+    fun isAnyBlank(vararg str: String?) = StringUtils.isAnyBlank(*str)
+
     /**
      * xss数据更改
      *
@@ -26,4 +28,9 @@ object StringUtil {
      * @return
      */
     fun stripXSS(value: String?) = value?.replace("<".toRegex(), "&lt;")?.replace(">".toRegex(), "&gt;")
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        println(isAnyBlank("ss", "123"))
+    }
 }
