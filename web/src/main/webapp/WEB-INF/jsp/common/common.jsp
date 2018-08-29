@@ -48,7 +48,6 @@
 <script type="text/javascript" src="/statics/js/common/vankiUploadImage.js"></script>
 <script type="text/javascript" src="/statics/js/common/timeUtil.js"></script>
 
-
 <!-- Piwik -->
 <%--<script type="text/javascript">
     var _paq = _paq || [];
