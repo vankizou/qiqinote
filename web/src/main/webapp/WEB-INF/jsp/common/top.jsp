@@ -17,7 +17,7 @@
 <script type="text/javascript" src="/statics/js/common/top/top.js"></script>
 <script type="text/javascript" src="/statics/js/common/top/loginRegister.js"></script>
 <%--<script type="text/javascript" color="255,0,0" opacity="0.8" count="100" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>--%>
-<script type="text/javascript" color="5,146,211" opacity="0.8" count="100" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+<%--<script type="text/javascript" color="5,146,211" opacity="0.8" count="50" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>--%>
 
 <script type="text/javascript">
     var a_loginUserId = '${suc.user.id}'
