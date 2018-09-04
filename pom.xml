@@ -4,13 +4,13 @@
 
     <groupId>com.qiqinote</groupId>
     <artifactId>qiqinote</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
-        <module>common</module>
-        <module>redis</module>
-        <module>dao</module>
-        <module>service</module>
-        <module>web</module>
+        <module>qiqinote-common</module>
+        <module>qiqinote-redis</module>
+        <module>qiqinote-dao</module>
+        <module>qiqinote-service</module>
+        <module>qiqinote-web</module>
     </modules>
     <packaging>pom</packaging>
 
