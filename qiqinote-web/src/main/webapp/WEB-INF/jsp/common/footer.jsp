@@ -18,9 +18,9 @@
     </div>
     <div>
         友情链接：
-        <a href="http://www.istimer.com">不负春光</a>&nbsp;&nbsp;
-        <a href="http://www.1tools.net/">工具箱</a>&nbsp;&nbsp;
-        <a href="http://www.boiiod.com/">微微笔记</a>
+        <a target="_blank" href="https://qumi.app">趣米APP</a>&nbsp;&nbsp;
+        <a target="_blank" href="https://zhiyan.app">知言笔记</a>&nbsp;&nbsp;
+        <a target="_blank" href="https://gjx.app">工具箱</a>
     </div>
 </footer>
 <!-- 尾部end -->
