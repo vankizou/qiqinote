@@ -89,6 +89,9 @@
                         <li title="浏览量" class="default_cursor">
                             <i class="fa fa fa-eye"></i> <span id="j_note_info_viewNum"></span><span style="margin-left: 0">次浏览</span>
                         </li>
+                        <li title="创建时间" class="default_cursor">
+                            <i class="fa fa fa-calendar"></i> <span id="j_note_info_create_datetime"></span>
+                        </li>
                         <li title="关键词">
                             <i class="fa fa-keyboard-o"></i>
                             <span id="j_note_info_keyword" class="textOverflow" contenteditable="true"></span>

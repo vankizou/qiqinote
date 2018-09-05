@@ -431,6 +431,10 @@ function buildViewNoteCommonInfo(noteContentVal, note) {
     var viewNum = note['viewNum'];
     $('#j_note_info_viewNum').text(numToHumanView(viewNum, null, 1));
 
+    // 创建时间
+    var createDatetime = note['createDatetime'];
+    $('#j_note_info_create_datetime').text(createDatetime);
+
     // 关键词
     var keyword = note['keyword'];
     if (!keyword || keyword.trim() == '') keyword = defaultKeyword;
