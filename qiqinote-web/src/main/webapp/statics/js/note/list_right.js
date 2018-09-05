@@ -65,7 +65,7 @@ $(function () {
         var val = $(':checked').val();
         if (val == ConstDB.Note.secretPwd) {
             currPwd = prompt("请输入密码", currPwd);
-            if (currPwd == null) {  // 取消恢复原来的type
+            if (currPwd == null) {  // 取消恢复原来成的type
                 if (a_secretType != null || a_secretType != undefined) $('#j_note_info_edit_secret').val(a_secretType);
                 return;
             }
@@ -180,18 +180,7 @@ $(function () {
      * 编辑内容
      */
     $("#note_content_edit").click(function () {
-        var ele = $(this);
-        var status = ele.attr("status");
-
-        if (status && status == "1") {
-            updateNoteContent(function () {
-                vankiEditor.previewing();
-                hideMarkdownCloseIcon();
-            });
-        } else {
-            vankiEditor.fullscreen();
-            vankiEditor.previewed();
-        }
+        vankiEditor.previewed();
     });
 });
 
@@ -227,8 +216,6 @@ function updateNote(justUpdateCommon, failFn) {
     var fnSucc = function (countNoteCount) {
         delete noDetailNodeId[noteId];
 
-        // vankiEditor.previewing();
-        // hideMarkdownCloseIcon();
         vankiMsgAlertAutoClose("保存成功");
 
         /**
@@ -317,16 +304,46 @@ function buildMarkdownEdit(val, heightDiff) {
             hideMarkdownCloseIcon();
         },
         onpreviewed: function () {
+            if (!vankiEditor.state.fullscreen) {
+                vankiEditor.fullscreen();
+            }
             showEdit();
         },
         onpreviewing: function () {
             showView();
+            /**
+             * 1. 全屏预览禁用Esc
+             * 2. 全屏编辑按Esc退出全屏并预览
+             */
+            $(document).keyup(function (event) {
+                console.info(event.keyCode);
+                if (event.keyCode == 27) {
+                    if (vankiEditor.state.fullscreen) {
+                        if (!vankiEditor.state.preview) {
+                            vankiEditor.fullscreenExit();
+                        }
+                        return false;
+                    }
+                } else {
+                    return true
+                }
+            });
+            if (!vankiEditor.state.fullscreen) {
+                hideMarkdownCloseIcon();
+            }
         },
         onfullscreen: function () {
             $("#ratio_menu").hide();
         },
         onfullscreenExit: function () {
+            if (!vankiEditor.state.preview) {
+                vankiEditor.previewing();
+            }
+            updateNoteContent(function () {
+                hideMarkdownCloseIcon();
+            });
             $("#ratio_menu").show();
+            console.info("退出全屏")
         }
     });
 }
@@ -507,13 +524,11 @@ function buildStatusStr(status, statusDescription) {
 
 function showView() {
     var ele = $("#note_content_edit");
-    ele.attr("status", "0");
     ele.html('<i title="点击编辑内容" class="fa fa-edit"></i>');
 }
 
 function showEdit() {
     var ele = $("#note_content_edit");
-    ele.attr("status", "1");
     ele.html('<i title="点击保存修改" class="fa fa-spinner fa-spin"></i>');
 }
 

@@ -88,7 +88,7 @@
          class="<c:choose><c:when test="${empty contentCssCls}">col-xs-9</c:when><c:otherwise>${contentCssCls}</c:otherwise></c:choose>">
         <div tips="笔记内容">
             <div class="note_common">
-                <div id="note_content_edit" status="0"><i class="fa fa-edit"></i></div>
+                <div id="note_content_edit"><i class="fa fa-edit"></i></div>
                 <div class="note_common2 row">
                     <span id="j_common_title" class="textOverflow" contenteditable="true"></span>
                     <ul class="common_meta">
