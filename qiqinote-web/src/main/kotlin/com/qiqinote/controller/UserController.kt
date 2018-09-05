@@ -8,6 +8,7 @@ import com.qiqinote.service.UserService
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.StringUtil
 import com.qiqinote.util.UserUtil
+import com.qiqinote.util.WebUtil
 import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.get
@@ -75,7 +76,12 @@ class UserController @Autowired constructor(
         if (PasswordUtil.getEncPwd(oldPassword) != user.password) return ResultVO(CodeEnum.PWD_ERROR)
 
         user.password = newPassword
-        return this.userService.upsertUser(user)
+        var status = this.userService.upsertUser(user)
+        if (status.isSuccess()) {
+            WebUtil.doSignOut(this.response)
+            this.request.session.invalidate()
+        }
+        return status
     }
 
     @ResponseBody
@@ -105,7 +111,12 @@ class UserController @Autowired constructor(
             return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_ANSWER_ERROR)
         }
         user.password = password
-        return this.userService.upsertUser(user)
+        val status = this.userService.upsertUser(user)
+        if (status.isSuccess()) {
+            WebUtil.doSignOut(this.response)
+            this.request.session.invalidate()
+        }
+        return status
     }
 
     @ResponseBody

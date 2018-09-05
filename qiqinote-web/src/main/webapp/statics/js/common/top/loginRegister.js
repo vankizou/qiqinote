@@ -55,13 +55,20 @@ $(function () {
         var params = {
             account: account,
             password: pwd,
-            isRemember: isRemember ? 1 : 0
+            isRemember: isRemember ? 1 : 0,
+            is_pop: false
         };
         var fnSucc = function () {
-            // window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], account);
-            window.location.reload();
+            if (window.location.href.indexOf("/note/") == -1) {
+                window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], account);
+            } else {
+                window.location.reload();
+            }
         };
-        vankiAjax(ConstAjaxUrl.Index.signIn, params, fnSucc);
+        var fnFail = function () {
+            vankiLayerMsgFailTou("用户名或密码错误")
+        };
+        vankiAjax(ConstAjaxUrl.Index.signIn, params, fnSucc, fnFail);
     };
 
     function fnRegister() {
@@ -120,8 +127,11 @@ $(function () {
             });
             $('#btn_close_msg').click(function () {
                 layer.close(regSuccLayerIndex);
-                // window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], data['name']||data['id']);
-                window.location.reload();
+                if (window.location.href.indexOf("/note/") == -1) {
+                    window.location = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], data['name']||data['id']);
+                } else {
+                    window.location.reload();
+                }
             });
         };
         var fnFail = function (data) {
