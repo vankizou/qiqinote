@@ -190,7 +190,6 @@ $(function () {
             });
         } else {
             vankiEditor.previewed();
-
         }
     });
 });
@@ -490,13 +489,13 @@ function buildStatusStr(status, statusDescription) {
             statusStr = '<span class="vertical-align: middle;" style="cursor: pointer;" title="正在审核中，请耐心等候...' + statusDescription + '">待审核</span>';
             break;
         case ConstDB.Note.statusNoPass:
-            statusStr = '<span class="vertical-align: middle;" style="cursor: pointer;" title="审核不通过，请修改后再提交' + statusDescription + '">不通过</span>';
+            statusStr = '<span class="vertical-align: middle;" style="cursor: pointer;" title="审核不通过，请修改后再提交' + statusDescription + '">审核不通过</span>';
             break;
         case ConstDB.Note.statusPass:
-            statusStr = '<span class="vertical-align: middle;"  style="cursor: pointer;" title="审核通过' + statusDescription + '">全站访问</span>';
+            statusStr = '<span class="vertical-align: middle;"  style="cursor: pointer;" title="审核通过' + statusDescription + '">审核通过</span>';
             break;
         default:
-            statusStr = '<span class="vertical-align: middle;" style="cursor: pointer;" title="审核不通过，请修改后再提交' + statusDescription + '">不通过</span>';
+            statusStr = '<span class="vertical-align: middle;" style="cursor: pointer;" title="审核不通过，请修改后再提交' + statusDescription + '">审核不通过</span>';
     }
     return statusStr;
 }

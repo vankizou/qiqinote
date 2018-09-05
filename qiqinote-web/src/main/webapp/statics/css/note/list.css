@@ -166,3 +166,7 @@ label {
     color: #0592d3;
     cursor: pointer;
 }
+
+#ratio_menu {
+    margin-left: 12px;
+}
