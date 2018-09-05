@@ -85,9 +85,10 @@ class IndexController @Autowired constructor(
         mv.addObject("search", search)
 
         if (user.id != null && user.id == this.justGetLoginUserId()) {
+            mv.addObject("isMine", true)
+
             val config = this.configService.getByUserId(user.id!!)
             if (config?.noteTreeConfig != null) {
-                mv.addObject("isMine", true)
                 mv.addObject("treeCssCls", config.noteTreeConfig!!.treeCssCls)
                 mv.addObject("contentCssCls", config.noteTreeConfig!!.contentCssCls)
             }
