@@ -34,7 +34,7 @@ $(function () {
      * 边距过小不显示悬浮
      */
     function menuDisplay() {
-        if ($('#j_note_info .col-xs-9').offset().left < 42 || $(window).height() < 320) {
+        if ($('#j_note_info .col-xs-9').offset().left < 30 || $(window).height() < 320) {
             $('#menu').hide();
         } else {
             $('#menu').show();

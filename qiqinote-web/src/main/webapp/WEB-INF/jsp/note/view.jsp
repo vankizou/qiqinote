@@ -48,7 +48,7 @@
 <body>
 <jsp:include page="../common/top.jsp"></jsp:include>
 
-<div class="container row c_all" style="margin: 10px auto; width: 88%; padding: 10px;">
+<div class="container row c_all" style="margin: 10px auto; width: 94%; padding: 10px;">
     <div id="j_empty_content" class="text-center"
          style="display: none; margin: 50px auto; font-size:18px; font-weight:bold;">
         笔记内容为空!&nbsp; <a href="/${noteVO.user.name == null ? noteVO.note.userId : noteVO.user.name}" target="_blank"
