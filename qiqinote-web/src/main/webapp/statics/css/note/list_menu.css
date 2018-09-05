@@ -1,17 +1,16 @@
 .menu {
-    /*margin-bottom: 20px;*/
-    /*margin-left: 20px;*/
-    opacity: 0.8;
+    opacity: 0.6;
+    margin-left: 14px;
 }
 
 .menu a {
-    width: 36px;
-    height: 36px;
+    width: 26px;
+    height: 26px;
     background-color: #0592d3;
 }
 
 .menu i {
-    line-height: 36px;
-    margin-left: 10px;
+    line-height: 26px;
+    margin-left: 4px;
     font-size: 18px;
 }
