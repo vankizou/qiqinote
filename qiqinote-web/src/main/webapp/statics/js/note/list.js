@@ -23,7 +23,7 @@ var setting = {
         onRightClick: onRightClick,
         beforeCollapse: beforeCollapse,
         beforeExpand: beforeExpand,
-        onClick: onDblClick,
+        onClick: onDblClick
         // onDblClick: onDblClick
     }
 };
@@ -65,11 +65,24 @@ $(function () {
         init();
     });
 
+    $("#j_note_tree_title_like_go").click(function () {
+        tree.destroy();
+        init();
+    });
+
+    $("#j_note_tree_title_like_clear").click(function () {
+        var v = $("#j_note_tree_title_like").val();
+        if (!v || v.trim() == "") return;
+
+        $("#j_note_tree_title_like").val("");
+        tree.destroy();
+        init();
+    });
 });
 
 function init() {
     if ($('#j_note_tree_title_like').length) {
-        $('#noteTree').css('height', $(window).height() - 110);
+        $('#noteTree').css('height', $(window).height() - 116);
     } else {
         $('#noteTree').css('height', $(window).height() - 80);
     }

@@ -151,7 +151,7 @@ class NoteController @Autowired constructor(
         vo.parentNote = this.noteService.getByIdOrIdLink(vo.note?.parentId ?: DBConst.defaultParentId)
 
         // 用户
-        if (vo.note?.userId != null) {
+        /*if (vo.note?.userId != null) {
             val user = this.userService.getById(vo.note?.userId!!)
             if (StringUtil.isBlank(user?.motto)) {
                 user?.motto = this.wordService.random()
@@ -163,7 +163,7 @@ class NoteController @Autowired constructor(
                     vo.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
                 }
             }
-        }
+        }*/
         return ResultVO(vo)
     }
 

@@ -189,6 +189,7 @@ $(function () {
                 hideMarkdownCloseIcon();
             });
         } else {
+            vankiEditor.fullscreen();
             vankiEditor.previewed();
         }
     });

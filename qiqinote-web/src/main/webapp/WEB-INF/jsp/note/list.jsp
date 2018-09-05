@@ -65,11 +65,21 @@
          class="<c:choose><c:when test="${empty treeCssCls}">col-xs-3</c:when><c:otherwise>${treeCssCls}</c:otherwise></c:choose>"
          tips="笔记树">
         <c:if test="${suc.user.id == userId}">
-            <div>
+            <div class="input-group" style="margin: 0 10px 8px 10px; z-index: 0;">
                 <input type="text" class="form-control"
-                       style="height: 24px; margin-bottom: 5px; margin-left: 9px; width: 90%;"
+                       style="height: 28px;"
                        id="j_note_tree_title_like" placeholder="搜索..."
                        value="${search}"/>
+                <span class="input-group-btn">
+                    <button id="j_note_tree_title_like_clear" class="btn btn-default" type="button"
+                            style="height: 28px; line-height: 14px; color: #0592d3;" title="清空">
+                        <i class="fa fa-times-circle"></i>
+                    </button>
+                    <button id="j_note_tree_title_like_go" class="btn btn-default" type="button"
+                            style="height: 28px; line-height: 14px; color: #0592d3;" title="搜索">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
             </div>
         </c:if>
         <ul id="noteTree" class="ztree" style="overflow: auto;"></ul>
@@ -87,10 +97,11 @@
                         </li>
                         <li title="私密状态" class="default_cursor" id="j_common_secret"></li>
                         <li title="浏览量" class="default_cursor">
-                            <i class="fa fa fa-eye"></i> <span id="j_note_info_viewNum"></span><span style="margin-left: 0">次浏览</span>
+                            <i class="fa fa-eye"></i> <span id="j_note_info_viewNum"></span><span
+                                style="margin-left: 0">次浏览</span>
                         </li>
                         <li title="创建时间" class="default_cursor">
-                            <i class="fa fa fa-calendar"></i> <span id="j_note_info_create_datetime"></span>
+                            <i class="fa fa-calendar"></i> <span id="j_note_info_create_datetime"></span>
                         </li>
                         <li title="关键词">
                             <i class="fa fa-keyboard-o"></i>
