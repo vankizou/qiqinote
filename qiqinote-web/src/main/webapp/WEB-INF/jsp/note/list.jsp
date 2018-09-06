@@ -47,11 +47,12 @@
         var c_noteUserAlias = '${userAlias}';
         var c_search = '${search}';
         var basePath = '<%=basePath%>';
+        var c_isMine = '${isMine}';
 
         var a_curr_note_id;
 
         $(function () {
-            if (c_myUserId && c_myUserId == c_noteUserId) {
+            if (c_isMine) {
                 $(".myNoteUrl").addClass("topActive");
             }
         });

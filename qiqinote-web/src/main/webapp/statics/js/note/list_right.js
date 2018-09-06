@@ -8,7 +8,7 @@ var defaultKeyword = "请输入关键词";
 var titleTmp;
 var keywordTmp;
 $(function () {
-    if (c_myUserId != c_noteUserId) {
+    if (!c_isMine) {
         $("#note_content_edit").hide();
         $("#j_common_title").attr("contenteditable", "false");
         $("#j_note_info_keyword").attr("contenteditable", "false");
@@ -184,8 +184,8 @@ $(function () {
     });
 
     $("#j_vanki-editormd-dynamic").dblclick(function () {
-        if (isInitedMD) return;
-        console.info(vankiEditor.state)
+        if (!c_isMine || isInitedMD) return;
+
         if (vankiEditor.state.preview) {
             vankiEditor.previewed();
         } else {
@@ -469,7 +469,7 @@ function buildViewNoteCommonInfo(noteContentVal, note) {
     // 关键词
     var keyword = note['keyword'];
     if (!keyword || keyword.trim() == '') keyword = defaultKeyword;
-    if (c_myUserId != c_noteUserId) keyword = "未设置关键词";
+    if (!c_isMine) keyword = "未设置关键词";
     var keywordEle = $('#j_note_info_keyword');
     keywordEle.text(keyword);
 

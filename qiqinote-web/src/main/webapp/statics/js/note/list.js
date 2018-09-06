@@ -541,9 +541,9 @@ function showRMenu(noteId, type, x, y) {
         }
         $('#m_add').show();
 
-        $('#m_open').hide();
+        // $('#m_open').hide();
         $('#m_updateTitle').hide();
-        $('#m_editInCurrPage').hide();
+        // $('#m_editInCurrPage').hide();
         $('#m_del').hide();
 
         $('#m_hr1').hide();
@@ -556,10 +556,10 @@ function showRMenu(noteId, type, x, y) {
         $('#m_download').hide();
     } else if (type == 'node') {
         if (c_noteUserId == c_myUserId) {
-            $('#m_open').show();
+            // $('#m_open').show();
             $('#m_add').show();
             $('#m_updateTitle').show();
-            $('#editNote').show();
+            // $('#m_editNote').show();
             $('#m_del').show();
 
             $('#m_hr1').show();
@@ -577,10 +577,10 @@ function showRMenu(noteId, type, x, y) {
                 $('#m_download').hide();
             }
         } else {
-            $('#m_open').show();
+            // $('#m_open').show();
             $('#m_add').hide();
             $('#m_updateTitle').hide();
-            $('#m_editInCurrPage').hide();
+            // $('#m_editInCurrPage').hide();
             $('#m_del').hide();
 
             $('#m_hr1').hide();
@@ -590,14 +590,11 @@ function showRMenu(noteId, type, x, y) {
             $('#m_secret_private').hide();
 
             $('#m_hr2').hide();
-            $('#m_download').hide();
 
             if (a_note_content_json[noteId] && a_note_content_json[noteId] > 0) {
-                $('#m_hr2').show();
                 $('#m_download').show();
             } else {
-                $('#m_hr2').hide();
-                $('#m_download').hide();
+                hideRMenu();
             }
         }
     } else {
@@ -634,10 +631,11 @@ function downloadNote(password) {
     };
     var fnSucc = function (data) {
         openedPwdJson[noteId] = password;
+        if (!password) password = "";
         window.location = "/note/download.json?id=" + noteId + "&idLink=" + idLink + "&password=" + password;
     };
     var fnFail = function (data) {
-        if (data['code'] != ConstStatusCode.CODE_1100[0]) return;
+        if (data['code'] != ConstStatusCode.CODE_1120[0]) return;
         var tempPwd = prompt("请输入密码");
         if (tempPwd == null) return false;
         downloadNote(tempPwd);
