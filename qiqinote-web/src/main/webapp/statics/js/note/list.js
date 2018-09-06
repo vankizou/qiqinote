@@ -495,7 +495,7 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
             isParent: noteCountNote > 0 ? true : false
         });
         var countNoteContent = note['noteContentNum'];
-        if (countNoteContent > 0) {
+        if (countNoteContent && countNoteContent > 0) {
             a_note_content_json[noteId] = countNoteContent;
         } else {
             delete a_note_content_json[noteId];
@@ -595,6 +595,7 @@ function showRMenu(noteId, type, x, y) {
                 $('#m_download').show();
             } else {
                 hideRMenu();
+                return;
             }
         }
     } else {
