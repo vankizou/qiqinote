@@ -182,10 +182,24 @@ $(function () {
     $("#note_content_edit").click(function () {
         vankiEditor.previewed();
     });
+
+    $("#j_vanki-editormd-dynamic").dblclick(function () {
+        if (isInitedMD) return;
+        console.info(vankiEditor.state)
+        if (vankiEditor.state.preview) {
+            vankiEditor.previewed();
+        } else {
+            // vankiEditor.previewing();
+            vankiEditor.fullscreenExit();
+        }
+    });
 });
+
+var isInitedMD = true;
 
 function initMD() {
     buildMarkdownEdit(initMDStr, 95);
+    isInitedMD = true;
 }
 
 function updateNote(justUpdateCommon, failFn) {
@@ -316,7 +330,6 @@ function buildMarkdownEdit(val, heightDiff) {
              * 2. 全屏编辑按Esc退出全屏并预览
              */
             $(document).keyup(function (event) {
-                console.info(event.keyCode);
                 if (event.keyCode == 27) {
                     if (vankiEditor.state.fullscreen) {
                         if (!vankiEditor.state.preview) {
@@ -343,9 +356,9 @@ function buildMarkdownEdit(val, heightDiff) {
                 hideMarkdownCloseIcon();
             });
             $("#ratio_menu").show();
-            console.info("退出全屏")
         }
     });
+    isInitedMD = false;
 }
 
 var currPwd;    // 密码
@@ -524,7 +537,7 @@ function buildStatusStr(status, statusDescription) {
 
 function showView() {
     var ele = $("#note_content_edit");
-    ele.html('<i title="点击编辑内容" class="fa fa-edit"></i>');
+    ele.html('<i title="点击（或双击内容框）编辑内容" class="fa fa-edit"></i>');
 }
 
 function showEdit() {
