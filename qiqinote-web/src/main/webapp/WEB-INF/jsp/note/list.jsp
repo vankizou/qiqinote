@@ -72,11 +72,12 @@
                        value="${search}"/>
                 <span class="input-group-btn">
                     <button id="j_note_tree_title_like_clear" class="btn btn-default" type="button"
-                            style="height: 28px; line-height: 14px; color: #0592d3;" title="清空">
+                            style="height: 28px; line-height: 14px; color: #0592d3; border-left: none; border-right: none; border-radius: 2px"
+                            title="清空">
                         <i class="fa fa-times-circle"></i>
                     </button>
                     <button id="j_note_tree_title_like_go" class="btn btn-default" type="button"
-                            style="height: 28px; line-height: 14px; color: #0592d3;" title="搜索">
+                            style="height: 28px; line-height: 14px; color: #0592d3; border-left: none;" title="搜索">
                         <i class="fa fa-search"></i>
                     </button>
                 </span>
