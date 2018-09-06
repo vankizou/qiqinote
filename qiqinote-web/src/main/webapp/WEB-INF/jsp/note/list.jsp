@@ -121,9 +121,9 @@
 <div id="rMenu">
     <ul>
         <li id="m_add" onclick="addNote();"><i class="fa fa-plus"></i> 添加笔记</li>
-        <li id="m_open" onclick="openNote();"><i class="fa fa-eye"></i> 查看内容</li>
+        <%--<li id="m_open" onclick="openNote();"><i class="fa fa-eye"></i> 查看内容</li>--%>
         <li id="m_updateTitle" onclick="updateNoteTitle();"><i class="fa fa-pencil"></i> 修改标题</li>
-        <li id="m_editInCurrPage" onclick="editNote();"><i class="fa fa-edit"></i> 编辑笔记</li>
+        <%--<li id="m_editInCurrPage" onclick="editNote();"><i class="fa fa-edit"></i> 编辑笔记</li>--%>
         <li id="m_del" onclick="deleteNote();"><i class="fa fa-trash-o"></i> 删除笔记</li>
         <hr id="m_hr1" style="height:1px;border:none;border-top:1px solid #555555;"/>
         <li id="m_secret_open" onclick="setSecretOpen();" title="所有人可见（不关联下级）"><i class="fa fa-share"></i> 设置公开</li>
