@@ -84,7 +84,7 @@ function fnInitVankiEditor(val) {
         htmlDecode: "style,script,iframe,form",  // you can filter tags decode
         toc: true,
         tocm: true,
-        // tocContainer: "#j_note_toc_container",
+        tocContainer: "#j_toc_container",
         emoji: false,
         taskList: true,
         tex: true,  // 默认不解析

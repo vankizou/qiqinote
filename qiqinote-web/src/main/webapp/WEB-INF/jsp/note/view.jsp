@@ -29,8 +29,9 @@
     <script type="text/javascript" src="/statics/js/note/view_menu.js"></script>
     <link rel="stylesheet" href="/statics/third/float/dist/mfb.css">
     <link rel="stylesheet" href="/statics/css/note/view_menu.css">
-    <%--<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">--%>
-    <%--<link rel="stylesheet" href="/statics/third/float/css/index.css">--%>
+
+    <script type="text/javascript" src="/statics/js/note/view_toc.js"></script>
+    <link rel="stylesheet" href="/statics/css/note/view_toc.css">
 
     <script type="text/javascript">
         var c_noteUserId = '${noteVO.note.userId}';
@@ -232,7 +233,18 @@
             </div>
         </div>
 
-        <ul id="menu" class="mfb-component--bl mfb-zoomin" data-mfb-toggle="click" style="display: none;">
+        <ul id="j_toc_menu" class="mfb-component--tr mfb-zoomin" data-mfb-toggle="hover" <%--style="display: none;"--%>>
+            <fieldset id="j_toc_menu_content">
+                <legend id="j_toc_container"></legend>
+            </fieldset>
+            <li class="mfb-component__wrap">
+                <%--<a class="mfb-component__button--main">--%>
+                <i class="mfb-component__button--main fa fa-navicon"></i>
+                <%--</a>--%>
+            </li>
+        </ul>
+
+        <ul id="menu" class="mfb-component--bl mfb-zoomin" <%--data-mfb-toggle="hover"--%> style="display: none;">
             <li class="mfb-component__wrap">
                 <a class="mfb-component__button--main" href="#">
                     <i class="fa fa-arrow-up"></i>

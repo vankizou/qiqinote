@@ -21,7 +21,7 @@ object HttpUtil {
 
     init {
         // 设置请求和传输超时时间
-        requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(5000).build();
+        requestConfig = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(1000).build();
     }
 
     fun doPost(url: String, param: String?): String? {

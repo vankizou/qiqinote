@@ -17,7 +17,12 @@ class WordServiceImpl @Autowired constructor(
         private val wordDao: WordDao
 ) : WordService {
     override fun random(): String {
-        val wordStr = HttpUtil.doGet("https://api.hitokoto.cn/?encode=json")
+        val wordStr =
+                try {
+                    HttpUtil.doGet("https://api.hitokoto.cn/?encode=json")
+                } catch (e: Exception) {
+                    null
+                }
         var w: String? = null
         if (StringUtil.isNotBlank(wordStr)) {
             val wordNode = jacksonObjectMapper().readTree(wordStr)
