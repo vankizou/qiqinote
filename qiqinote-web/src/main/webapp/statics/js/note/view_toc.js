@@ -12,6 +12,8 @@ $(function () {
         $("#j_toc_menu").css("margin-top", initOffsetTop);
         $("#j_toc_menu").css("margin-right", initOffsetLeft);
 
+        console.info(mdOffset.left)
+        $("#j_toc_menu fieldset legend").css("max-width", md.width() - 100);
         $("#j_toc_menu").show();
     }
 
