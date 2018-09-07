@@ -2,14 +2,18 @@ $(function () {
     /**
      * 配置菜单导航坐标
      */
-    var md = $("#vanki-editormd-view-note");
-    var mdOffset = md.offset();
-    $("#j_toc_menu_content").hide();
+    if ($("#j_toc_container li").length > 0) {
+        var md = $("#vanki-editormd-view-note");
+        var mdOffset = md.offset();
+        $("#j_toc_menu_content").hide();
 
-    var initOffsetTop = mdOffset.top - 34;
-    var initOffsetLeft = $(window).width() - mdOffset.left - md.width() - 30;
-    $("#j_toc_menu").css("margin-top", initOffsetTop);
-    $("#j_toc_menu").css("margin-right", initOffsetLeft);
+        var initOffsetTop = mdOffset.top - 34;
+        var initOffsetLeft = $(window).width() - mdOffset.left - md.width() - 30;
+        $("#j_toc_menu").css("margin-top", initOffsetTop);
+        $("#j_toc_menu").css("margin-right", initOffsetLeft);
+
+        $("#j_toc_menu").show();
+    }
 
     $("#j_aaa").dblclick(function () {
         $(".editormd-markdown-toc").slideToggle("slow");

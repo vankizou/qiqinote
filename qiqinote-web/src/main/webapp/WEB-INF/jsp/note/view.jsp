@@ -233,7 +233,7 @@
             </div>
         </div>
 
-        <ul id="j_toc_menu" class="mfb-component--tr mfb-zoomin" data-mfb-toggle="hover" <%--style="display: none;"--%>>
+        <ul id="j_toc_menu" class="mfb-component--tr mfb-zoomin" data-mfb-toggle="hover" style="display: none;">
             <fieldset id="j_toc_menu_content">
                 <legend id="j_toc_container"></legend>
             </fieldset>
