@@ -1,6 +1,6 @@
 $(function () {
     /**
-     * 配置菜单导航坐标
+     * 配置悬浮目录坐标
      */
     if ($("#j_toc_container li").length > 0) {
         var md = $("#vanki-editormd-view-note");
@@ -12,14 +12,15 @@ $(function () {
         $("#j_toc_menu").css("margin-top", initOffsetTop);
         $("#j_toc_menu").css("margin-right", initOffsetLeft);
 
-        console.info(mdOffset.left)
-        $("#j_toc_menu fieldset legend").css("max-width", md.width() - 100);
+        /**
+         * 悬浮目录最大宽度
+         */
+        var contentWidth = md.width();
+        var marginWidth = 500;  // 最大宽度设置
+        if (marginWidth > contentWidth) marginWidth = contentWidth;
+        $("#j_toc_menu fieldset legend").css("max-width",  marginWidth);
         $("#j_toc_menu").show();
     }
-
-    $("#j_aaa").dblclick(function () {
-        $(".editormd-markdown-toc").slideToggle("slow");
-    });
 
     $("#j_toc_menu .mfb-component__wrap").hover(function () {
         $("#j_toc_menu_content").show()
