@@ -135,22 +135,25 @@ class NoteDaoImpl @Autowired constructor(
 
         val status = this.namedParameterJdbcTemplate.update(NamedSQLUtil.getUpdateSQL(Note::class, paramMap, paramMap.size - 1 - 2), paramMap)
         if (status > 0) {
-            println(deleteSubNotes(userId, note.path + DBConst.Note.pathLink + note.id))
+            deleteSubNotes(userId, note.id!!, note.path + DBConst.Note.pathLink + note.id)
             return 1
         }
         return status
     }
 
-    private fun deleteSubNotes(userId: Long, path: String): Int {
+    private fun deleteSubNotes(userId: Long, parentId: Long, path: String): Int {
         val paramMap = mutableMapOf<String, Any>("del" to DBConst.trueVal)
 
         val sql = StringBuilder(128)
         sql.append(NamedSQLUtil.getUpdateSQLWithoutCondition(Note::class, paramMap))
         sql.append(" WHERE ")
-        sql.append("user_id=:userId AND path like '$path%'")
+        sql.append("user_id=:userId")
 
         paramMap["userId"] = userId
-        return this.namedParameterJdbcTemplate.update(sql.toString(), paramMap)
+
+        val s2 = this.namedParameterJdbcTemplate.update(sql.toString() + " AND parent_id=$parentId", paramMap)
+        val s1 = this.namedParameterJdbcTemplate.update(sql.toString() + " AND path like '$path\\_%'", paramMap)
+        return s1 + s2
     }
 
     override fun countByParentId(parentId: Long): Int {
