@@ -143,6 +143,9 @@ class NoteServiceImpl @Autowired constructor(
             updateNoteNum(loginUserId, oldParentId)
             updateNoteNum(loginUserId, newParentId)
         }
+        if (old.path != note.path) {
+            this.noteDao.updatePath(note.id!!, note.path!!)
+        }
 //        this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, note.parentId!!))
         return ResultVO(status)
     }

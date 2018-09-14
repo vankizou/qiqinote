@@ -21,6 +21,8 @@ interface NoteDao {
 
     fun updateById(userId: Long, id: Long, fieldValueMap: Map<String, Any?>): Int
 
+    fun updatePath(parentId: Long, parentPath: String)
+
     fun deleteById(userId: Long, id: Long): Int
 
     fun countByParentId(parentId: Long): Int

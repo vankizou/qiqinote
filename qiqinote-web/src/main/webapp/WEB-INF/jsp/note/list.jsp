@@ -98,6 +98,18 @@
                             <i class="fa fa-bell-o"></i> <span id="j_note_info_status"></span>
                         </li>
                         <li title="私密状态" class="default_cursor" id="j_common_secret"></li>
+                        <%--<li class="dropdown all-camera-dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Tutorials
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li data-filter-camera-type="all"><a data-toggle="tab" href="#">HTML5</a></li>
+                                <li data-filter-camera-type="Alpha"><a data-toggle="tab" href="#">PHP</a></li>
+                                <li data-filter-camera-type="Zed"><a data-toggle="tab" href="#">MySQL</a></li>
+                                <li data-filter-camera-type="Bravo"><a data-toggle="tab" href="#">JavaScript</a></li>
+                            </ul>
+                        </li>--%>
                         <li title="浏览量" class="default_cursor">
                             <i class="fa fa-eye"></i> <span id="j_note_info_viewNum"></span><span
                                 style="margin-left: 0">次浏览</span>

@@ -109,6 +109,20 @@ class NoteDaoImpl @Autowired constructor(
         return this.namedParameterJdbcTemplate.update(sql, paramMap)
     }
 
+    override fun updatePath(parentId: Long, parentPath: String) {
+        val sql = "select id, parent_id, path from note where parent_id=$parentId"
+        val list = this.namedParameterJdbcTemplate.query(sql, rowMapper)
+        if (list.isEmpty()) return
+
+        val date = Date()
+        list.forEach({
+            val path = if (parentId == DBConst.defaultParentId) DBConst.defaultParentId.toString() else parentPath + DBConst.Note.pathLink + parentId
+            val sql2 = "update note set path='$path', update_datetime=:updateDatetime where parent_id=$parentId"
+            this.namedParameterJdbcTemplate.update(sql2, mapOf("updateDatetime" to date))
+            updatePath(it.id!!, path)
+        })
+    }
+
     override fun deleteById(userId: Long, id: Long): Int {
         val note = this.getByIdOrIdLink(id, null) ?: return 1
         if (note.userId != userId) return 1
@@ -121,7 +135,7 @@ class NoteDaoImpl @Autowired constructor(
 
         val status = this.namedParameterJdbcTemplate.update(NamedSQLUtil.getUpdateSQL(Note::class, paramMap, paramMap.size - 1 - 2), paramMap)
         if (status > 0) {
-            deleteSubNotes(userId, note.path + DBConst.Note.pathLink + note.id)
+            println(deleteSubNotes(userId, note.path + DBConst.Note.pathLink + note.id))
             return 1
         }
         return status
@@ -133,10 +147,9 @@ class NoteDaoImpl @Autowired constructor(
         val sql = StringBuilder(128)
         sql.append(NamedSQLUtil.getUpdateSQLWithoutCondition(Note::class, paramMap))
         sql.append(" WHERE ")
-        sql.append("user_id=:userId AND path like '$path%' AND del=:currDel")
+        sql.append("user_id=:userId AND path like '$path%'")
 
         paramMap["userId"] = userId
-        paramMap["currDel"] = DBConst.falseVal
         return this.namedParameterJdbcTemplate.update(sql.toString(), paramMap)
     }
 
