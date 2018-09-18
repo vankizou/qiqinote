@@ -141,14 +141,6 @@ label {
     display: inline-block;
 }
 
-.common_meta span {
-    vertical-align: middle;
-}
-
-.common_meta i {
-    vertical-align: middle;
-}
-
 #j_note_info_keyword {
     text-align: left;
     display: inline-block;
@@ -165,4 +157,33 @@ label {
     font-size: 22px;
     color: #0592d3;
     cursor: pointer;
+}
+
+.common_meta .dropdown {
+    color: grey;
+    cursor: pointer;
+}
+
+.common_meta .dropdown-menu {
+    min-width: 110px;
+}
+
+.common_meta .dropdown-menu span:hover {
+    color: #0592d3;
+    background-color: white;
+    font-weight: 700;
+}
+
+.common_meta .dropdown li {
+    background-color: white;
+    display: block;
+    padding: 4px 10px;
+}
+
+.common_meta .dropdown li:hover {
+    background-color: white;
+}
+
+.note_info_secret {
+    font-weight: 500;
 }

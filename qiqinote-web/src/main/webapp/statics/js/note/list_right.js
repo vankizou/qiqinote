@@ -70,8 +70,9 @@ $(function () {
                 return;
             }
         }
-        var viewSecretStr = buildViewSecretStr(val, currPwd);
-        $('#j_note_info_secret').text(viewSecretStr);
+        // var viewSecretStr = buildViewSecretStr(val, currPwd);
+        // $('#j_note_info_secret').text(viewSecretStr);
+        setViewSecretStr(val, currPwd);
     });
 
     /**
@@ -193,6 +194,13 @@ $(function () {
             vankiEditor.fullscreenExit();
         }
     });
+
+    /**
+     * 修改秘密状态
+     */
+    $("#j_note_info_secret_dropdown span").click(function () {
+        setSecretCommon($(this).attr("secrettype"));
+    });
 });
 
 var isInitedMD = true;
@@ -205,7 +213,6 @@ function initMD() {
 function updateNote(justUpdateCommon, failFn) {
     var noteId = $('#j_curr_note_id').val();
     var title = $('#j_common_title').text();
-    var secretType = $('#j_note_info_secret').text();
     var keyword = $('#j_note_info_keyword').text();
 
     if (keyword == defaultKeyword || keyword.trim() == "") {
@@ -215,7 +222,7 @@ function updateNote(justUpdateCommon, failFn) {
     var params = {
         "note.id": noteId,
         "note.title": title,
-        "note.secret": secretType,
+        // "note.secret": secretType,
         "note.password": currPwd,
         "note.keyword": keyword
     };
@@ -456,7 +463,8 @@ function buildViewNoteCommonInfo(noteContentVal, note) {
     // 私密
     var pwd = note['password'];
     var secret = note['secret'];
-    $('#j_common_secret').html(buildViewSecretStr(secret, pwd));
+    // $('#j_common_secret').html(buildViewSecretStr(secret, pwd));
+    setViewSecretStr(secret, pwd);
 
     // 浏览数
     var viewNum = note['viewNum'];
@@ -490,12 +498,26 @@ function updateViewTitle(originTitle) {
 
 var a_secretType;
 
+function setViewSecretStr(secretType, pwd) {
+    currPwd = undefined;
+    var ele = $("#j_note_info_secret_dropdown span[secrettype=" + secretType + "]");
+    if ((secretType = Number(secretType)) == ConstDB.Note.secretPwd) {
+        ele.attr("title", "密码（" + pwd + "）");
+    } else {
+        ele.attr("title", "");
+    }
+    var activeEle = $("#j_note_info_secret_active");
+    activeEle.html("");
+    ele.clone(false).appendTo(activeEle);
+    a_secretType = secretType;
+}
+
 function buildViewSecretStr(secretType, pwd) {
     var secretStr = "";
     currPwd = undefined;
     switch (Number(secretType)) {
         case ConstDB.Note.secretPwd:
-            secretStr = '<i class="fa fa-key" style="fvertical-align: middle;ont-weight:500;cursor: pointer;" title="密码：(' + pwd + ')"> 密码访问</i><span id="j_note_info_secret" style="display: none">' + secretType + '</span>';
+            secretStr = '<i class="fa fa-key" style="fvertical-align: middle;font-weight:500;cursor: pointer;" title="密码：(' + pwd + ')"> 密码访问</i><span id="j_note_info_secret" style="display: none">' + secretType + '</span>';
             currPwd = pwd;
             break;
         case ConstDB.Note.secretClose:

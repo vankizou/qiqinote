@@ -97,19 +97,35 @@
                         <li title="管理员审核状态" class="default_cursor">
                             <i class="fa fa-bell-o"></i> <span id="j_note_info_status"></span>
                         </li>
-                        <li title="私密状态" class="default_cursor" id="j_common_secret"></li>
-                        <%--<li class="dropdown all-camera-dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Tutorials
+                        <%--<li title="私密状态" class="default_cursor" id="j_common_secret"></li>--%>
+                        <li class="dropdown all-camera-dropdown">
+                            <div class="dropdown-toggle" data-toggle="dropdown">
+                                <span id="j_note_info_secret_active"></span>
                                 <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li data-filter-camera-type="all"><a data-toggle="tab" href="#">HTML5</a></li>
-                                <li data-filter-camera-type="Alpha"><a data-toggle="tab" href="#">PHP</a></li>
-                                <li data-filter-camera-type="Zed"><a data-toggle="tab" href="#">MySQL</a></li>
-                                <li data-filter-camera-type="Bravo"><a data-toggle="tab" href="#">JavaScript</a></li>
+                            </div>
+                            <ul id="j_note_info_secret_dropdown" class="dropdown-menu">
+                                <li>
+                                    <span data-toggle="tab" secrettype="0">
+                                        <i class="fa fa-share note_info_secret"> 公开</i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span data-toggle="tab" secrettype="1">
+                                        <i class="fa fa-key note_info_secret"> 密码访问</i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span data-toggle="tab" secrettype="2">
+                                        <i class="fa fa-user-o note_info_secret"> 仅自己可见</i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span data-toggle="tab" secrettype="3">
+                                        <i class="fa fa-link note_info_secret"> 链接访问</i>
+                                    </span>
+                                </li>
                             </ul>
-                        </li>--%>
+                        </li>
                         <li title="浏览量" class="default_cursor">
                             <i class="fa fa-eye"></i> <span id="j_note_info_viewNum"></span><span
                                 style="margin-left: 0">次浏览</span>

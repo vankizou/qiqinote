@@ -304,14 +304,15 @@ function setSecretPrivate() {
     setSecretCommon(ConstDB.Note.secretClose);
 }
 
-function setSecretCommon(secretType) {
+function setSecretCommon(secretType, nodeId) {
     if (secretType == undefined || secretType == null) return;
     hideRMenu();
 
     var node = tree.getSelectedNodes()[0];
+    var nodeId = node.id;
 
     var params = {
-        "note.id": node.id,
+        "note.id": nodeId,
         "note.secret": secretType
     };
 
@@ -322,21 +323,22 @@ function setSecretCommon(secretType) {
     }
 
     var fnSucc = function () {
-        noteSecretTypeJson[node.id] = secretType;
+        noteSecretTypeJson[nodeId] = secretType;
         updateDiyDom(node);
 
         /**
          * 修改右侧信息
          */
-        $('#j_common_secret').html(buildViewSecretStr(secretType, params['note.password']));
+        // $('#j_common_secret').html(buildViewSecretStr(secretType, params['note.password']));
+        setViewSecretStr(secretType, params['note.password']);
 
         /**
          * 修改地址栏链接
          */
-        if (secretType == ConstDB.Note.secretLink && noteIdAndNoteIdLinkJson[node.id]) {
-            history.pushState(null, null, "/note/" + noteIdAndNoteIdLinkJson[node.id]);
+        if (secretType == ConstDB.Note.secretLink && noteIdAndNoteIdLinkJson[nodeId]) {
+            history.pushState(null, null, "/note/" + noteIdAndNoteIdLinkJson[nodeId]);
         } else {
-            history.pushState(null, null, "/note/" + node.id + ".html");
+            history.pushState(null, null, "/note/" + nodeId + ".html");
         }
     };
     vankiAjax(ConstAjaxUrl.Note.updateById, params, fnSucc);
