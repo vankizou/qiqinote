@@ -115,9 +115,9 @@ function buildEditor(seq, markdown) {
         toc: false,
         tocm: true,
         emoji: false,
-        taskList: true,
-        tex: true,  // 默认不解析
-        flowChart: true,  // 默认不解析
-        sequenceDiagram: true,  // 默认不解析
+        taskList: false,
+        tex: false,  // 默认不解析
+        flowChart: false,  // 默认不解析
+        sequenceDiagram: false,  // 默认不解析
     });
 }

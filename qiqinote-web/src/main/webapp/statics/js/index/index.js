@@ -75,7 +75,7 @@ function getNoteList(pageNo, pageSize, navNum) {
             var viewNoteUrl = ConstAjaxUrl.Note.view_html[0].replace(ConstAjaxUrl.Note.view_html[1], noteIdLink);
             var viewUserUrl = ConstAjaxUrl.Index.userHome_html[0].replace(ConstAjaxUrl.Index.userHome_html[1], userName);
 
-            node += '<tr>'
+            node += '<tr>';
             node += '<td><a href="' + viewNoteUrl + '" target="_blank">' + noteTitle + '</a></td>';
             node += '<td>' + pNoteTitle + "</td>";
             node += '<td><a href="' + viewUserUrl + '" target="_blank">' + userAlias + '</a></td>';
