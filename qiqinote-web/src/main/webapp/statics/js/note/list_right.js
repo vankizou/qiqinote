@@ -500,11 +500,12 @@ var a_secretType;
 
 function setViewSecretStr(secretType, pwd) {
     currPwd = undefined;
+    secretType = Number(secretType);
     var ele = $("#j_note_info_secret_dropdown span[secrettype=" + secretType + "]");
-    if ((secretType = Number(secretType)) == ConstDB.Note.secretPwd) {
+    if (secretType == ConstDB.Note.secretPwd) {
         ele.attr("title", "密码（" + pwd + "）");
     } else {
-        ele.attr("title", "");
+        $("#j_note_info_secret_dropdown span[secrettype=" + ConstDB.Note.secretPwd + "]").removeAttr("title");
     }
     var activeEle = $("#j_note_info_secret_active");
     activeEle.html("");
