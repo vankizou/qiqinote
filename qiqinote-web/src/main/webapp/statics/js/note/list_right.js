@@ -186,6 +186,7 @@ $(function () {
 
     $("#j_vanki-editormd-dynamic").dblclick(function () {
         if (!c_isMine || isInitedMD) return;
+        if (!vankiEditor.state.preview) return; // 编辑状态关闭双击
 
         if (vankiEditor.state.preview) {
             vankiEditor.previewed();
