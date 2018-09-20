@@ -100,6 +100,8 @@ $(function () {
             updateNote(true, function (data, context) {
                 ele.text(context["title"][1]);   // 更新失败
             });
+
+            // beforeRename(null, null, title, null);
         } else {
             ele.text(titleTmp[1]);
         }
@@ -244,7 +246,7 @@ function updateNote(justUpdateCommon, failFn) {
          * 更新树节点的信息
          */
         var node = tree.getSelectedNodes()[0];
-        noteSecretTypeJson[noteId] = secretType;
+        // noteSecretTypeJson[noteId] = secretType;
         node.name = title;
 
         tree.updateNode(node);

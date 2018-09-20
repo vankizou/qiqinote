@@ -268,6 +268,7 @@ function beforeRename(treeId, treeNode, newName, isCancel) {
         // vankiMsgAlertAutoClose(ConstStatusCode.CODE_1102[1]);
         return false;
     }
+    if (!treeNode) treeNode = tree.getSelectedNodes()[0];
     var params = {
         "note.id": treeNode.id,
         "note.title": newName
