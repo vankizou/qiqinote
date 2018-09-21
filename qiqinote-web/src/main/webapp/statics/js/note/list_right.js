@@ -188,7 +188,10 @@ $(function () {
 
     $("#j_vanki-editormd-dynamic").dblclick(function () {
         if (!c_isMine || isInitedMD) return;
-        if (!vankiEditor.state.preview) return; // 编辑状态关闭双击
+        if (!vankiEditor.state.preview) {// 编辑状态
+            // updateNoteContent();
+            return;
+        }
 
         if (vankiEditor.state.preview) {
             vankiEditor.previewed();
@@ -204,6 +207,7 @@ $(function () {
     $("#j_note_info_secret_dropdown span").click(function () {
         setSecretCommon($(this).attr("secrettype"));
     });
+
 });
 
 var isInitedMD = true;
