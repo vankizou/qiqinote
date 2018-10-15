@@ -151,12 +151,13 @@ $(function () {
 
         var keyword = ele.text();
         if (keyword == defaultKeyword) keyword = undefined;
-        if (keyword && keyword.trim() != "" && keywordTmp[1] != keyword) {
+        debugger
+        if (keywordTmp && keywordTmp[1] != keyword && (keywordTmp[1] || keyword)) {
             updateNote(true, function (data, context) {
                 ele.text(context["keyword"][1]);   // 更新失败
             });
         } else {
-            if (keyword && keyword.trim() != "") {
+            if (keywordTmp && keywordTmp[1] && keywordTmp[1].trim() != "" && keyword.trim() != "") {
                 ele.text(keywordTmp[1])
             } else {
                 ele.text(defaultKeyword);

@@ -13,7 +13,7 @@
 %>
 <html>
 <head>
-    <meta name="keywords" content="${noteVO.note.keyword}">
+    <meta name="keywords" content="${(noteVO.note.keyword == null || noteVO.note.keyword.equals("")) ? noteVO.note.title : noteVO.note.keyword}">
     <%--<base href="<%=basePath%>">--%>
     <title>${noteVO.note.title}-奇奇笔记</title>
     <jsp:include page="../common/common.jsp"></jsp:include>
