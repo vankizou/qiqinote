@@ -21,7 +21,8 @@
 #j_toc_menu fieldset legend {
     background-color: white;
     border-radius: 6px;
-    padding: 2px 6px 6px 4px;
+    /*padding: 2px 6px 6px 4px;*/
+    padding: 12px 18px 12px 12px;
     overflow: auto;
     max-height: 680px;
     border: 1px solid #ccc;
