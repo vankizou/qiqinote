@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import java.io.BufferedOutputStream
 import java.io.IOException
+import java.net.URLEncoder
 import java.nio.charset.Charset
 
 /**
@@ -94,7 +95,7 @@ class NoteController @Autowired constructor(
         val userName = noteVO.user?.name
         var title = noteVO.note?.title
         if (title != null) title = title.split("/", limit = 2)[0]
-        mv.addObject("searchLink", if (StringUtil.isAnyBlank(userName, title)) "/" else "/$userName/$title")
+        mv.addObject("searchLink", if (StringUtil.isAnyBlank(userName, title)) "/" else "/$userName/${URLEncoder.encode(title, "UTF-8")}")
         return mv
     }
 

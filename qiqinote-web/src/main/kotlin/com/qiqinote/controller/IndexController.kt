@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.ModelAndView
+import java.net.URLDecoder
 import java.net.URLEncoder
 
 /**
@@ -82,7 +83,7 @@ class IndexController @Autowired constructor(
         mv.addObject("userId", user.id ?: 0)
         mv.addObject("userName", user.name ?: "")
         mv.addObject("userAlias", user.alias ?: "")
-        mv.addObject("search", search)
+        mv.addObject("search", URLDecoder.decode(search, "UTF-8"))
 
         if (user.id != null && user.id == this.justGetLoginUserId()) {
             mv.addObject("isMine", true)
