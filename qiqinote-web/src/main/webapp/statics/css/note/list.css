@@ -187,3 +187,13 @@ label {
 .note_info_secret {
     font-weight: 500;
 }
+
+
+/*
+.node_name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 320px;
+    display: inline-block;
+}*/

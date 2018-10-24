@@ -54,14 +54,16 @@ object PasswordUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println(PasswordUtil.getEncNoteId(1))
-        println(PasswordUtil.getEncNoteId(15))
-        println(PasswordUtil.getEncNoteId(175))
-        println(PasswordUtil.getEncNoteId(1755))
-        println(PasswordUtil.getEncNoteId(17552))
-        println(PasswordUtil.getDecNoteId(PasswordUtil.getEncNoteId(2812345678)))
+//        println(PasswordUtil.getEncNoteId(1))
+//        println(PasswordUtil.getEncNoteId(15))
+//        println(PasswordUtil.getEncNoteId(175))
+//        println(PasswordUtil.getEncNoteId(1755))
+//        println(PasswordUtil.getEncNoteId(17552))
+//        println(PasswordUtil.getDecNoteId(PasswordUtil.getEncNoteId(2812345678)))
+//
+//        println(PasswordUtil.getEncPwd("123456"))
+//        println(PasswordUtil.getDecPwd(PasswordUtil.getEncPwd("12312345678901234567890123456789012345678")))
 
-        println(PasswordUtil.getEncPwd("123456"))
-        println(PasswordUtil.getDecPwd(PasswordUtil.getEncPwd("12312345678901234567890123456789012345678")))
+        println(PasswordUtil.getDecPwd("wr9zw7rCkcOGJA=="))
     }
 }

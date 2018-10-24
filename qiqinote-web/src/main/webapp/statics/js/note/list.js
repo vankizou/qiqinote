@@ -14,6 +14,9 @@ var setting = {
     data: {
         simpleData: {
             enable: true
+        },
+        key: {
+            title: "desc"
         }
     },
     callback: {
@@ -148,36 +151,32 @@ function addDiyDom(treeId, treeNode) {
     if (treeNode.id < 0) return;
     var num = childNoteNumJson[treeNode.id];
 
-    var spanId = 'j_diy_span_' + treeNode.id;
-    $('#' + spanId).remove();
+    var spanIdNum = 'j_diy_span_num_' + treeNode.id;
+    var spanIdSecret = 'j_diy_span_secret_' + treeNode.id;
+    $("#" + spanIdNum).remove();
+    $("#" + spanIdSecret).remove();
 
-    var flag = false;
+    var treeNodeEle = $("#" + treeNode.tId + "_span");
 
-    var s = '<span id="' + spanId + '">';
     if (num && num > 0) {  // 有数量
+        var s = '<span id="' + spanIdNum + '">';
         s += '（' + num + '）';
-        flag = true;
+        s += '</span>';
+        treeNodeEle.append(s)
     }
     // 私密
     var secret = noteSecretTypeJson[treeNode.id];
     if (secret) {
-        var secretIId = 'j_diy_secret';
-
+        var s = '<span id="' + spanIdSecret + '">';
         if (secret == ConstDB.Note.secretPwd) {
-            s += '<b style="color:green; font-size: 10px;" title="密码访问"> &nbsp;<i style="color: #0593d3; font-weight: 700;" class="fa fa-key"></i></b>';
-            flag = true;
+            s += '<b style="color:green; font-size: 10px;" title="密码访问"><i style="color: #0593d3; font-weight: 700;" class="fa fa-key"></i>&nbsp;</b>';
         } else if (secret == ConstDB.Note.secretClose) {
-            s += '<b style="color:green; font-size: 10px;" title="不公开"> &nbsp;<i style="color: #0593d3; font-weight: 700;" class="fa fa-user-o"></i></b>';
-            flag = true;
+            s += '<b style="color:green; font-size: 10px;" title="不公开"><i style="color: #0593d3; font-weight: 700;" class="fa fa-user-o"></i>&nbsp;</b>';
         } else if (secret == ConstDB.Note.secretLink) {
-            s += '<b style="color:green; font-size: 10px;" title="链接访问"> &nbsp;<i style="color: #0593d3; font-weight: 700;" class="fa fa-link"></i></b>';
-            flag = true;
+            s += '<b style="color:green; font-size: 10px;" title="链接访问"><i style="color: #0593d3; font-weight: 700;" class="fa fa-link"></i>&nbsp;</b>';
         }
-    }
-    s += '</span>';
-    if (flag) {
-        var aObj = $("#" + treeNode.tId + "_span");
-        aObj.append(s);
+        s += '</span>';
+        treeNodeEle.prepend(s);
     }
 }
 
@@ -487,13 +486,15 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
         if (noteCountNote > 0) childNoteNumJson[note['id']] = noteCountNote;
         var subNoteVOList = data[i]['subNoteVOList'];
         var title = note['title'];
+        var title2 = title;
         if (title == c_search) openNoteId = noteId;
-        if (title.length > 32) title = title.substring(0, 32) + "...";
+        if (title.length > 32) title2 = title.substring(0, 32) + "...";
 
         noteTreeNodes.push({
             id: noteId,
             pId: note['parentId'],
-            name: title,
+            name: title2,
+            desc: title,
             open: noteCountNote > 0 && subNoteVOList && subNoteVOList.length > 0 ? true : false,
             isParent: noteCountNote > 0 ? true : false
         });
