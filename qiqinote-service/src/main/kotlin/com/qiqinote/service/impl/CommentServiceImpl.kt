@@ -181,10 +181,10 @@ class CommentServiceImpl @Autowired constructor(
      * 构建头像全路径
      */
     private fun buildAvatarBasePath(dto: TargetCommentDTO) {
-        if (dto.fromUserAvatar != null && !dto.fromUserAvatar!!.startsWith(imageDomain)) {
+        if (dto.fromUserAvatar != null && !dto.fromUserAvatar!!.startsWith(imageDomain!!)) {
             dto.fromUserAvatar = imageDomain + dto.fromUserAvatar
         }
-        if (dto.parent?.fromUserAvatar != null && !dto.parent?.fromUserAvatar!!.startsWith(imageDomain)) {
+        if (dto.parent?.fromUserAvatar != null && !dto.parent?.fromUserAvatar!!.startsWith(imageDomain!!)) {
             dto.fromUserAvatar = imageDomain + dto.fromUserAvatar
         }
     }

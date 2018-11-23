@@ -48,7 +48,7 @@ class UserController @Autowired constructor(
         if (result.isSuccess()) {
             UserUtil.signIn(this.request, this.response, this.userService,
                     this.userContext?.user?.name!!, PasswordUtil.getDecPwd(this.userContext?.user?.password!!), DBConst.trueVal,
-                    null, env["qiqinote.image.domain"])
+                    null, env["qiqinote.image.domain"]!!)
         }
         return result
     }

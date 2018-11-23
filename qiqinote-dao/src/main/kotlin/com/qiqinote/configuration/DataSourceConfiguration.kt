@@ -27,16 +27,16 @@ class DataSourceConfiguration {
         ds.url = env["db.url"]
         ds.username = env["db.username"]
         ds.password = env["db.password"]
-        ds.initialSize = env["db.initialSize"].toInt()
-        ds.maxActive = env["db.maxActive"].toInt()
-        ds.minIdle = env["db.minIdle"].toInt()
-        ds.maxWait = env["db.maxWait"].toLong()
+        ds.initialSize = env["db.initialSize"]!!.toInt()
+        ds.maxActive = env["db.maxActive"]!!.toInt()
+        ds.minIdle = env["db.minIdle"]!!.toInt()
+        ds.maxWait = env["db.maxWait"]!!.toLong()
         ds.setConnectionProperties(env["db.connectionProperties"])
         ds.validationQuery = env["db.validationQuery"]
-        ds.isTestOnBorrow = env["db.testOnBorrow"].toBoolean()
-        ds.isTestOnReturn = env["db.testOnReturn"].toBoolean()
-        ds.isTestWhileIdle = env["db.testWhileIdle"].toBoolean()
-        ds.timeBetweenEvictionRunsMillis = env["db.timeBetweenEvictionRunsMillis"].toLong()
+        ds.isTestOnBorrow = env["db.testOnBorrow"]!!.toBoolean()
+        ds.isTestOnReturn = env["db.testOnReturn"]!!.toBoolean()
+        ds.isTestWhileIdle = env["db.testWhileIdle"]!!.toBoolean()
+        ds.timeBetweenEvictionRunsMillis = env["db.timeBetweenEvictionRunsMillis"]!!.toLong()
         ds.setFilters("stat")
         return ds
     }

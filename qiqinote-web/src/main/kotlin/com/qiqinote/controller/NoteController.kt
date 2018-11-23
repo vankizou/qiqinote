@@ -81,7 +81,7 @@ class NoteController @Autowired constructor(
             user?.avatarId?.let {
                 val pic = this.pictureService.getById(it)
                 if (pic != null) {
-                    noteVO.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
+                    noteVO.user?.avatar = PictureDTO(env["qiqinote.image.domain"]!!, pic)
                 }
             }
         }
@@ -182,7 +182,7 @@ class NoteController @Autowired constructor(
 
         if (noteList.isEmpty()) return ResultVO(returnPage)
 
-        val imageDomain = env["qiqinote.image.domain"]
+        val imageDomain = env["qiqinote.image.domain"]!!
 
         val userTmpMap = hashMapOf<Long, UserDTO>()
         val parentNoteMap = hashMapOf<Long, Note>()

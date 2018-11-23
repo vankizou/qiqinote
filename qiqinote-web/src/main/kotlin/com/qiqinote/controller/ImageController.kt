@@ -33,12 +33,12 @@ class ImageController @Autowired constructor(
     private val uploadMaxNum = 20
     private val imageAllowTypeList = arrayListOf<String>()
 
-    private val imageAllowType = environment["qiqinote.image.allow.type"]
-    private val imageBasePath = environment["qiqinote.image.basepath"]
-    private val imageDomain = environment["qiqinote.image.domain"]
-    private val imageSizeNote = environment["qiqinote.image.size.note"].toInt()
-    private val imageSizeAvatar = environment["qiqinote.image.size.avatar"].toInt()
-    private val imageSizeOther = environment["qiqinote.image.size.other"].toInt()
+    private val imageAllowType = environment["qiqinote.image.allow.type"]!!
+    private val imageBasePath = environment["qiqinote.image.basepath"]!!
+    private val imageDomain = environment["qiqinote.image.domain"]!!
+    private val imageSizeNote = environment["qiqinote.image.size.note"]!!.toInt()
+    private val imageSizeAvatar = environment["qiqinote.image.size.avatar"]!!.toInt()
+    private val imageSizeOther = environment["qiqinote.image.size.other"]!!.toInt()
 
     @PostMapping("/uploadMulti" + WebConst.needLoginJsonSuffix)
     fun uploadMulti(@RequestParam images: Array<MultipartFile>?, useType: Int?): ResultVO<MutableList<Picture>> {

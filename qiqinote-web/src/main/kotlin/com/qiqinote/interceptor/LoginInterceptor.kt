@@ -78,7 +78,7 @@ class LoginInterceptor(
 
         userIdAndPwd?.let {
             val isSuccess = UserUtil.signIn(request, response, userService, userIdAndPwd[0],
-                    userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin, env["qiqinote.image.domain"])
+                    userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin, env["qiqinote.image.domain"]!!)
             if (isSuccess) return true
         }
 

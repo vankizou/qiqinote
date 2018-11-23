@@ -134,7 +134,7 @@ class IndexController @Autowired constructor(
         if (originTmp == DBConst.UserLoginRecord.originAutoLogin) {
             originTmp = DBConst.UserLoginRecord.originNone
         }
-        return if (UserUtil.signIn(this.request, this.response, this.userService, account, password, isRememberTmp, originTmp, env["qiqinote.image.domain"])) ResultVO() else ResultVO(CodeEnum.FAIL)
+        return if (UserUtil.signIn(this.request, this.response, this.userService, account, password, isRememberTmp, originTmp, env["qiqinote.image.domain"]!!)) ResultVO() else ResultVO(CodeEnum.FAIL)
     }
 
     /**
