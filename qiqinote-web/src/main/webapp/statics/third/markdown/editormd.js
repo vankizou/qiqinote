@@ -134,7 +134,12 @@
         disabledKeyMaps      : [],
         
         onload               : function() {},
-        onresize             : function() {},
+        onresize             : function() {
+            this.preview.css({
+                top: 0,
+                height: ''
+            });
+        },
         onchange             : function() {},
         onwatch              : null,
         onunwatch            : null,

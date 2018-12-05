@@ -211,6 +211,24 @@ $(function () {
 
 });
 
+window.onresize = function() {
+    /**
+     * 左边菜单动态高度
+     */
+    changeLeftHeight();
+
+    /**
+     * 右边的markdown编辑动态高度
+     */
+    var nch = $('.note_common2').height();
+    if (!nch || nch <=0) {
+        nch = 95;
+    } else {
+        nch = 0;
+    }
+    vankiEditor.height(this.getEditorHeight(nch));
+};
+
 var isInitedMD = true;
 
 function initMD() {
@@ -282,17 +300,20 @@ function updateNoteContent(fnSucc2) {
     vankiAjax(ConstAjaxUrl.Note.updateById, params, fnSucc);
 }
 
+function getEditorHeight(heightDiff) {
+    var infoHeight = $('#j_note_info_div').height();
+    if (!infoHeight) infoHeight = 0;
+    heightDiff = heightDiff ? heightDiff : 160 + infoHeight;
+    return $(window).height() - heightDiff;
+}
+
 function buildMarkdownEdit(val, heightDiff) {
     if (vankiEditor) vankiEditor.editor.remove();
     if ((!c_noteUserId || !c_myUserId || c_myUserId != c_noteUserId) && !val) return;
 
     $('#j_vanki-editormd-dynamic').append('<div id="vanki-editormd-edit-note"></div>');
 
-    var infoHeight = $('#j_note_info_div').height();
-    if (!infoHeight) infoHeight = 0;
-
-    heightDiff = heightDiff ? heightDiff : 160 + infoHeight;
-    var height = $(window).height() - heightDiff;
+    var height = this.getEditorHeight(heightDiff);
     vankiEditor = editormd("vanki-editormd-edit-note", {
         width: "100%",
         height: height,

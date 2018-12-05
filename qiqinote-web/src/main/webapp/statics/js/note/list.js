@@ -83,12 +83,16 @@ $(function () {
     });
 });
 
-function init() {
+function changeLeftHeight() {
     if ($('#j_note_tree_title_like').length) {
         $('#noteTree').css('height', $(window).height() - 116);
     } else {
         $('#noteTree').css('height', $(window).height() - 80);
     }
+}
+
+function init() {
+    changeLeftHeight();
     var rootName = (c_noteUserAlias ? c_noteUserAlias : "TA") + "的笔记";
     if (c_myUserId && c_noteUserId == c_myUserId) {
         rootName = '我的笔记';

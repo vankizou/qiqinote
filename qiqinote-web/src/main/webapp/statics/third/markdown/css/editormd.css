@@ -668,7 +668,7 @@
 
 .editormd-preview {
   position: absolute;
-  top: 35px;
+  /*top: 35px;*/
   right: 0;
   right: -1px\0;
   overflow: auto;
