@@ -139,8 +139,9 @@ class NoteServiceImpl @Autowired constructor(
             note.path = DBConst.defaultParentId.toString()
         }
         val status = this.noteDao.updateById(note.id!!, loginUserId, note)
+
+        updateNoteNum(loginUserId, oldParentId)
         if (newParentId != oldParentId) {
-            updateNoteNum(loginUserId, oldParentId)
             updateNoteNum(loginUserId, newParentId)
         }
         if (old.path != note.path) {
@@ -281,9 +282,9 @@ class NoteServiceImpl @Autowired constructor(
         } while (true)
 
         val parentIdAndNoteMap = hashMapOf<Long, LinkedHashMap<Long, Note>>()
-        totalNoteList.forEach({
+        totalNoteList.forEach {
             reviewParentOfNoteTitleLike(it, parentIdAndNoteMap)
-        })
+        }
         val resultList = mutableListOf<NoteTreeVO>()
         buildNoteTreeVOOfNoteTitleLike(resultList, DBConst.defaultParentId, parentIdAndNoteMap)
         return NoteTreeVOAndTotalNote(resultList, totalRowTmp ?: 0)

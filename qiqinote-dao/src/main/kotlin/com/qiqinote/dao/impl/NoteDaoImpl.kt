@@ -168,7 +168,7 @@ class NoteDaoImpl @Autowired constructor(
     override fun countByParentId(parentId: Long, isAuthor: Boolean): Int {
         val paramMap = mapOf("parent_id" to parentId, "del" to DBConst.falseVal)
         val sql = StringBuilder()
-        sql.append(NamedSQLUtil.getSelectSQL(Note::class, "COUNT(*)", paramMap))
+        sql.append(NamedSQLUtil.getSelectSQL(Note::class, "COUNT(distinct id)", paramMap))
 
         if (!isAuthor) {
             // 别人看的统计数
