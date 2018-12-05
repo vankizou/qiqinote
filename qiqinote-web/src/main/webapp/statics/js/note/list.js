@@ -489,9 +489,10 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
 
         if (existsNodeIdArr.indexOf(noteId) != -1) continue;    // 节点已存在
 
-        var noteCountNote;
-        if (isMine() || !(noteCountNote = note["noteNum2"])) {
-            noteCountNote = note["noteNum"];
+        var noteCountNote = note["noteNum1"];
+        var noteCountNote2 = note["noteNum2"];
+        if (!isMine() && (noteCountNote2 || noteCountNote2 == 0)) {
+            noteCountNote = noteCountNote2;
         }
 
         if (noteCountNote > 0) childNoteNumJson[note['id']] = noteCountNote;
