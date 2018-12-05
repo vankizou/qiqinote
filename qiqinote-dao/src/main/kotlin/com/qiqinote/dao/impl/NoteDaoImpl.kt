@@ -115,12 +115,12 @@ class NoteDaoImpl @Autowired constructor(
         if (list.isEmpty()) return
 
         val date = Date()
-        list.forEach({
+        list.forEach {
             val path = if (parentId == DBConst.defaultParentId) DBConst.defaultParentId.toString() else parentPath + DBConst.Note.pathLink + parentId
             val sql2 = "update note set path='$path', update_datetime=:updateDatetime where parent_id=$parentId"
             this.namedParameterJdbcTemplate.update(sql2, mapOf("updateDatetime" to date))
             updatePath(it.id!!, path)
-        })
+        }
     }
 
     override fun deleteById(userId: Long, id: Long): Int {

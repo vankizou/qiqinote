@@ -119,6 +119,8 @@ class NoteServiceImpl @Autowired constructor(
         }
         note.userId = null
 
+        EntityUtil.copyValIfNull(note, old)
+
         val newParentId = note.parentId ?: DBConst.defaultParentId
         val oldParentId = old.parentId ?: DBConst.defaultParentId
 
@@ -126,8 +128,6 @@ class NoteServiceImpl @Autowired constructor(
             val parent = this.getByIdOrIdLink(newParentId) ?: return ResultVO(CodeEnum.NOT_FOUND)
             note.path = parent.path + DBConst.Note.pathLink + newParentId
         }
-
-        EntityUtil.copyValIfNull(note, old)
 
         if (note.secret != DBConst.Note.secretPwd && StringUtil.isNotEmpty(note.password)) {
             note.password = null
@@ -298,14 +298,14 @@ class NoteServiceImpl @Autowired constructor(
 
         var noteTreeVOTmp: NoteTreeVO
 
-        noteMap.values.forEach({
+        noteMap.values.forEach {
             noteTreeVOTmp = NoteTreeVO()
             resultList?.add(noteTreeVOTmp)
 
             noteTreeVOTmp.note = it
             noteTreeVOTmp.subNoteVOList = mutableListOf()
             buildNoteTreeVOOfNoteTitleLike(noteTreeVOTmp.subNoteVOList, it.id!!, parentIdAndNoteMap)
-        })
+        }
     }
 
     /**
