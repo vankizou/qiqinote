@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.collections.LinkedHashMap
 
 /**
@@ -114,11 +115,10 @@ class NoteDaoImpl @Autowired constructor(
         val list = this.namedParameterJdbcTemplate.query(sql, rowMapper)
         if (list.isEmpty()) return
 
-        val date = Date()
         list.forEach {
             val path = if (parentId == DBConst.defaultParentId) DBConst.defaultParentId.toString() else parentPath + DBConst.Note.pathLink + parentId
-            val sql2 = "update note set path='$path', update_datetime=:updateDatetime where parent_id=$parentId"
-            this.namedParameterJdbcTemplate.update(sql2, mapOf("updateDatetime" to date))
+            val sql2 = "update note set path='$path' where parent_id=$parentId"
+            this.namedParameterJdbcTemplate.update(sql2, mutableMapOf<String, Any>())
             updatePath(it.id!!, path)
         }
     }
