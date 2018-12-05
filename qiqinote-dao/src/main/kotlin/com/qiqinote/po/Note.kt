@@ -20,6 +20,8 @@ class Note {
 
     var noteNum: Int? = null
 
+    var noteNum2: Int? = null
+
     var noteContentNum: Int? = null
 
     var secret: Int? = null

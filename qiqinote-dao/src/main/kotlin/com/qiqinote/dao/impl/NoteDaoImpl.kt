@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.LinkedHashMap
 
 /**
@@ -32,6 +31,7 @@ class NoteDaoImpl @Autowired constructor(
         paramMap["user_id"] = note.userId
         paramMap["type"] = note.type
         paramMap["note_num"] = note.noteNum ?: 0
+        paramMap["note_num2"] = note.noteNum2 ?: 0
         paramMap["note_content_num"] = note.noteContentNum
         paramMap["secret"] = note.secret
         paramMap["password"] = note.password
@@ -63,8 +63,16 @@ class NoteDaoImpl @Autowired constructor(
     override fun updateViewNum(userId: Long, id: Long, viewNum: Long) = this.updateById(userId, id, mapOf("view_num" to viewNum))
 
     override fun updateNoteNum(userId: Long, id: Long): Int {
-        val count = this.countByParentId(id)
-        return this.updateById(userId, id, mapOf("note_num" to if (count < 0) 0 else count))
+        val count1 = this.countByParentId(id, true)
+        val count2 = this.countByParentId(id, false)
+        return this.updateById(
+                userId,
+                id,
+                mapOf(
+                        "note_num" to if (count1 < 0) 0 else count1,
+                        "note_num2" to if (count2 < 0) 0 else count2
+                )
+        )
     }
 
     override fun updateNoteCountNum(userId: Long, id: Long, noteContentNum: Int): Int {
@@ -77,6 +85,7 @@ class NoteDaoImpl @Autowired constructor(
         paramMap["path"] = note.path
         paramMap["type"] = note.type
         paramMap["note_num"] = note.noteNum
+        paramMap["note_num2"] = note.noteNum2
         paramMap["note_content_num"] = note.noteContentNum
         paramMap["secret"] = note.secret
         paramMap["password"] = note.password
@@ -156,10 +165,17 @@ class NoteDaoImpl @Autowired constructor(
         return s1 + s2
     }
 
-    override fun countByParentId(parentId: Long): Int {
+    override fun countByParentId(parentId: Long, isAuthor: Boolean): Int {
         val paramMap = mapOf("parent_id" to parentId, "del" to DBConst.falseVal)
-        val sql = NamedSQLUtil.getSelectSQL(Note::class, "COUNT(*)", paramMap)
-        return this.namedParameterJdbcTemplate.queryForObject(sql, paramMap, Int::class.java) ?: 0
+        val sql = StringBuilder()
+        sql.append(NamedSQLUtil.getSelectSQL(Note::class, "COUNT(*)", paramMap))
+
+        if (!isAuthor) {
+            // 别人看的统计数
+            this.buildSecretAndStatus(sql, null, null, true)
+        }
+
+        return this.namedParameterJdbcTemplate.queryForObject(sql.toString(), paramMap, Int::class.java) ?: 0
     }
 
     override fun countNoteHasContent(loginUserId: Long?, userId: Long?): Int {
@@ -232,7 +248,7 @@ class NoteDaoImpl @Autowired constructor(
         if (StringUtil.isNotEmpty(orderBy)) {
             conditionSql.append(" ORDER BY ").append(orderBy)
         } else {
-            conditionSql.append(" ORDER BY ").append("title DESC, note_num DESC")
+            conditionSql.append(" ORDER BY ").append("note_num DESC")
         }
         conditionSql.append(" LIMIT ").append(resultPage.startRow).append(",").append(resultPage.pageSize)
 
@@ -245,10 +261,10 @@ class NoteDaoImpl @Autowired constructor(
          * 不是自己过滤部分字段
          */
         if (userId != null && userId != loginUserId) {
-            resultPage.data.let {
-                it.forEach({
+            resultPage.data.let { out ->
+                out.forEach {
                     it.password = null
-                })
+                }
             }
         }
         return resultPage
@@ -267,7 +283,7 @@ class NoteDaoImpl @Autowired constructor(
         /**
          * 访问单人主页
          */
-        if (userId != null && userId != loginUserId && isTree) {
+        if (((userId == null || loginUserId == null) || userId != loginUserId) && isTree) {
             secretList.add(DBConst.Note.secretPwd)
         }
         if (!secretList.isEmpty()) {

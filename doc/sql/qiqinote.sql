@@ -53,6 +53,7 @@ CREATE TABLE `note` (
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
   `type` int(2) DEFAULT NULL COMMENT '笔记类型. 1普通笔记, 2Markdown',
   `note_num` int(11) DEFAULT NULL COMMENT '笔记数量. 只当是目录时有值',
+  `note_num2` int(11) DEFAULT NULL COMMENT '笔记数量. 只当是目录时有值. 其它人看的统计数',
   `note_content_num` int(11) DEFAULT NULL COMMENT '笔记内容段数量',
   `secret` int(2) DEFAULT NULL COMMENT '私密状态. 0公开访问, 1密码访问, 2私密访问, 3链接访问',
   `password` varchar(64) DEFAULT NULL COMMENT '密码, 笔记为私密时有值',

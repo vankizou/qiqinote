@@ -91,10 +91,14 @@ function changeLeftHeight() {
     }
 }
 
+function isMine() {
+    return c_myUserId && c_noteUserId == c_myUserId
+}
+
 function init() {
     changeLeftHeight();
     var rootName = (c_noteUserAlias ? c_noteUserAlias : "TA") + "的笔记";
-    if (c_myUserId && c_noteUserId == c_myUserId) {
+    if (isMine()) {
         rootName = '我的笔记';
     }
     var noteTreeNodes = [{
@@ -485,7 +489,10 @@ function buildNodeJson(data, noteTreeNodes, existsNodeIdArr) {
 
         if (existsNodeIdArr.indexOf(noteId) != -1) continue;    // 节点已存在
 
-        var noteCountNote = note["noteNum"];
+        var noteCountNote;
+        if (isMine() || !(noteCountNote = note["noteNum2"])) {
+            noteCountNote = note["noteNum"];
+        }
 
         if (noteCountNote > 0) childNoteNumJson[note['id']] = noteCountNote;
         var subNoteVOList = data[i]['subNoteVOList'];
