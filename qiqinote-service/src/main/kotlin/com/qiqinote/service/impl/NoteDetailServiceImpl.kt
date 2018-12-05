@@ -1,6 +1,7 @@
 package com.qiqinote.service.impl
 
 import com.qiqinote.constant.CodeEnum
+import com.qiqinote.constant.DBConst
 import com.qiqinote.dao.NoteDetailDao
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.service.NoteDetailService
@@ -21,8 +22,9 @@ class NoteDetailServiceImpl @Autowired constructor(
         if (noteDetail.userId == null || noteDetail.noteId == null || StringUtil.isEmpty(noteDetail.content)) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
+        if (noteDetail.type == null) noteDetail.type = DBConst.NoteDetail.typeMarkdown
 
-        var id = if (noteDetail.id == null) {
+        val id = if (noteDetail.id == null) {
             /**
              * 添加
              */
