@@ -29,6 +29,7 @@ var operateMyAjaxData = function (data, ajaxContext, successFun, failFun, is_pop
         // 是否弹出错误码信息
         if (is_pop != false && !is_pop) is_pop = true;
         var errInfo = ConstStatusCode["CODE_" + code];
+
         if (code == 201) {// 未登录
             popLoginRegister();
         } else if (errInfo && is_pop) {

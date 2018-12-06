@@ -37,6 +37,10 @@ class ExceptionHandler {
             log.error("参数异常", ex)
             WebUtil.printResponseData(response, ResultVO(CodeEnum.PARAM_ERROR))
             return null
+        } else if (ex is Exception) {
+            log.error("", ex)
+            WebUtil.printResponseData(response, ResultVO(CodeEnum.FAIL))
+            return null
         }
         log.error("", ex)
         when (response.status) {

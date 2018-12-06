@@ -151,7 +151,7 @@ $(function () {
 
         var keyword = ele.text();
         if (keyword == defaultKeyword) keyword = undefined;
-        debugger
+
         if (keywordTmp && keywordTmp[1] != keyword && (keywordTmp[1] || keyword)) {
             updateNote(true, function (data, context) {
                 ele.text(context["keyword"][1]);   // 更新失败

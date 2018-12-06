@@ -18,6 +18,7 @@ import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
