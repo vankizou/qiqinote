@@ -332,13 +332,20 @@ function buildMarkdownEdit(val, heightDiff) {
             "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
             "h1", "h2", "h3", "h4", "h5", "h6", "|",
             "list-ul", "list-ol", "hr", "|",
+            "link", "reference-link", "image",
             "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
-            "goto-line", "watch", "preview", "fullscreen", "clear", "search", "info"
-            , "|", "addImage", "|", "saveNoteContent"
+            "goto-line", "watch", "preview", "fullscreen", "search"
+            , "|", "addImage", "saveNoteContent"
         ],
-        toolbarIconTexts: {
-            addImage: '<span style="font-size: 14px; font-weight: 700">添加图片</span>',
-            saveNoteContent: '<span style="font-size: 14px; font-weight: 700">保存内容</span>'
+        toolbarIconsClass: {
+            addImage: "fa-upload",
+            saveNoteContent: "fa-save"
+        },
+        lang: {
+            toolbar: {
+                addImage: "添加本地图片",
+                saveNoteContent: "保存笔记内容"
+            }
         },
         toolbarHandlers: {
             addImage: function () {

@@ -258,7 +258,7 @@
                 hr               : "横线",
                 link             : "链接",
                 "reference-link" : "引用链接",
-                image            : "添加图片",
+                image            : "添加网络图片",
                 code             : "行内代码",
                 "preformatted-text" : "预格式文本 / 代码块（缩进风格）",
                 "code-block"     : "代码块（多语言风格）",
@@ -300,7 +300,7 @@
                     urlEmpty : "错误：请填写引用链接的URL地址。"
                 },
                 image : {
-                    title    : "添加图片",
+                    title    : "添加网络图片",
                     url      : "图片地址",
                     link     : "图片链接",
                     alt      : "图片描述",
