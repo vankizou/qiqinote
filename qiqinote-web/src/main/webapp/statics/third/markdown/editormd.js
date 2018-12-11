@@ -4306,7 +4306,6 @@
             {
                 editor.find("." + classPrefix + "mask").hide();
             }
-
             return dialog;
         };
 
@@ -4353,6 +4352,10 @@
                 footer.append("<button class=\"" + classPrefix + "btn " + btnClassName + "\">" + btn[0] + "</button>");
                 btn[1] = $.proxy(btn[1], dialog);
                 footer.children("." + btnClassName).bind(mouseOrTouch("click", "touchend"), btn[1]);
+                if (key == 'cancel') {
+                    if (!editor.dialogCancelFn) editor.dialogCancelFn = []
+                    editor.dialogCancelFn.push(btn[1]);
+                }
             }
         }
 
@@ -4458,7 +4461,6 @@
         }
 
         editormd.dialogZindex += 2;
-
         return dialog;
     };
 

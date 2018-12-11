@@ -367,6 +367,17 @@ function buildMarkdownEdit(val, heightDiff) {
             showEdit();
         },
         onpreviewing: function () {
+            /**
+             * 关注md弹出框
+             */
+            if (this.editor.dialogCancelFn) {
+                for (var i in this.editor.dialogCancelFn) {
+                    if (this.editor.dialogCancelFn[i]) {
+                        this.editor.dialogCancelFn[i]();
+                    }
+                }
+            }
+            // 打开显示样式
             showView();
             /**
              * 1. 全屏预览禁用Esc
