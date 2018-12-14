@@ -410,6 +410,13 @@ function buildMarkdownEdit(val, heightDiff) {
                     }
                 }
             }
+            /**
+             * 关注图片弹出框
+             */
+            if (uploadImageLayerIndex) {
+                layer.close(uploadImageLayerIndex);
+            }
+
             // 打开显示样式
             showView();
             /**
