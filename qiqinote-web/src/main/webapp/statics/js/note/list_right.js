@@ -640,12 +640,12 @@ function buildStatusStr(status, statusDescription) {
 
 function showView() {
     var ele = $("#note_content_edit");
-    ele.html('<i title="点击（或双击内容框）编辑内容" class="fa fa-edit"></i>');
+    ele.html('<i title="编辑内容（快捷键：鼠标在内容框三击左键）" class="fa fa-edit"></i>');
 }
 
 function showEdit() {
     var ele = $("#note_content_edit");
-    ele.html('<i title="点击保存修改" class="fa fa-spinner fa-spin"></i>');
+    ele.html('<i title="保存修改" class="fa fa-spinner fa-spin"></i>');
 }
 
 function hideMarkdownCloseIcon() {
