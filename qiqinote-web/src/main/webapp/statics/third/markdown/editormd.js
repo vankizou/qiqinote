@@ -271,7 +271,7 @@
                 watch            : "关闭实时预览",
                 unwatch          : "开启实时预览",
                 preview          : "全窗口预览HTML",
-                fullscreen       : "全屏（按ESC还原）",
+                fullscreen       : "快捷键（ESC）",
                 clear            : "清空",
                 search           : "搜索",
                 help             : "使用帮助",
