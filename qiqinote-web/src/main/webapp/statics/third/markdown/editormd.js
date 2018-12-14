@@ -2617,7 +2617,7 @@
             var fullscreenClass  = this.classPrefix + "fullscreen";
 
             if (toolbar) {
-                toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active");
+                // toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active");
             }
 
             var escHandle = function(event) {

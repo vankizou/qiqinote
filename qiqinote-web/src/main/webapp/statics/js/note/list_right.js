@@ -187,17 +187,28 @@ $(function () {
         vankiEditor.previewed();
     });
 
-    $("#j_vanki-editormd-dynamic").dblclick(function () {
+    /*$("#j_vanki-editormd-dynamic").dblclick(function () {
         if (!c_isMine || isInitedMD) return;
         if (!vankiEditor.state.preview) {// 编辑状态
-            // updateNoteContent();
             return;
         }
 
         if (vankiEditor.state.preview) {
             vankiEditor.previewed();
         } else {
-            // vankiEditor.previewing();
+            vankiEditor.fullscreenExit();
+        }
+    });*/
+
+    nClickEvent($("#j_vanki-editormd-dynamic"), function() {
+        if (!c_isMine || isInitedMD) return;
+        if (!vankiEditor.state.preview) {// 编辑状态
+            return;
+        }
+
+        if (vankiEditor.state.preview) {
+            vankiEditor.previewed();
+        } else {
             vankiEditor.fullscreenExit();
         }
     });
@@ -211,7 +222,23 @@ $(function () {
 
 });
 
-window.onresize = function() {
+function nClickEvent(dom, fn, n) {
+    if (!n) n = 3;
+    var count = 0,
+        lastTime = 0;//用于记录上次结束的时间
+    var handler = function (event) {
+        var currentTime = new Date().getTime();//获取本次点击的时间
+        count = (currentTime - lastTime) < 500 ? count + 1 : 0;//如果本次点击的时间和上次结束时间相比大于500毫秒就把count置0
+        lastTime = new Date().getTime();
+        if (count >= n - 1) {
+            fn(event, n);
+            count = 0;
+        }
+    };
+    dom.bind('click', handler);
+}
+
+window.onresize = function () {
     /**
      * 左边菜单动态高度
      */
@@ -221,7 +248,7 @@ window.onresize = function() {
      * 右边的markdown编辑动态高度
      */
     var nch = $('.note_common2').height();
-    if (!nch || nch <=0) {
+    if (!nch || nch <= 0) {
         nch = 95;
     } else {
         nch = 0;
@@ -334,12 +361,18 @@ function buildMarkdownEdit(val, heightDiff) {
             "list-ul", "list-ol", "hr", "|",
             "link", "reference-link", "image",
             "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
-            "goto-line", "watch", "preview", "fullscreen", "search"
-            , "|", "addImage", "saveNoteContent"
+            "goto-line", "watch", "preview", "search"
+            , "|", "addImage", "fullscreen", "saveNoteContent"
         ],
         toolbarIconsClass: {
             addImage: "fa-upload",
-            saveNoteContent: "fa-save"
+            // saveNoteContent: "fa-save",
+            fullscreen: ""
+        },
+        toolbarIconTexts: {
+            addImage: '<span style="font-size: 14px; font-weight: 700">添加本地图片</span>',
+            saveNoteContent: '<span style="font-size: 14px; font-weight: 700">保存</span>',
+            fullscreen: '<span style="font-size: 14px; font-weight: 700">保存并退出</span>'
         },
         lang: {
             toolbar: {
