@@ -59,6 +59,9 @@ var openedPwdJson = {};
 // 无内容的nodeId
 var noDetailNodeId = [];
 
+// 树id
+var _nodeTreeId = "noteTree";
+
 $(function () {
     init();
 
@@ -113,7 +116,7 @@ function init() {
     } else {
         $.fn.zTree.init($("#noteTree"), setting_noLogin, noteTreeNodes);
     }
-    tree = $.fn.zTree.getZTreeObj("noteTree");
+    tree = $.fn.zTree.getZTreeObj(_nodeTreeId);
     $("#noteTree_1_span").append('<span id="j_note_tree_root_name"></span>');
     rMenu = $('#rMenu');
     buildNoteTreeNodes();
@@ -128,7 +131,15 @@ function addNote() {
     hideRMenu();
     var parentNode = tree.getSelectedNodes()[0];
     var pId = parentNode.id;
-    var pId = parentNode ? parentNode.id : ConstDB.defaultParentId;
+    pId = parentNode ? parentNode.id : ConstDB.defaultParentId;
+    var childrenNum = childNoteNumJson[pId];
+    if (childrenNum && childrenNum > 0) {
+        var pNode = tree.getNodeByParam('id', pId);
+        if (!pNode.open) {
+            openNote(pId, pNode);
+            beforeExpand(pId, pNode);
+        }
+    }
 
     var params = {
         "note.parentId": pId,
@@ -141,10 +152,13 @@ function addNote() {
             return false;
         }
         var secret = data['secret'];
-        noteSecretTypeJson[data['id']] = secret;
-        noteIdAndNoteIdLinkJson[data['id']] = data['idLink'];
+        var id = data["id"];
+        noteSecretTypeJson[id] = secret;
+        noteIdAndNoteIdLinkJson[id] = data['idLink'];
         updateDiyDom(parentNode, 1);
-        tree.addNodes(parentNode, {id: data["id"], pId: pId, name: data["title"]});
+        var node = tree.addNodes(parentNode, {id: id, pId: pId, name: data["title"]})[0];
+        tree.selectNode(node);
+        setting.callback.onClick(null, _nodeTreeId, node);
     };
     vankiAjax(ConstAjaxUrl.Note.add, params, fnSucc);
 };
