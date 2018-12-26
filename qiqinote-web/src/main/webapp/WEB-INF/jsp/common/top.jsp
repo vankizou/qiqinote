@@ -33,15 +33,17 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/index.html" style="color: #fff;font-style: italic; font-weight:700;">
-                <i class="fa fa-paint-brush"></i>&nbsp;奇奇笔记
+                <%--<i class="fa fa-paint-brush"></i>&nbsp;奇奇笔记--%>
+                <img class="logo" src="/statics/images/common/logo/logo.png">
             </a>
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-ex-collapse">
             <ul class="nav navbar-nav navbar-right" >
-                <li class="text-align">
-                    <a href="/index.html" class="homeUrl"><i class="fa fa-home"></i>&nbsp; 主页</a>
-                </li>
+                <%--<li class="text-align">
+                    &lt;%&ndash;<a href="/index.html" class="homeUrl"><i class="fa fa-home"></i>&nbsp; 主页</a>&ndash;%&gt;
+                    <a href="/index.html" class="homeUrl">主页</a>
+                </li>--%>
                 <%--<li>
                     <a href="#">Contacts</a>
                 </li>
@@ -60,6 +62,7 @@
                         <li>
                             <a href="/${suc.user.name == null ? suc.user.id : suc.user.name}" class="myNoteUrl">
                                 <i class="fa fa-paint-brush"></i>&nbsp; 我的笔记
+                                <%--我的笔记--%>
                             </a>
                         </li>
                         <li class="dropdown">

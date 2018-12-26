@@ -12,9 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner
 @RunWith(SpringRunner::class)
 @SpringBootTest
 class TestNoteService {
-    @Autowired
-    private lateinit var noteService: NoteService
-
     @Test
     fun t1() {
     }

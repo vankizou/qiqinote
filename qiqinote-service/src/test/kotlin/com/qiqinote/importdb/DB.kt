@@ -3,7 +3,6 @@ package com.qiqinote.importdb
 import com.qiqinote.dao.NoteDao
 import com.qiqinote.po.Note
 import com.qiqinote.po.User
-import com.qiqinote.service.NoteService
 import com.qiqinote.util.PasswordUtil
 import com.qiqinote.util.sql.NamedSQLUtil
 import org.junit.Test

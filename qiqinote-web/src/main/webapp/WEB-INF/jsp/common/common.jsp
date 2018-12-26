@@ -7,7 +7,7 @@
 --%>
 <%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 
-<link rel="shortcut icon" type="image/x-icon" href="/statics/images/common/logo/logo.ico"/>
+<link rel="shortcut icon" href="/statics/images/common/logo/ico.png" type="image/png"/>
 <script type="text/javascript" src="/statics/third/jquery/jquery-3.1.1.min.js"></script>
 
 <script type="text/javascript" src="/statics/third/jqueryForm/jquery.form.min.js"></script>
