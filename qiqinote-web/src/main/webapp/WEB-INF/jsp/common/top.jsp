@@ -41,8 +41,7 @@
         <div class="collapse navbar-collapse" id="navbar-ex-collapse">
             <ul class="nav navbar-nav navbar-right" >
                 <%--<li class="text-align">
-                    &lt;%&ndash;<a href="/index.html" class="homeUrl"><i class="fa fa-home"></i>&nbsp; 主页</a>&ndash;%&gt;
-                    <a href="/index.html" class="homeUrl">主页</a>
+                    <a href="/index.html" class="homeUrl"><i class="fa fa-home"></i>&nbsp; 主页</a>
                 </li>--%>
                 <%--<li>
                     <a href="#">Contacts</a>
@@ -62,7 +61,6 @@
                         <li>
                             <a href="/${suc.user.name == null ? suc.user.id : suc.user.name}" class="myNoteUrl">
                                 <i class="fa fa-paint-brush"></i>&nbsp; 我的笔记
-                                <%--我的笔记--%>
                             </a>
                         </li>
                         <li class="dropdown">
