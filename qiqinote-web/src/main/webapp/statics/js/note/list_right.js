@@ -606,7 +606,7 @@ function buildViewSecretStr(secretType, pwd) {
     currPwd = undefined;
     switch (Number(secretType)) {
         case ConstDB.Note.secretPwd:
-            secretStr = '<i class="fa fa-key" style="fvertical-align: middle;font-weight:500;cursor: pointer;" title="密码：(' + pwd + ')"> 密码访问</i><span id="j_note_info_secret" style="display: none">' + secretType + '</span>';
+            secretStr = '<i class="fa fa-key" style="vertical-align: middle;font-weight:500;cursor: pointer;" title="密码：(' + pwd + ')"> 密码访问</i><span id="j_note_info_secret" style="display: none">' + secretType + '</span>';
             currPwd = pwd;
             break;
         case ConstDB.Note.secretClose:
