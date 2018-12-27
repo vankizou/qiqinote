@@ -265,7 +265,7 @@ class NoteServiceImpl @Autowired constructor(
         var currPage = Page.firstPage
         val pageSize = 200
 
-        var totalNoteList = mutableListOf<Note>()
+        val totalNoteList = mutableListOf<Note>()
         var totalRowTmp: Int? = null
         var noteListTmp: MutableList<Note>?
         var pageTmp: Page<Note>
