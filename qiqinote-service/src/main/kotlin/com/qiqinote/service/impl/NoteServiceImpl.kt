@@ -212,7 +212,7 @@ class NoteServiceImpl @Autowired constructor(
     }
 
     override fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int): MutableList<NoteTreeVO> {
-        if (deep > 5) return arrayListOf()
+        if (deep > 8) return arrayListOf()
         val h = 10    // 横向找最多打开的节点数
         var hCount = 0
 
