@@ -180,16 +180,16 @@ $(function () {
         }
     });
 
-    $("#j_note_info_keyword").click(function () {
-        $(this).focus();
-    });
+    // $("#j_note_info_keyword").click(function () {
+    //     $(this).focus();
+    // });
 
     /**
      * 编辑内容
      */
-    // $("#note_content_edit").click(function () {
-    //     vankiEditor.previewed();
-    // });
+    $("#note_content_edit").click(function () {
+        vankiEditor.previewed();
+    });
 
     /*$("#j_vanki-editormd-dynamic").dblclick(function () {
         if (!c_isMine || isInitedMD) return;
