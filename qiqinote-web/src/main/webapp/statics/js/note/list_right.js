@@ -180,6 +180,10 @@ $(function () {
         }
     });
 
+    $("#j_note_info_keyword").click(function () {
+        $(this).focus();
+    });
+
     /**
      * 编辑内容
      */

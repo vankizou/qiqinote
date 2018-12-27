@@ -144,6 +144,7 @@ label {
 #j_note_info_keyword {
     text-align: left;
     display: inline-block;
+    min-width: 50px;
     max-width: 200px;
     vertical-align: middle;
 }
