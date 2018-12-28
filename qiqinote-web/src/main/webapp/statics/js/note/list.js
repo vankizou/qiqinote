@@ -156,7 +156,7 @@ function addNote() {
         noteSecretTypeJson[id] = secret;
         noteIdAndNoteIdLinkJson[id] = data['idLink'];
         updateDiyDom(parentNode, 1);
-        var node = tree.addNodes(parentNode, {id: id, pId: pId, name: data["title"]})[0];
+        var node = tree.addNodes(parentNode, {id: id, pId: pId, name: data["title"], desc: data["title"]})[0];
         tree.selectNode(node);
         setting.callback.onClick(null, _nodeTreeId, node);
     };

@@ -17,7 +17,7 @@
     <%--<base href="<%=basePath%>">--%>
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>笔记列表-奇奇笔记</title>
+    <title>笔记树-奇奇笔记</title>
     <jsp:include page="../common/common.jsp"></jsp:include>
     <jsp:include page="../common/ztree.jsp"></jsp:include>
     <jsp:include page="../common/markdown.jsp"></jsp:include>
