@@ -8,6 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
 <link href="/statics/css/common/top/top.css" rel="stylesheet" type="text/css">
 <link href="/statics/css/common/top/top2.css" rel="stylesheet" type="text/css">
 <link href="/statics/css/common/body.css" rel="stylesheet" type="text/css">
