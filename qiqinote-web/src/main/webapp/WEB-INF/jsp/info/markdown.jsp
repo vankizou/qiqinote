@@ -76,12 +76,12 @@
 #### Heading 4
 ##### Heading 5
 ###### Heading 6
-# Heading 1 link [Heading link](http://www.qiqinote.com "Heading link")
-## Heading 2 link [Heading link](http://www.qiqinote.com "Heading link")
-### Heading 3 link [Heading link](http://www.qiqinote.com "Heading link")
-#### Heading 4 link [Heading link](http://www.qiqinote.com "Heading link") Heading link [Heading link](http://www.qiqinote.com "Heading link")
-##### Heading 5 link [Heading link](http://www.qiqinote.com "Heading link")
-###### Heading 6 link [Heading link](http://www.qiqinote.com "Heading link")
+# Heading 1 link [Heading link](https://www.qiqinote.com "Heading link")
+## Heading 2 link [Heading link](https://www.qiqinote.com "Heading link")
+### Heading 3 link [Heading link](https://www.qiqinote.com "Heading link")
+#### Heading 4 link [Heading link](https://www.qiqinote.com "Heading link") Heading link [Heading link](http://www.qiqinote.com "Heading link")
+##### Heading 5 link [Heading link](https://www.qiqinote.com "Heading link")
+###### Heading 6 link [Heading link](https://www.qiqinote.com "Heading link")
 
 #### 标题（用底线的形式）Heading (underline)
 
@@ -119,11 +119,11 @@ The <abbr title="Hyper Text Markup Language">HTML</abbr> specification is mainta
 
 ### 锚点与链接 Links
 
-[普通链接](http://www.qiqinote.com)
+[普通链接](https://www.qiqinote.com)
 
-[普通链接带标题](http://www.qiqinote.com "普通链接带标题")
+[普通链接带标题](https://www.qiqinote.com "普通链接带标题")
 
-直接链接：<http://www.qiqinote.com>
+直接链接：<https://www.qiqinote.com>
 
 [锚点链接][anchor-id]
 

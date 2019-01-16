@@ -13,7 +13,7 @@
 <!-- 尾部start -->
 <footer id="copyright" style="display:none">
     <div>
-        <p>Copyright © <a href="http://www.qiqinote.com">www.qiqinote.com</a> | <a href="http://www.miibeian.gov.cn/">京ICP备17034644</a>
+        <p>Copyright © <a href="https://www.qiqinote.com">www.qiqinote.com</a> | <a href="http://www.miibeian.gov.cn/">京ICP备17034644</a>
             | 联系人：<a href="mailto:vankizou@163.com">奇奇笔记</a></p>
     </div>
     <div>
