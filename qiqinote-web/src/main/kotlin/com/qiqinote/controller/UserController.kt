@@ -1,9 +1,9 @@
 package com.qiqinote.controller
 
+import com.qiqinote.anno.NeedLogin
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
 import com.qiqinote.constant.ServiceConst
-import com.qiqinote.constant.WebConst
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.po.SecurityQuestion
 import com.qiqinote.po.User
@@ -17,7 +17,6 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import kotlin.collections.set
@@ -26,7 +25,7 @@ import kotlin.collections.set
  * Created by vanki on 2018/3/13 17:35.
  */
 @Api("用户相关")
-@Controller
+@RestController
 @RequestMapping("/user")
 class UserController @Autowired constructor(
         private val securityQuestionService: SecurityQuestionService
@@ -37,9 +36,9 @@ class UserController @Autowired constructor(
      */
     @ApiOperation("注册")
     @ResponseBody
-    @PostMapping("/signUp" + WebConst.jsonSuffix)
+    @PostMapping("/signUp")
     fun signUp(name: String, alias: String?, password: String, imageCode: String): ResultVO<Long> {
-//        if (!this.validateImageCode(imageCode)) return ResultVO(CodeEnum.IMAGE_CODE_ERROR)
+        if (!this.validateImageCode(imageCode)) return ResultVO(CodeEnum.IMAGE_CODE_ERROR)
 
         val user = User()
         user.name = name
@@ -56,7 +55,7 @@ class UserController @Autowired constructor(
     @ApiOperation("登录")
     @ApiImplicitParam(name = "isRemember", value = "是否记住登录，0/1，默认0")
     @ResponseBody
-    @PostMapping("/signIn" + WebConst.jsonSuffix)
+    @PostMapping("/signIn")
     fun signIn(account: String, password: String, isRemember: Int?): ResultVO<UserContextVO?> {
         var originTmp = DBConst.UserLoginRecord.originNone
         /**
@@ -85,22 +84,24 @@ class UserController @Autowired constructor(
      */
     @ApiOperation("退出登录")
     @ResponseBody
-    @RequestMapping("/signOut" + WebConst.jsonSuffix, method = arrayOf(RequestMethod.GET, RequestMethod.POST))
+    @RequestMapping("/signOut", method = arrayOf(RequestMethod.GET, RequestMethod.POST))
     fun signOut(): ResultVO<Any> {
         this.userService.singOut(this.request, this.response)
         return ResultVO()
     }
 
+    @NeedLogin
     @ApiOperation("当前登录用户信息")
     @ResponseBody
-    @GetMapping("/currentInfo" + WebConst.needLoginJsonSuffix)
+    @GetMapping("/currentInfo")
     fun info(): ResultVO<UserContextVO> {
         return ResultVO(this.userContext ?: throw QiqiNoteException(CodeEnum.NOT_LOGIN))
     }
 
+    @NeedLogin
     @ApiOperation("修改用户信息")
     @ResponseBody
-    @PostMapping("/updateInfo" + WebConst.needLoginJsonSuffix)
+    @PostMapping("/updateInfo")
     fun update(
             avatarId: Long?,
             alias: String?,
@@ -141,14 +142,16 @@ class UserController @Autowired constructor(
                         this.response,
                         loginUserId.toString(),
                         PasswordUtil.getDecPwd(u.password!!),
+                        false,
                         null
                 )
         )
     }
 
+    @NeedLogin
     @ApiOperation("修改密保问题")
     @ResponseBody
-    @PostMapping("/updateSecurityQuestions" + WebConst.needLoginJsonSuffix)
+    @PostMapping("/updateSecurityQuestions")
     fun updateSecurityQuestions(password: String, questionDTO: SecurityQuestionDTO): ResultVO<List<SecurityQuestion>> {
         if (questionDTO.questions == null || questionDTO.questions?.size != ServiceConst.findPwdQuestionNum) return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_NUM_NOT_ENOUGH)
 
@@ -160,7 +163,7 @@ class UserController @Autowired constructor(
 
     @ApiOperation("修改登录密码（通过旧密码）")
     @ResponseBody
-    @PostMapping("/updatePwdByOldPwd" + WebConst.jsonSuffix)
+    @PostMapping("/updatePwdByOldPwd")
     fun updatePwdByOldPwd(account: String?, oldPassword: String, newPassword: String): ResultVO<Long> {
         var accountTmp = account
         if (accountTmp == null) accountTmp = this.justGetLoginUserId()?.toString()
@@ -179,7 +182,7 @@ class UserController @Autowired constructor(
 
     @ApiOperation("修改密码（通过密保问题）")
     @ResponseBody
-    @PostMapping("/updatePwdByQuestions" + WebConst.jsonSuffix)
+    @PostMapping("/updatePwdByQuestions")
     fun updatePwdByQuestions(account: String?, password: String, questionDTO: SecurityQuestionDTO): ResultVO<Long> {
         var accountTmp = account
         if (accountTmp == null) accountTmp = this.justGetLoginUserId()?.toString()
@@ -214,7 +217,7 @@ class UserController @Autowired constructor(
     @ApiOperation("获取密保问题列表")
     @ApiImplicitParam(name = "password", value = "若密码为空或不正确，则不显示答案")
     @ResponseBody
-    @PostMapping("/listOfPwdQuestion" + WebConst.jsonSuffix)
+    @PostMapping("/listOfPwdQuestion")
     fun listOfPwdQuestion(account: String?, password: String?): ResultVO<List<SecurityQuestion>> {
         var accountTmp = account
         if (accountTmp == null) accountTmp = this.justGetLoginUserId()?.toString()

@@ -29,10 +29,7 @@ abstract class BaseController : AbstractBaseService() {
 
     protected var userContext: UserContextVO? = null
         get() {
-            field = this.userService.getUserContextVO(this.request, this.response)
-            if (field == null || !field!!.isOK()) {
-                WebUtil.buildExceptionIfNeedLogin(this.request.servletPath)
-            }
+            field = this.userService.getUserContextVO(this.request, this.response, true)
             return field
         }
 
@@ -41,7 +38,13 @@ abstract class BaseController : AbstractBaseService() {
      */
     protected fun isMine(userId: Long?) = if (userId == null) false else userId == userContext?.id
 
-    protected fun getLoginUserId() = justGetLoginUserId()!!
+    protected fun getLoginUserId() : Long {
+        val loginUserId = justGetLoginUserId()
+        if(loginUserId == null) {
+            WebUtil.buildLoginException()
+        }
+        return loginUserId!!
+    }
 
     protected fun justGetLoginUserId() = userContext?.id
 

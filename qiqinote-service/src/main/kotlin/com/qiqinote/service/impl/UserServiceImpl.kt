@@ -8,13 +8,11 @@ import com.qiqinote.dto.PictureDTO
 import com.qiqinote.po.Picture
 import com.qiqinote.po.User
 import com.qiqinote.po.UserLoginRecord
-import com.qiqinote.service.AbstractBaseService
-import com.qiqinote.service.PictureService
-import com.qiqinote.service.UserLoginRecordService
-import com.qiqinote.service.UserService
+import com.qiqinote.service.*
 import com.qiqinote.util.*
 import com.qiqinote.vo.ResultVO
 import com.qiqinote.vo.UserContextVO
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.BoundValueOperations
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -32,7 +30,8 @@ class UserServiceImpl @Autowired constructor(
         private val envDao: EnvDao,
         private val pictureService: PictureService,
         private val userLoginRecordService: UserLoginRecordService,
-        private val redisTemplate: StringRedisTemplate
+        private val redisTemplate: StringRedisTemplate,
+        private val wordService: WordService
 ) : UserService, AbstractBaseService() {
 
     override fun signIn(
@@ -43,7 +42,7 @@ class UserServiceImpl @Autowired constructor(
             isRemember: Boolean?,
             origin: Int?
     ): UserContextVO? {
-        val uc = this.getUserContextVO(request, response, account, password, isRemember) ?: return null
+        val uc = this.getUserContextVO(request, response, account, password, false, isRemember) ?: return null
 
         val userLoginRecord = UserLoginRecord.buildRequestInfo(request)
         userLoginRecord.origin = origin
@@ -146,8 +145,8 @@ class UserServiceImpl @Autowired constructor(
 
     override fun getByName(name: String) = this.userDao.getByName(name)
 
-    override fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse): UserContextVO? {
-        return this.getUserContextVO(request, response, null, null, null)
+    override fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse, randomMotto: Boolean?): UserContextVO? {
+        return this.getUserContextVO(request, response, null, null, randomMotto, null)
     }
 
     override fun getUserContextVO(
@@ -155,6 +154,7 @@ class UserServiceImpl @Autowired constructor(
             response: HttpServletResponse,
             account: String?,
             password: String?,
+            randomMotto: Boolean?,
             remember: Boolean?
     ): UserContextVO? {
         /**
@@ -192,11 +192,11 @@ class UserServiceImpl @Autowired constructor(
             return null
         }
         val userTmp = this.getByAccount(accountTmp!!) ?: return null
-        if (!checkPwd(userTmp.password ?: "", pwdTmp!!)) {
+        if (!checkPwd(userTmp.password ?: "", pwdTmp)) {
             return null
         }
 
-        val uc = this.buildUserContext(userTmp)
+        val uc = this.buildUserContext(userTmp, randomMotto)
         if (!uc.isOK()) {
             return null
         }
@@ -223,7 +223,7 @@ class UserServiceImpl @Autowired constructor(
         return dbPwd == PasswordUtil.getEncPwd(inputPwd)
     }
 
-    private fun buildUserContext(user: User): UserContextVO {
+    override fun buildUserContext(user: User, randomMotto: Boolean?): UserContextVO {
         val uc = UserContextVO()
         uc.build(user)
 
@@ -246,6 +246,12 @@ class UserServiceImpl @Autowired constructor(
         }
         if (avatar != null) {
             uc.build(PictureDTO(this.imageDomain, avatar))
+        }
+        /**
+         * 添加自动格言
+         */
+        if (randomMotto != null && randomMotto && StringUtils.isEmpty(user.motto)) {
+            user.motto = this.wordService.random()
         }
         return uc
     }

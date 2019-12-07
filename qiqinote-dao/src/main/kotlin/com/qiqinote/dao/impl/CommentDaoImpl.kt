@@ -85,15 +85,15 @@ class CommentDaoImpl @Autowired constructor(
         return if (list.isEmpty()) null else list[0]
     }
 
-    override fun countRoot(type: Int, targetId: Long): Int {
-        val sql = "SELECT COUNT(1) FROM comment WHERE type=$type AND del=${DBConst.falseVal} AND target_id=$targetId AND root_id=${DBConst.defaultParentId}"
+    override fun subCount(type: Int, targetId: Long, rootId: Long): Int {
+        val sql = "SELECT COUNT(1) FROM comment WHERE type=$type AND del=${DBConst.falseVal} AND target_id=$targetId AND root_id=$rootId"
         return this.namedParameterJdbcTemplate.queryForObject(sql, MapSqlParameterSource(), Int::class.java) ?: 0
     }
 
     /**
      * 用户查看他人对自己的评论时返回的数据
      */
-    override fun listOfUserUnreadCommentDTO(type: Int, ids: MutableList<Long>): MutableList<UserUnreadCommentDTO> {
+    override fun listOfUserUnreadCommentDTO(type: Int, ids: List<Long>): List<UserUnreadCommentDTO> {
         val condition: String = when (ids.size) {
             0 -> return Collections.emptyList()
             1 -> "=${ids[0]}"
@@ -105,7 +105,7 @@ class CommentDaoImpl @Autowired constructor(
         return listOfUserUnreadCommentDTO(type, condition)
     }
 
-    override fun listOfUserUnreadCommentDTO(type: Int, ids: MutableSet<String>): MutableList<UserUnreadCommentDTO> {
+    override fun listOfUserUnreadCommentDTO(type: Int, ids: Set<String>): List<UserUnreadCommentDTO> {
         val condition: String = when (ids.size) {
             0 -> return Collections.emptyList()
             1 -> "=${ids.first()}"
@@ -117,7 +117,7 @@ class CommentDaoImpl @Autowired constructor(
         return listOfUserUnreadCommentDTO(type, condition)
     }
 
-    private fun listOfUserUnreadCommentDTO(type: Int, condition: String): MutableList<UserUnreadCommentDTO> {
+    private fun listOfUserUnreadCommentDTO(type: Int, condition: String): List<UserUnreadCommentDTO> {
 
         /**
          * 评论类型对应获取的目标字段。如：type=笔记，获取title信息
@@ -160,8 +160,8 @@ class CommentDaoImpl @Autowired constructor(
     /**
      * 在详情页查看评论的数据
      */
-    override fun listOfTargetCommentDTO(type: Int, targetId: Long, rootId: Long, orderBy: String?, currPage: Int, pageSize: Int): MutableList<TargetCommentDTO> {
-        val startRow = ((if (currPage < 1) 1 else currPage) - 1) * pageSize
+    override fun listOfTargetCommentDTO(type: Int, targetId: Long, rootId: Long, orderBy: String?, page: Int, row: Int): List<TargetCommentDTO> {
+        val startRow = ((if (page < 1) 1 else page) - 1) * row
 
         val sql = """
             SELECT
@@ -185,13 +185,13 @@ class CommentDaoImpl @Autowired constructor(
 
             ORDER BY ${orderBy ?: "id DESC"}
 
-            LIMIT $startRow, $pageSize
+            LIMIT $startRow, $row
         """.trimIndent()
 
         return this.namedParameterJdbcTemplate.query(sql, mapOf<String, Any>(), rowMapperTargetCommentDTO)
     }
 
-    override fun listOfTargetCommentDTO(ids: List<Long>): MutableList<TargetCommentDTO> {
+    override fun listOfTargetCommentDTO(ids: List<Long>): List<TargetCommentDTO> {
         val condition: String = when (ids.size) {
             0 -> return Collections.emptyList()
             1 -> "=${ids[0]}"

@@ -2,10 +2,10 @@ package com.qiqinote.dao.impl
 
 import com.qiqinote.constant.DBConst
 import com.qiqinote.dao.NoteDao
-import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.util.StringUtil
 import com.qiqinote.util.sql.NamedSQLUtil
+import org.apache.commons.lang3.tuple.Pair
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -203,8 +203,17 @@ class NoteDaoImpl @Autowired constructor(
         return if (list.isEmpty()) null else list[0]
     }
 
-    override fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
-                                 isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
+    override fun listByCondition(
+            loginUserId: Long?,
+            userId: Long?,
+            parentId: Long?,
+            orderBy: String?,
+            titleLike: String?,
+            isTree: Boolean,
+            page: Int,
+            row: Int,
+            countTotal: Boolean?
+    ): Pair<Int, List<Note>> {
         val conditionSql = StringBuilder(256)
         conditionSql.append(" WHERE ")
 
@@ -232,49 +241,58 @@ class NoteDaoImpl @Autowired constructor(
             conditionSql.append(" AND note_content_num>0")
         }
 
-        this.buildSecretAndStatus(conditionSql, loginUserId, userId, isTree)
+        var totalRowDB = 0
+        if (countTotal != null && countTotal) {
+            totalRowDB =
+                    this.namedParameterJdbcTemplate
+                            .queryForObject(
+                                    NamedSQLUtil.getSelectSQL(
+                                            Note::class,
+                                            "COUNT(*)",
+                                            null
+                                    ) + conditionSql.toString(),
+                                    paramMap,
+                                    Int::class.java
+                            ) ?: 0
+        }
 
-        var totalRowDB = totalRow
-        if (totalRowDB == null) {
-            totalRowDB = this.namedParameterJdbcTemplate
-                    .queryForObject(NamedSQLUtil.getSelectSQL(Note::class, "COUNT(*)", null) + conditionSql.toString(),
-                            paramMap, Int::class.java) ?: 0
-        }
-        val resultPage = Page<Note>(currPage, pageSize, totalRowDB)
-        if (totalRowDB <= 0) {
-            return resultPage
-        }
+        this.buildSecretAndStatus(conditionSql, loginUserId, userId, isTree)
 
         if (StringUtil.isNotEmpty(orderBy)) {
             conditionSql.append(" ORDER BY ").append(orderBy)
         } else {
             conditionSql.append(" ORDER BY ").append("note_num DESC")
         }
-        conditionSql.append(" LIMIT ").append(resultPage.startRow).append(",").append(resultPage.pageSize)
+        if (page > 0 && row > 0) {
+            val startRow = (page - 1) * row
+            conditionSql.append(" LIMIT ").append(startRow).append(",").append(row)
+        }
 
-        val results = this.namedParameterJdbcTemplate
-                .query(NamedSQLUtil.getSelectSQL(Note::class, null) + conditionSql.toString(), paramMap, rowMapper)
-
-        resultPage.data = results
+        val results =
+                this.namedParameterJdbcTemplate.query(
+                        NamedSQLUtil.getSelectSQL(Note::class, null) + conditionSql.toString(),
+                        paramMap,
+                        rowMapper
+                )
 
         /**
          * 不是自己过滤部分字段
          */
         if (userId != null && userId != loginUserId) {
-            resultPage.data.let { out ->
+            results.let { out ->
                 out.forEach {
                     it.password = null
                 }
             }
         }
-        return resultPage
+        return Pair.of(totalRowDB, results)
     }
 
     private fun buildSecretAndStatus(sql: StringBuilder, loginUserId: Long?, userId: Long?, isTree: Boolean) {
         val statusList = arrayListOf<Int>()
         val secretList = arrayListOf<Int>()
         /**
-         * 首页等
+         * 不是访问自己的主页，加上笔记类型限制
          */
         if (loginUserId == null || userId != loginUserId) {
             statusList.add(DBConst.Note.statusPass)

@@ -15,6 +15,7 @@ import com.qiqinote.vo.NoteTreeVO
 import com.qiqinote.vo.NoteTreeVOAndTotalNote
 import com.qiqinote.vo.NoteViewVO
 import com.qiqinote.vo.ResultVO
+import org.apache.commons.lang3.tuple.Pair
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
@@ -159,7 +160,9 @@ class NoteServiceImpl @Autowired constructor(
         return ResultVO()
     }
 
-    override fun getByIdOrIdLink(id: Long?, idLink: String?) = this.noteDao.getByIdOrIdLink(id, idLink)
+    override fun getByIdOrIdLink(id: Long?, idLink: String?): Note? {
+        return this.noteDao.getByIdOrIdLink(id, idLink)
+    }
 
     override fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest?, response: HttpServletResponse?): NoteViewVO? {
         if (id == null && idLink == null) return null
@@ -215,29 +218,31 @@ class NoteServiceImpl @Autowired constructor(
             isMine = true
         }
 
-        var currPage = Page.firstPage
-        val pageSize = 200
+        var page = Page.firstPage
+        val row = 200
 
-        var resultList: MutableList<NoteTreeVO>? = null
-        var noteListTmp: MutableList<Note>?
-        var totalRowTmp: Int? = null
+        val results = mutableListOf<NoteTreeVO>()
+        var notesTmp: List<Note>?
         var voTmp: NoteTreeVO?
-        var pageTmp: Page<Note>
-
         do {
-            pageTmp = this.page(loginUserId, userId, parentId, null,
-                    "secret DESC, note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
-            noteListTmp = pageTmp.data
-            if (noteListTmp.isEmpty()) break
-            if (resultList == null) {
-                totalRowTmp = pageTmp.totalRow
-                resultList = ArrayList(totalRowTmp)
-            }
+            notesTmp =
+                    this.listByCondition(
+                            loginUserId,
+                            userId,
+                            parentId,
+                            null,
+                            "secret DESC, note_num DESC, title DESC",
+                            true,
+                            page,
+                            row,
+                            false
+                    ).right
+            if (notesTmp.isEmpty()) break
 
             /**
              * 获取展开的数据
              */
-            for (note in noteListTmp) {
+            for (note in notesTmp) {
                 voTmp = NoteTreeVO()
 
                 if (isMine && hCount < h && note.noteNum != null &&
@@ -246,43 +251,55 @@ class NoteServiceImpl @Autowired constructor(
                     voTmp.subNoteVOList = this.listOfNoteTreeVO(loginUserId, userId, note.id, deep + 1)
                 }
                 voTmp.note = note
-                resultList.add(voTmp)
+                results.add(voTmp)
             }
-            if (noteListTmp.size < pageSize) break
-            currPage++
+            if (notesTmp.size < row) break
+            page++
         } while (true)
-        return resultList ?: arrayListOf()
+        return results
     }
 
     override fun listOfNoteTreeVOByTitleLike(loginUserId: Long, titleLike: String): NoteTreeVOAndTotalNote {
         if (StringUtil.isEmpty(titleLike.trim())) return NoteTreeVOAndTotalNote(Collections.emptyList(), 0)
-        var currPage = Page.firstPage
-        val pageSize = 200
+        var page = Page.firstPage
+        val row = 200
 
-        val totalNoteList = mutableListOf<Note>()
-        var totalRowTmp: Int? = null
-        var noteListTmp: MutableList<Note>?
-        var pageTmp: Page<Note>
+        val results = mutableListOf<Note>()
+        var notesTmp: List<Note>?
+        var dataPair: Pair<Int, List<Note>>
+        var total = 0
+        var isFirstPage: Boolean
         do {
-            pageTmp = this.page(loginUserId, loginUserId, null, titleLike,
-                    "secret DESC, note_num DESC, title DESC", true, totalRowTmp, currPage, pageSize)
-            noteListTmp = pageTmp.data
-            if (noteListTmp.isEmpty()) break
-            if (currPage == Page.firstPage) {
-                totalRowTmp = pageTmp.totalRow
+            isFirstPage = page == Page.firstPage
+            dataPair =
+                    this.listByCondition(
+                            loginUserId,
+                            loginUserId,
+                            null,
+                            titleLike,
+                            "secret DESC, note_num DESC, title DESC",
+                            true,
+                            page,
+                            row,
+                            isFirstPage
+                    )
+            if (isFirstPage) {
+                total = dataPair.left
             }
-            totalNoteList.addAll(noteListTmp)
-            if (noteListTmp.size < pageSize) break
-            currPage++
+            notesTmp = dataPair.right
+            if (notesTmp.isEmpty()) break
+            results.addAll(notesTmp)
+            if (notesTmp.size < row) break
+            page++
         } while (true)
 
         val parentIdAndNoteMap = hashMapOf<Long, LinkedHashMap<Long, Note>>()
-        totalNoteList.forEach {
+        results.forEach {
             reviewParentOfNoteTitleLike(it, parentIdAndNoteMap)
         }
         val resultList = mutableListOf<NoteTreeVO>()
         buildNoteTreeVOOfNoteTitleLike(resultList, DBConst.defaultParentId, parentIdAndNoteMap)
-        return NoteTreeVOAndTotalNote(resultList, totalRowTmp ?: 0)
+        return NoteTreeVOAndTotalNote(resultList, total)
     }
 
     /**
@@ -321,9 +338,18 @@ class NoteServiceImpl @Autowired constructor(
     }
 
 
-    override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?, orderBy: String?,
-                      isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
-        return this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, totalRow, currPage, pageSize, navNum)
+    override fun listByCondition(
+            loginUserId: Long?,
+            userId: Long?,
+            parentId: Long?,
+            titleLike: String?,
+            orderBy: String?,
+            isTree: Boolean,
+            page: Int,
+            row: Int,
+            countTotal: Boolean?
+    ): Pair<Int, List<Note>> {
+        return this.noteDao.listByCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, page, row, countTotal)
     }
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
@@ -372,7 +398,7 @@ class NoteServiceImpl @Autowired constructor(
                 continue
             }
 
-            if ("".equals(detail.content)) {
+            if ("" == detail.content) {
                 this.noteDetailService.deleteById(userId, detail.id ?: continue)
                 continue
             }

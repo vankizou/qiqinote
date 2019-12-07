@@ -2,18 +2,14 @@ package com.qiqinote.controller
 
 import com.qiqinote.dao.UserDao
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import springfox.documentation.annotations.ApiIgnore
 
 /**
  * Created by vanki on 2018/1/17 22:43.
  */
 @ApiIgnore
-@Controller
+@RestController
 @RequestMapping("/test")
 class TestController @Autowired constructor(val userDao: UserDao) {
 

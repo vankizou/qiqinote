@@ -1,7 +1,7 @@
 package com.qiqinote.dao
 
-import com.qiqinote.model.Page
 import com.qiqinote.po.Note
+import org.apache.commons.lang3.tuple.Pair
 
 /**
  * Created by vanki on 2018/1/23 14:04.
@@ -31,6 +31,6 @@ interface NoteDao {
 
     fun getByIdOrIdLink(id: Long?, idLink: String?): Note?
 
-    fun pageOfCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
-                        isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note>
+    fun listByCondition(loginUserId: Long?, userId: Long?, parentId: Long?, orderBy: String?, titleLike: String?,
+                        isTree: Boolean, page: Int, row: Int, countTotal: Boolean?): Pair<Int, List<Note>>
 }

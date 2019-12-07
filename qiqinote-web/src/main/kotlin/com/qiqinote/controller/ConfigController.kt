@@ -1,6 +1,6 @@
 package com.qiqinote.controller
 
-import com.qiqinote.constant.WebConst
+import com.qiqinote.anno.NeedLogin
 import com.qiqinote.po.Config
 import com.qiqinote.po.fieldjson.ConfigNoteTree
 import com.qiqinote.service.ConfigService
@@ -24,7 +24,8 @@ class ConfigController @Autowired constructor(
     /**
      * 树页页面比例
      */
-    @PostMapping("/upsertNoteTreeConfig" + WebConst.needLoginJsonSuffix)
+    @NeedLogin
+    @PostMapping("/upsertNoteTreeConfig")
     fun upsertNoteTreeConfig(treeCssCls: String, contentCssCls: String): ResultVO<Unit> {
         val config = Config()
         config.userId = this.getLoginUserId()

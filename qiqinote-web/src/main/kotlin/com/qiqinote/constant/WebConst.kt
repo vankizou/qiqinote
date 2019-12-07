@@ -6,16 +6,6 @@ package com.qiqinote.constant
 object WebConst {
 
     /**
-     * json后缀, 返回未登录code
-     */
-    const val jsonSuffix = ".json"
-
-    /**
-     * 需要登录json后缀, 返回未登录code
-     */
-    const val needLoginJsonSuffix = ".sjson"
-
-    /**
      * 图片验证码cookie失效时间
      */
     const val cookieImageCodeVInvalidTime = 60 * 10

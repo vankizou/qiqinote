@@ -30,7 +30,9 @@ interface UserService : BaseService<UserDao> {
 
     fun getByAccount(account: String): User?
 
-    fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse): UserContextVO?
+    fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse, randomMotto: Boolean?): UserContextVO?
 
-    fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse, account: String?, password: String?, remember: Boolean? = null): UserContextVO?
+    fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse, account: String?, password: String?, randomMotto: Boolean?, remember: Boolean? = null): UserContextVO?
+
+    fun buildUserContext(user: User, randomMotto: Boolean?): UserContextVO
 }

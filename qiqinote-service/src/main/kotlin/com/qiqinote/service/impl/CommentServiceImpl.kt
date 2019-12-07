@@ -8,18 +8,17 @@ import com.qiqinote.dao.CommentDao
 import com.qiqinote.dto.TargetCommentDTO
 import com.qiqinote.dto.UserUnreadCommentDTO
 import com.qiqinote.exception.QiqiNoteException
-import com.qiqinote.model.Page
 import com.qiqinote.po.Comment
+import com.qiqinote.service.AbstractBaseService
 import com.qiqinote.service.CommentService
 import com.qiqinote.service.NoteService
 import com.qiqinote.util.StringUtil
 import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.env.Environment
-import org.springframework.core.env.get
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.set
 
 /**
  * Created by vanki on 2018/5/3 15:50.
@@ -27,11 +26,9 @@ import java.util.*
 @Service
 class CommentServiceImpl @Autowired constructor(
         private val redisTemplate: StringRedisTemplate,
-        private val environment: Environment,
         private val commentDao: CommentDao,
         private val noteService: NoteService
-) : CommentService {
-    private val imageDomain = environment["qiqinote.image.domain"]
+) : CommentService, AbstractBaseService() {
 
     override fun create(comment: Comment): ResultVO<Comment> {
         val type = comment.type
@@ -92,21 +89,31 @@ class CommentServiceImpl @Autowired constructor(
 
     override fun getById(id: Long) = this.commentDao.getById(id)
 
-    override fun countRoot(type: Int, targetId: Long) = this.commentDao.countRoot(type, targetId)
+    override fun subCount(type: Int, targetId: Long, rootId: Long?): Int {
+        return this.commentDao.subCount(type, targetId, rootId ?: DBConst.defaultParentId)
+    }
 
-    override fun listOfTarget(type: Int, rootId: Long, ids: List<Long>, loginUserId: Long?): MutableList<TargetCommentDTO> {
+    override fun listOfTarget(type: Int, rootId: Long, ids: List<Long>, loginUserId: Long?): List<TargetCommentDTO> {
         val resultList = this.commentDao.listOfTargetCommentDTO(ids)
         this.buildTargetParentCommentAndRemoveUnread(type, rootId, loginUserId, resultList)
         return resultList
     }
 
-    override fun listOfTarget(type: Int, targetId: Long, rootId: Long, currPage: Int, pageSize: Int, loginUserId: Long?): MutableList<TargetCommentDTO> {
-        val resultList = this.commentDao.listOfTargetCommentDTO(type, targetId, rootId, if (rootId == DBConst.defaultParentId) "id DESC" else "id ASC", currPage, pageSize)
+    override fun listOfTarget(type: Int, targetId: Long, rootId: Long, page: Int, row: Int, loginUserId: Long?): List<TargetCommentDTO> {
+        val resultList =
+                this.commentDao.listOfTargetCommentDTO(
+                        type,
+                        targetId,
+                        rootId,
+                        if (rootId == DBConst.defaultParentId) "id DESC" else "id ASC",
+                        page,
+                        row
+                )
         this.buildTargetParentCommentAndRemoveUnread(type, rootId, loginUserId, resultList)
         return resultList
     }
 
-    private fun buildTargetParentCommentAndRemoveUnread(type: Int, rootId: Long, loginUserId: Long?, commentList: MutableList<TargetCommentDTO>) {
+    private fun buildTargetParentCommentAndRemoveUnread(type: Int, rootId: Long, loginUserId: Long?, commentList: List<TargetCommentDTO>) {
         if (commentList.isEmpty()) return
 
         val map = mutableMapOf<Long, TargetCommentDTO>()
@@ -156,35 +163,28 @@ class CommentServiceImpl @Autowired constructor(
 
     override fun unreadNum(userId: Long, type: Int) = this.getRedisOpt(userId, type).size() ?: 0
 
-    override fun pageOfUnread(userId: Long, type: Int, pageSize: Int): Page<UserUnreadCommentDTO> {
+    override fun unreads(userId: Long, type: Int, row: Int): List<UserUnreadCommentDTO> {
         val opt = this.getRedisOpt(userId, type)
-        val totalRow = opt.size()?.toInt() ?: 0
-
-        val result = Page<UserUnreadCommentDTO>(Page.firstPage, pageSize, totalRow)
-        if (totalRow == 0) {
-            result.data = Collections.emptyList()
-            return result
-        }
 
         val startIndex = 0L
-        val lastIndex = (pageSize - 1).toLong()
+        val lastIndex = (row - 1).toLong()
 
-        val ids = opt.range(startIndex, lastIndex) ?: return result
+        val ids = opt.range(startIndex, lastIndex) ?: return listOf()
         opt.removeRange(startIndex, lastIndex)
 
-        result.data = this.commentDao.listOfUserUnreadCommentDTO(type, ids)
-        result.data.let { it.forEach { buildAvatarBasePath(it) } }
-        return result
+        val results = this.commentDao.listOfUserUnreadCommentDTO(type, ids)
+        results.forEach { buildAvatarBasePath(it) }
+        return results
     }
 
     /**
      * 构建头像全路径
      */
     private fun buildAvatarBasePath(dto: TargetCommentDTO) {
-        if (dto.fromUserAvatar != null && !dto.fromUserAvatar!!.startsWith(imageDomain!!)) {
+        if (dto.fromUserAvatar != null && !dto.fromUserAvatar!!.startsWith(this.imageDomain)) {
             dto.fromUserAvatar = imageDomain + dto.fromUserAvatar
         }
-        if (dto.parent?.fromUserAvatar != null && !dto.parent?.fromUserAvatar!!.startsWith(imageDomain!!)) {
+        if (dto.parent?.fromUserAvatar != null && !dto.parent?.fromUserAvatar!!.startsWith(this.imageDomain)) {
             dto.fromUserAvatar = imageDomain + dto.fromUserAvatar
         }
     }

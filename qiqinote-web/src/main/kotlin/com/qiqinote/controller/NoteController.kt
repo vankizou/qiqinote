@@ -1,19 +1,15 @@
 package com.qiqinote.controller
 
-import com.qiqinote.constant.*
-import com.qiqinote.dto.PictureDTO
-import com.qiqinote.dto.UserDTO
+import com.qiqinote.anno.NeedLogin
+import com.qiqinote.constant.CodeEnum
+import com.qiqinote.constant.DBConst
+import com.qiqinote.constant.ServiceConst
 import com.qiqinote.exception.QiqiNoteException
-import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.po.User
 import com.qiqinote.service.NoteDetailService
 import com.qiqinote.service.NoteService
-import com.qiqinote.service.PictureService
-import com.qiqinote.service.WordService
-import com.qiqinote.util.DateUtil
-import com.qiqinote.util.EntityUtil
 import com.qiqinote.util.StringUtil
 import com.qiqinote.util.TemplateUtil
 import com.qiqinote.vo.*
@@ -22,96 +18,30 @@ import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.env.get
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.ModelAndView
 import java.io.BufferedOutputStream
 import java.io.IOException
-import java.net.URLEncoder
 import java.nio.charset.Charset
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.hashMapOf
+import kotlin.collections.mutableListOf
+import kotlin.collections.set
 
 /**
  * Created by vanki on 2018/3/12 14:20.
  */
 @Api("笔记相关")
-@Controller
+@RestController
 @RequestMapping("/note")
 class NoteController @Autowired constructor(
         private val noteService: NoteService,
-        private val noteDetailService: NoteDetailService,
-        private val pictureService: PictureService,
-        private val wordService: WordService
+        private val noteDetailService: NoteDetailService
 ) : BaseController() {
-    fun editHtml(@PathVariable("idOrIdLink") idOrIdLink: String): ModelAndView {
-        val loginUserId = this.getLoginUserId()
 
-        val id = idOrIdLink.toLongOrNull()
-
-        val noteVO = this.noteService.getNoteVOByIdOrIdLink(loginUserId, id, if (id == null) idOrIdLink else null, null)
-        if (noteVO == null || noteVO.needPwd == ServiceConst.falseVal) {
-            throw QiqiNoteException(CodeEnum.NOT_FOUND)
-        }
-        val mv = ModelAndView(WebPageEnum.note_edit.url)
-        mv.addObject("noteVO", noteVO)
-        return mv
-    }
-
-    /*@GetMapping("/{id}" + WebConst.htmlSuffix)
-    fun viewHtml2(@PathVariable("id") id: Long, password: String?) = "forward:/note/$id?password=$password"*/
-
-    /*@GetMapping("/{idOrIdLink}")
-    fun viewHtml(@PathVariable("idOrIdLink") idOrIdLink: String, password: String?): ModelAndView {
-        val loginUserId = this.justGetLoginUserId()
-        val mv = ModelAndView(WebPageEnum.note_view.url)
-
-        val id = idOrIdLink.toLongOrNull()
-        val noteVO = this.noteService.getNoteVOByIdOrIdLink(loginUserId, id,
-                if (id == null) idOrIdLink else null, password, this.request, this.response)
-                ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
-
-        // 访链只能通过idLink访问
-        if (id != null && noteVO.note?.secret == DBConst.Note.secretLink) {
-            throw QiqiNoteException(CodeEnum.NOT_FOUND)
-        }
-
-        // 父节点数据
-        noteVO.parentNote = this.noteService.getByIdOrIdLink(noteVO.note?.parentId ?: DBConst.defaultParentId)
-
-        // 用户
-        if (noteVO.needPwd != ServiceConst.trueVal && noteVO.note?.userId != null) {
-            val user = this.userService.getById(noteVO.note?.userId!!)
-            if (StringUtil.isBlank(user?.motto)) {
-                user?.motto = this.wordService.random()
-            }
-            user?.let { noteVO.user = UserDTO(it) }
-            user?.avatarId?.let {
-                val pic = this.pictureService.getById(it)
-                if (pic != null) {
-                    noteVO.user?.avatar = PictureDTO(env["qiqinote.image.domain"]!!, pic)
-                }
-            }
-        }
-        noteVO.createDatetimeStr = DateUtil.formatDatetime(noteVO.note?.createDatetime)
-        noteVO.updateDatetimeStr = DateUtil.formatDatetime(noteVO.note?.updateDatetime)
-        mv.addObject("noteVO", noteVO)
-        mv.addObject("newest", this.noteService.page(null, noteVO.user?.id, null, null, "id DESC", false, null, 1, 10).data)
-        mv.addObject("hottest", this.noteService.page(null, noteVO.user?.id, null, null, "view_num DESC", false, null, 1, 10).data)
-        mv.addObject("isMe", loginUserId != null && loginUserId == noteVO.user?.id)
-
-        val userName = noteVO.user?.name
-        var title = noteVO.note?.title
-        if (title != null) title = title.split("/", limit = 2)[0]
-        mv.addObject("searchLink", if (StringUtil.isAnyBlank(userName, title)) "/" else "/$userName/${URLEncoder.encode(title, "UTF-8")}")
-        return mv
-    }*/
-
+    @NeedLogin
     @ApiOperation("添加新笔记")
-    @ApiImplicitParams(
-            ApiImplicitParam(name = "")
-    )
-    @ResponseBody
-    @PostMapping("/add" + WebConst.needLoginJsonSuffix)
+    @PostMapping("/add")
     fun add(p: UpsertNoteParam): ResultVO<Note?> {
         val result = this.noteService.add(
                 this.getLoginUserId(),
@@ -127,8 +57,9 @@ class NoteController @Autowired constructor(
         var noteDetails: List<NoteDetail>? = null
     }
 
-    @ResponseBody
-    @PostMapping("/updateById" + WebConst.needLoginJsonSuffix)
+    @NeedLogin
+    @ApiOperation("修改笔记")
+    @PostMapping("/updateById")
     fun updateById(p: UpsertNoteParam): ResultVO<Int> {
         return this.noteService.updateById(
                 this.getLoginUserId(),
@@ -137,8 +68,8 @@ class NoteController @Autowired constructor(
         )
     }
 
-    @ResponseBody
-    @GetMapping("/closeNote" + WebConst.jsonSuffix)
+    @ApiOperation("关闭笔记（笔记树）")
+    @GetMapping("/closeNote")
     fun closeNote(noteUserId: Long, id: Long): ResultVO<Any> {
         val loginUserId = this.justGetLoginUserId()
         if (noteUserId == loginUserId) {
@@ -147,8 +78,8 @@ class NoteController @Autowired constructor(
         return ResultVO()
     }
 
-    @ResponseBody
-    @GetMapping("/openNote" + WebConst.jsonSuffix)
+    @ApiOperation("打开笔记（笔记树）")
+    @GetMapping("/openNote")
     fun openNote(noteUserId: Long, id: Long): ResultVO<Any> {
         val loginUserId = this.justGetLoginUserId()
         if (noteUserId == loginUserId) {
@@ -157,67 +88,75 @@ class NoteController @Autowired constructor(
         return ResultVO()
     }
 
-    @ResponseBody
-    @PostMapping("/deleteById" + WebConst.needLoginJsonSuffix)
+    @NeedLogin
+    @ApiOperation("删除笔记")
+    @PostMapping("/deleteById")
     fun deleteById(id: Long) = this.noteService.deleteById(this.getLoginUserId(), id)
 
-
-    @ResponseBody
-    @GetMapping("/getNoteVOById" + WebConst.jsonSuffix)
-    fun getNoteVOByIdOrIdLink(idOrIdLink: String, password: String?): ResultVO<Any> {
+    @ApiOperation("获取笔记详情")
+    @ApiImplicitParams(
+            ApiImplicitParam(name = "idOrIdLink", value = "id或id映射字符串，当查看别人笔记且secret=3（私密笔记）时则必须为idLink"),
+            ApiImplicitParam(name = "password", value = "当返回数据[needPwd=true]时，传入该值作检验")
+    )
+    @GetMapping("/info/{idOrIdLink}")
+    fun getNoteVOByIdOrIdLink(
+            @PathVariable("idOrIdLink") idOrIdLink: String,
+            password: String?
+    ): ResultVO<NoteViewVO> {
         val id = idOrIdLink.toLongOrNull()
-
-        val vo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, if (id == null) idOrIdLink else null, password, this.request, this.response)
-                ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
+        val vo =
+                this.noteService.getNoteVOByIdOrIdLink(
+                        this.justGetLoginUserId(),
+                        id,
+                        if (id == null) idOrIdLink else null,
+                        password,
+                        this.request,
+                        this.response
+                ) ?: throw QiqiNoteException(CodeEnum.NOT_FOUND)
         if (vo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.PWD_ERROR)
         }
         // 父节点数据
         vo.parentNote = this.noteService.getByIdOrIdLink(vo.note?.parentId ?: DBConst.defaultParentId)
-
-        // 用户
-        /*if (vo.note?.userId != null) {
-            val user = this.userService.getById(vo.note?.userId!!)
-            if (StringUtil.isBlank(user?.motto)) {
-                user?.motto = this.wordService.random()
-            }
-            user?.let { vo.user = UserDTO(it) }
-            user?.avatarId?.let {
-                val pic = this.pictureService.getById(it)
-                if (pic != null) {
-                    vo.user?.avatar = PictureDTO(env["qiqinote.image.domain"], pic)
-                }
-            }
-        }*/
         return ResultVO(vo)
     }
 
-    @ResponseBody
-    @GetMapping("/pageOfHome.json")
-    fun pageOfHome(currPage: Int?, pageSize: Int?, navNum: Int?, titleLike: String?): ResultVO<Page<NoteHomeVO>> {
-        val page = this.noteService.page(this.justGetLoginUserId(), null, null, titleLike,
-                "update_datetime DESC", false, null, currPage ?: Page.firstPage, pageSize ?: 10, navNum ?: 3)
-        val noteList = page.data
-
-        val returnPage = Page<NoteHomeVO>()
-        EntityUtil.copyVal(returnPage, page, "data")
-        val returnList = ArrayList<NoteHomeVO>()
-        returnPage.data = returnList
-
-        if (noteList.isEmpty()) return ResultVO(returnPage)
-
-        val imageDomain = env["qiqinote.image.domain"]!!
-
-        val userTmpMap = hashMapOf<Long, UserDTO>()
+    @ApiOperation("获取主页笔记列表")
+    @ApiImplicitParams(
+            ApiImplicitParam(name = "page", value = "页码，初始页为1"),
+            ApiImplicitParam(name = "row", value = "每页最大数据量"),
+            ApiImplicitParam(name = "search", value = "搜索标题含相关字符的笔记，非必填")
+    )
+    @GetMapping("/home")
+    fun listOfHome(page: Int, row: Int, search: String?): ResultVO<List<NoteHomeVO>> {
+        if (page <= 0 || row <= 0) {
+            return ResultVO()
+        }
+        val notePair =
+                this.noteService.listByCondition(
+                        this.justGetLoginUserId(),
+                        null,
+                        null,
+                        search,
+                        "update_datetime DESC",
+                        false,
+                        page,
+                        row,
+                        false
+                )
+        val notes = notePair.right
+        val userTmpMap = hashMapOf<Long, UserContextVO>()
         val parentNoteMap = hashMapOf<Long, Note>()
         var noteHomeVO: NoteHomeVO
         var userIdTmp: Long?
         var userTmp: User?
-        var userDTOTmp: UserDTO?
+        var userDTOTmp: UserContextVO?
         var parentNoteIdTmp: Long?
         var noteContents: MutableList<NoteDetail>
 
-        for (note in noteList) {
+        val results = mutableListOf<NoteHomeVO>()
+
+        for (note in notes) {
             userIdTmp = note.userId ?: continue
 
             noteHomeVO = NoteHomeVO()
@@ -238,15 +177,12 @@ class NoteController @Autowired constructor(
                 userTmp = this.userService.getById(userIdTmp)
                 if (userTmp == null) continue
 
-                userDTOTmp = UserDTO(userTmp)
+                userDTOTmp = this.userService.buildUserContext(userTmp, true)
                 userTmpMap[userIdTmp] = userDTOTmp
             }
-            userDTOTmp.avatarId?.let {
-                val pic = this.pictureService.getById(it)
-                userDTOTmp.avatar = if (pic != null) PictureDTO(imageDomain, pic) else null
-            }
+
             noteHomeVO.user = userDTOTmp
-            returnList.add(noteHomeVO)
+            results.add(noteHomeVO)
 
             /**
              * 添加父笔记信息
@@ -261,37 +197,94 @@ class NoteController @Autowired constructor(
             }
             noteHomeVO.parentNote = pNote
         }
-        return ResultVO(returnPage)
+        return ResultVO(results)
     }
 
-    @ResponseBody
-    @GetMapping("/listOfNoteTreeVO" + WebConst.jsonSuffix)
-    fun listOfNoteTreeVO(userId: Long?, parentId: Long?, titleLike: String?): ResultVO<Any> {
+    @ApiOperation("笔记树列表")
+    @ApiImplicitParams(
+            ApiImplicitParam(name = "userId", value = "用户id"),
+            ApiImplicitParam(name = "parentId", value = "笔记树父id，若是根笔记，不填或值为[-1]"),
+            ApiImplicitParam(name = "search", value = "搜索标题含相关字符的笔记，非必填")
+    )
+    @GetMapping("/tree")
+    fun listOfNoteTreeVO(userId: Long?, parentId: Long?, search: String?): ResultVO<NoteTreeVOAndTotalNote> {
         val loginUserId = this.justGetLoginUserId()
         if (userId == null && loginUserId == null) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
         val parentIdTmp = parentId ?: DBConst.defaultParentId
         val userIdTmp = userId ?: loginUserId
-        var total = 0
-        val list: MutableList<NoteTreeVO> =
+        val result =
                 if (userIdTmp == loginUserId && parentIdTmp == DBConst.defaultParentId &&
-                        StringUtil.isNotEmpty(titleLike?.trim())) {
-                    val noteTreeVOOfLike = this.noteService.listOfNoteTreeVOByTitleLike(loginUserId!!, titleLike!!.trim())
-                    total = noteTreeVOOfLike.total
-                    noteTreeVOOfLike.notes
+                        StringUtil.isNotEmpty(search?.trim())) {
+                    this.noteService.listOfNoteTreeVOByTitleLike(loginUserId!!, search!!.trim())
                 } else {
-                    if (parentId == DBConst.defaultParentId) {
-                        total = this.noteService.countNoteHasContent(loginUserId, userId ?: loginUserId)
-                    }
-                    this.noteService.listOfNoteTreeVO(loginUserId, userIdTmp!!, parentIdTmp)
+                    NoteTreeVOAndTotalNote(
+                            this.noteService.listOfNoteTreeVO(loginUserId, userIdTmp!!, parentIdTmp),
+                            if (parentId == DBConst.defaultParentId) {
+                                this.noteService.countNoteHasContent(loginUserId, userId ?: loginUserId)
+                            } else {
+                                0
+                            }
+                    )
                 }
 
-        return ResultVO(NoteTreeVOAndTotalNote(list, total))
+        return ResultVO(result)
     }
 
-    @ResponseBody
-    @GetMapping("/totalNote" + WebConst.jsonSuffix)
+    @ApiOperation("获取最新笔记列表")
+    @ApiImplicitParams(
+            ApiImplicitParam(name = "userId", value = "用户id，非必填"),
+            ApiImplicitParam(name = "row", value = "获取数据量，默认10")
+    )
+    @GetMapping("/newest")
+    fun newest(userId: Long?, row: Int?): ResultVO<List<Note>> {
+        val rowTmp = row ?: 10
+        if (rowTmp <= 0) {
+            return ResultVO()
+        }
+        return ResultVO(
+                this.noteService.listByCondition(
+                        null,
+                        userId,
+                        null,
+                        null,
+                        "id DESC",
+                        false,
+                        1,
+                        rowTmp,
+                        false
+                ).right
+        )
+    }
+
+    @ApiOperation("获取最热笔记列表")
+    @ApiImplicitParams(
+            ApiImplicitParam(name = "userId", value = "用户id，非必填"),
+            ApiImplicitParam(name = "row", value = "获取数据量，默认10")
+    )
+    @GetMapping("/hottest")
+    fun hottest(userId: Long?, row: Int?): ResultVO<List<Note>> {
+        val rowTmp = row ?: 10
+        if (rowTmp <= 0) {
+            return ResultVO()
+        }
+        return ResultVO(
+                this.noteService.listByCondition(
+                        null,
+                        userId,
+                        null,
+                        null,
+                        "view_num DESC",
+                        false,
+                        1,
+                        rowTmp,
+                        false
+                ).right
+        )
+    }
+
+    //    @GetMapping("/totalNote" + WebConst.jsonSuffix)
     fun totalNote(userId: Long?): ResultVO<Any> {
         val loginUserId = this.justGetLoginUserId()
         if (userId == null && loginUserId == null) {
@@ -300,8 +293,7 @@ class NoteController @Autowired constructor(
         return ResultVO(this.noteService.countNoteHasContent(loginUserId, userId ?: loginUserId))
     }
 
-    @ResponseBody
-    @RequestMapping("/preDownload" + WebConst.jsonSuffix)
+    //    @RequestMapping("/preDownload" + WebConst.jsonSuffix)
     fun downloadNote(id: Long, idLink: String?, password: String?): ResultVO<Any> {
         val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, idLink, password)
         val detailList = noteViewVo?.noteDetails
@@ -312,8 +304,7 @@ class NoteController @Autowired constructor(
 
     }
 
-    @ResponseBody
-    @RequestMapping("/download" + WebConst.jsonSuffix)
+    //    @RequestMapping("/download" + WebConst.jsonSuffix)
     fun doDownloadNote(id: Long, idLink: String?, password: String?) {
         val noteTempList = TemplateUtil.getExportNoteTempList() ?: return
 

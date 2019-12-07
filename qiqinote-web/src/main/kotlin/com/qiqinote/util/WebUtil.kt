@@ -2,7 +2,6 @@ package com.qiqinote.util
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.qiqinote.constant.CodeEnum
-import com.qiqinote.constant.WebConst
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.vo.ResultVO
 import org.apache.log4j.Logger
@@ -24,10 +23,8 @@ object WebUtil {
     /**
      * 未登录且请求需要登录, 响应对应信息
      */
-    fun buildExceptionIfNeedLogin(requestURI: String) {
-        if (!requestURI.endsWith(WebConst.jsonSuffix)) {
-            log.warn("需要登录, 请求路径: $requestURI");
-            throw QiqiNoteException(CodeEnum.NOT_LOGIN)
-        }
+    @Throws(QiqiNoteException::class)
+    fun buildLoginException() {
+        throw QiqiNoteException(CodeEnum.NOT_LOGIN)
     }
 }

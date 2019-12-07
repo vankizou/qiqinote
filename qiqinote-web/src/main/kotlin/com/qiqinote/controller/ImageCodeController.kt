@@ -27,7 +27,7 @@ class ImageCodeController : BaseController() {
             ApiImplicitParam(name = "width", value = "图片宽度，默认：220"),
             ApiImplicitParam(name = "height", value = "图片高度，默认：45")
     )
-    @GetMapping("/getImageCode" + WebConst.jsonSuffix)
+    @GetMapping("/getImageCode")
     fun getImageCode(width: Int?, height: Int?) = ResultVO(this.getImageCodeBase64(width, height))
 
     private fun getImageCodeBase64(width: Int?, height: Int?): String {

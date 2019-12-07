@@ -16,13 +16,13 @@ interface CommentDao {
 
     fun getById(id: Long): Comment?
 
-    fun countRoot(type: Int, targetId: Long): Int
+    fun subCount(type: Int, targetId: Long, rootId: Long): Int
 
-    fun listOfUserUnreadCommentDTO(type: Int, ids: MutableList<Long>): MutableList<UserUnreadCommentDTO>
+    fun listOfUserUnreadCommentDTO(type: Int, ids: List<Long>): List<UserUnreadCommentDTO>
 
-    fun listOfUserUnreadCommentDTO(type: Int, ids: MutableSet<String>): MutableList<UserUnreadCommentDTO>
+    fun listOfUserUnreadCommentDTO(type: Int, ids: Set<String>): List<UserUnreadCommentDTO>
 
-    fun listOfTargetCommentDTO(type: Int, targetId: Long, rootId: Long, orderBy: String?, currPage: Int, pageSize: Int): MutableList<TargetCommentDTO>
+    fun listOfTargetCommentDTO(type: Int, targetId: Long, rootId: Long, orderBy: String?, page: Int, row: Int): List<TargetCommentDTO>
 
-    fun listOfTargetCommentDTO(ids: List<Long>): MutableList<TargetCommentDTO>
+    fun listOfTargetCommentDTO(ids: List<Long>): List<TargetCommentDTO>
 }

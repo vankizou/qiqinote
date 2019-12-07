@@ -1,10 +1,9 @@
 package com.qiqinote.controller
 
+import com.qiqinote.anno.NeedLogin
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.DBConst
-import com.qiqinote.constant.WebConst
 import com.qiqinote.dto.PictureDTO
-import com.qiqinote.model.Page
 import com.qiqinote.po.Picture
 import com.qiqinote.service.PictureService
 import com.qiqinote.util.*
@@ -44,12 +43,13 @@ class PictureController @Autowired constructor(
     private val imageSizeAvatar = environment["qiqinote.image.size.avatar"]!!.toInt()
     private val imageSizeOther = environment["qiqinote.image.size.other"]!!.toInt()
 
+    @NeedLogin
     @ApiOperation("上传图片（限制图片类型为：jpg,jpeg,png,gif）")
     @ApiImplicitParams(
             ApiImplicitParam(name = "images", value = "图片二进制流（数组）"),
             ApiImplicitParam(name = "useType", value = "图片类型；1笔记，2头像。默认1")
     )
-    @PostMapping("/uploadMulti" + WebConst.needLoginJsonSuffix)
+    @PostMapping("/uploadMulti")
     fun uploadMulti(@RequestParam images: Array<MultipartFile>?, useType: Int?): ResultVO<List<PictureDTO>> {
         val uploadNum = images?.size
         if (uploadNum == null || uploadNum == 0) return ResultVO(CodeEnum.IMAGE_NOT_FOUNT)
@@ -128,16 +128,17 @@ class PictureController @Autowired constructor(
         }
     }
 
+    @NeedLogin
     @ApiOperation("获取图片列表")
     @ApiImplicitParams(
             ApiImplicitParam(name = "useType", value = "图片类型；1笔记，2头像，默认1"),
             ApiImplicitParam(name = "page", value = "第几页，从1开始，默认1"),
             ApiImplicitParam(name = "row", value = "每页获取最大数据量，默认10")
     )
-    @GetMapping("/list" + WebConst.needLoginJsonSuffix)
+    @GetMapping("/list")
     fun page(useType: Int?, page: Int?, row: Int?): ResultVO<List<PictureDTO>> {
         val useTypeTmp = useType ?: DBConst.Picture.useTypeNote
-        val currPageTmp = page ?: Page.firstPage
+        val currPageTmp = 1
         val pageSizeTmp = row ?: 10
 
         val list = this.pictureService.list(this.getLoginUserId(), useTypeTmp, currPageTmp, pageSizeTmp)

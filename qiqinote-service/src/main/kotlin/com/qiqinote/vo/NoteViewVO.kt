@@ -1,7 +1,6 @@
 package com.qiqinote.vo
 
 import com.qiqinote.constant.ServiceConst
-import com.qiqinote.dto.UserDTO
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 
@@ -16,8 +15,6 @@ class NoteViewVO {
     /**
      * 详情页
      */
-//    var createDatetimeStr: String? = null
-//    var updateDatetimeStr: String? = null
     var parentNote: Note? = null
     var user: UserContextVO? = null
 }
