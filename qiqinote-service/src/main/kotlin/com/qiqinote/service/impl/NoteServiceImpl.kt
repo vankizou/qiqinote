@@ -18,7 +18,6 @@ import com.qiqinote.vo.ResultVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -36,7 +35,7 @@ class NoteServiceImpl @Autowired constructor(
     private val maxTitleLen = 200
     private val defaultPwd = ""
 
-    override fun add(loginUserId: Long, note: Note, noteDetailList: List<NoteDetail>?): ResultVO<Long> {
+    override fun add(loginUserId: Long, note: Note, noteDetails: List<NoteDetail>?): ResultVO<Long> {
         if (StringUtil.isEmpty(note.title?.trim())) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
@@ -59,29 +58,28 @@ class NoteServiceImpl @Autowired constructor(
             if (parent == null || note.userId != parent.userId) {
                 return ResultVO(CodeEnum.FAIL)
             }
+            /**
+             * 子笔记私密类型为空，则以继承父笔记私密类型
+             */
             if (note.secret == null) {
-                if (parent.secret == DBConst.Note.secretPwd) {
-                    note.secret = DBConst.Note.secretPwd
-                    note.password = parent.password
-                } else if (parent.secret == DBConst.Note.secretClose) {
-                    note.secret = DBConst.Note.secretClose
-                }
+                note.secret = parent.secret
+                note.password = parent.password
             }
             note.path = parent.path + DBConst.Note.pathLink + parent.id
-            note.secret = parent.secret
-            note.password = parent.password
         }
 
         note.secret = note.secret ?: DBConst.Note.secretOpen
 
-        if (note.secret != DBConst.Note.secretPwd) {
+        if (note.secret == DBConst.Note.secretPwd) {
+            if (note.password == null) {
+                note.password = defaultPwd
+            }
+        } else {
             note.password = null
-        } else if (note.password == null) {
-            note.password = defaultPwd
         }
 
         this.setDefaultStatus(note)
-        note.noteContentNum = noteDetailList?.size ?: 0
+        note.noteContentNum = noteDetails?.size ?: 0
 
         val id = this.noteDao.insert(note)
         if (id > 0) {
@@ -89,8 +87,8 @@ class NoteServiceImpl @Autowired constructor(
             /**
              * 如果有笔记内容
              */
-            if (noteDetailList != null && !noteDetailList.isEmpty()) {
-                val countNoteContentReal = upsertNoteDetail(loginUserId, id, noteDetailList)
+            if (noteDetails != null && noteDetails.isNotEmpty()) {
+                val countNoteContentReal = upsertNoteDetail(loginUserId, id, noteDetails)
                 if (countNoteContentReal != note.noteContentNum) {
                     this.noteDao.updateNoteCountNum(loginUserId, id, countNoteContentReal)
                 }
@@ -101,12 +99,11 @@ class NoteServiceImpl @Autowired constructor(
             if (note.parentId != null && note.parentId != DBConst.defaultParentId) {
                 this.updateNoteNum(loginUserId, note.parentId!!)
             }
-//            this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, note.parentId!!))
         }
         return ResultVO(id)
     }
 
-    override fun updateById(loginUserId: Long, note: Note, noteDetailList: List<NoteDetail>?): ResultVO<Int> {
+    override fun updateById(loginUserId: Long, note: Note, noteDetails: List<NoteDetail>?): ResultVO<Int> {
         if (note.id == null) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
@@ -133,8 +130,8 @@ class NoteServiceImpl @Autowired constructor(
         if (note.secret != DBConst.Note.secretPwd && StringUtil.isNotEmpty(note.password)) {
             note.password = null
         }
-        if (noteDetailList != null && !noteDetailList.isEmpty()) {
-            note.noteContentNum = this.upsertNoteDetail(loginUserId, note.id!!, noteDetailList)
+        if (noteDetails != null && noteDetails.isNotEmpty()) {
+            note.noteContentNum = this.upsertNoteDetail(loginUserId, note.id!!, noteDetails)
         }
         if (newParentId == DBConst.defaultParentId) {
             note.path = DBConst.defaultParentId.toString()
@@ -148,7 +145,6 @@ class NoteServiceImpl @Autowired constructor(
         if (old.path != note.path) {
             this.noteDao.updatePath(note.id!!, note.path!!)
         }
-//        this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, note.parentId!!))
         return ResultVO(status)
     }
 
@@ -160,8 +156,6 @@ class NoteServiceImpl @Autowired constructor(
         this.updateNoteNum(loginUserId, old.parentId ?: DBConst.defaultParentId)
         this.closeNoteInRedis(loginUserId, id)
 
-//        this.redisTemplate.delete(this.buildNoteTreeRedisKey(true, loginUserId, old.parentId!!))
-
         return ResultVO()
     }
 
@@ -171,7 +165,7 @@ class NoteServiceImpl @Autowired constructor(
         if (id == null && idLink == null) return null
 
         val note = this.getByIdOrIdLink(id, idLink) ?: return null
-        var secret = note.secret ?: DBConst.Note.secretOpen
+        val secret = note.secret ?: DBConst.Note.secretOpen
 
         /**
          * 拒绝访问
@@ -198,15 +192,15 @@ class NoteServiceImpl @Autowired constructor(
 
         val vo = NoteViewVO()
         vo.note = note
-        vo.noteDetailList = this.noteDetailService.listByNoteId(note.id!!)
+        vo.noteDetails = this.noteDetailService.listByNoteId(note.id!!)
 
         if (request != null && response != null) {
-            val cookieIdOrLink = CookieUtil.getCookie(request, WebKeyEnum.cookieNoteViewNum.shortName)
+            val cookieIdOrLink = CookieUtil.getCookie(request, WebKeyEnum.cookieLastNoteView.shortName)
             val isAddViewNum = cookieIdOrLink != note.id?.toString() && cookieIdOrLink != note.idLink
             if (isAddViewNum && loginUserId != note.userId && note.noteContentNum ?: 0 > 0) {
                 this.noteDao.updateViewNum(note.userId!!, note.id!!, (note.viewNum ?: 0) + 1)
             }
-            CookieUtil.setCookie(response, WebKeyEnum.cookieNoteViewNum.shortName, id?.toString() ?: idLink)
+            CookieUtil.setCookie(response, WebKeyEnum.cookieLastNoteView.shortName, id?.toString() ?: idLink)
         }
         return vo
     }
@@ -329,34 +323,8 @@ class NoteServiceImpl @Autowired constructor(
 
     override fun page(loginUserId: Long?, userId: Long?, parentId: Long?, titleLike: String?, orderBy: String?,
                       isTree: Boolean, totalRow: Int?, currPage: Int, pageSize: Int, navNum: Int): Page<Note> {
-        /**
-         * 笔记树添加缓存
-         */
-        /*var ops: BoundValueOperations<String, String>? = null
-        if (userId != null && isTree && currPage == 1) {
-            ops = this.redisTemplate.boundValueOps(this.buildNoteTreeRedisKey(loginUserId == userId, userId,
-                    parentId ?: DBConst.defaultParentId))
-            val cache = ops.get()
-            if (StringUtil.isNotBlank(cache)) {
-                if (cache == ServiceConst.cacheNullValue) return Page()
-
-                val page = JSON.parseObject(cache, Page::class.java)
-
-                val page2 = Page<Note>(page.currPage, page.pageSize, page.totalRow, page.navSize)
-                page2.data = JSON.parseArray(JSON.toJSONString(page.data), Note::class.java) as MutableList<Note>
-                return page2
-            }
-        }*/
-
-        val result = this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, totalRow, currPage, pageSize, navNum)
-        /*if (ops != null) {
-            ops.set(JSON.toJSONString(result), RedisKeyEnum.kvNoteTreePage_.time, RedisKeyEnum.kvNoteTreePage_.timeUnit)
-        }*/
-        return result
+        return this.noteDao.pageOfCondition(loginUserId, userId, parentId, orderBy, titleLike, isTree, totalRow, currPage, pageSize, navNum)
     }
-
-    private fun buildNoteTreeRedisKey(isMine: Boolean, userId: Long, parentId: Long) =
-            RedisKeyEnum.kvNoteTreePage_.name + "${if (isMine) 1 else 0}_${userId}_${parentId}"
 
     override fun isNoteOpenedInRedis(userId: Long, noteId: Long): Boolean {
         if (DBConst.defaultParentId == noteId) {

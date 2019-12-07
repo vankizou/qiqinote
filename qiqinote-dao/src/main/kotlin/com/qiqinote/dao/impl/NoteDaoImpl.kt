@@ -160,8 +160,8 @@ class NoteDaoImpl @Autowired constructor(
 
         paramMap["userId"] = userId
 
-        val s2 = this.namedParameterJdbcTemplate.update(sql.toString() + " AND parent_id=$parentId", paramMap)
-        val s1 = this.namedParameterJdbcTemplate.update(sql.toString() + " AND path like '$path\\_%'", paramMap)
+        val s2 = this.namedParameterJdbcTemplate.update("$sql AND parent_id=$parentId", paramMap)
+        val s1 = this.namedParameterJdbcTemplate.update("$sql AND path like '$path\\_%'", paramMap)
         return s1 + s2
     }
 
@@ -286,7 +286,7 @@ class NoteDaoImpl @Autowired constructor(
         if (((userId == null || loginUserId == null) || userId != loginUserId) && isTree) {
             secretList.add(DBConst.Note.secretPwd)
         }
-        if (!secretList.isEmpty()) {
+        if (secretList.isNotEmpty()) {
             sql.append(" AND (")
 
             val secretSql = StringBuilder(32)
@@ -296,7 +296,7 @@ class NoteDaoImpl @Autowired constructor(
             sql.append(secretSql.substring(4))
             sql.append(")")
         }
-        if (!statusList.isEmpty()) {
+        if (statusList.isNotEmpty()) {
             sql.append(" AND (")
 
             val statusSql = StringBuilder(32)

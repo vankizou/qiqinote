@@ -3,11 +3,9 @@ package com.qiqinote.util
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.qiqinote.constant.CodeEnum
 import com.qiqinote.constant.WebConst
-import com.qiqinote.constant.WebKeyEnum
 import com.qiqinote.exception.QiqiNoteException
 import com.qiqinote.vo.ResultVO
 import org.apache.log4j.Logger
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -24,36 +22,12 @@ object WebUtil {
     }
 
     /**
-     * 响应登录页
-     */
-    fun redirectLoginHtml(request: HttpServletRequest, response: HttpServletResponse) {
-        val path = request.getContextPath()
-        val basePath = StringBuffer()
-                .append(request.getScheme())
-                .append("://")
-                .append(request.getServerName())
-                .append(":")
-                .append(request.getServerPort())
-                .append(path)
-                .append("/")
-                .toString()
-        response.sendRedirect(basePath + "/login.html");
-    }
-
-    /**
      * 未登录且请求需要登录, 响应对应信息
      */
     fun buildExceptionIfNeedLogin(requestURI: String) {
-        if (requestURI.endsWith(WebConst.needLoginJsonSuffix)) {
-            log.warn("未登录, 响应登录code, 请求路径: ${requestURI}");
+        if (!requestURI.endsWith(WebConst.jsonSuffix)) {
+            log.warn("需要登录, 请求路径: $requestURI");
             throw QiqiNoteException(CodeEnum.NOT_LOGIN)
-        } else if (requestURI.endsWith(WebConst.needLoginHtmlSuffix)) {
-            log.warn("未登录, 跳转到登录页面, 请求路径: ${requestURI}");
-            throw QiqiNoteException(CodeEnum.NOT_LOGIN_HTML)
         }
-    }
-
-    fun doSignOut(response: HttpServletResponse) {
-        CookieUtil.deleteCookie(response, WebKeyEnum.cookieRememberUser.shortName)
     }
 }

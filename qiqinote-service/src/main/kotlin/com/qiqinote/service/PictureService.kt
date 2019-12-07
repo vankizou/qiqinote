@@ -1,7 +1,6 @@
 package com.qiqinote.service
 
 import com.qiqinote.dao.PictureDao
-import com.qiqinote.model.Page
 import com.qiqinote.po.Picture
 
 /**
@@ -12,5 +11,5 @@ interface PictureService : BaseService<PictureDao> {
 
     fun getById(id: Long): Picture?
 
-    fun page(userId: Long, useType: Int, currPage: Int, pageSize: Int, navNum: Int = 10): Page<Picture>
+    fun list(userId: Long, useType: Int, page: Int, row: Int): List<Picture>
 }

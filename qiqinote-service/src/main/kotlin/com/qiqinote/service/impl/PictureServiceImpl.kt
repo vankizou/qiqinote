@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 class PictureServiceImpl @Autowired constructor(
         private val pictureDao: PictureDao
 ) : PictureService {
-
     override fun add(picture: Picture): Long {
         if (StringUtil.isEmpty(picture.uuid) || picture.userId == null || picture.useType == null) {
             return 0
@@ -24,5 +23,8 @@ class PictureServiceImpl @Autowired constructor(
 
     override fun getById(id: Long) = this.pictureDao.getById(id)
 
-    override fun page(userId: Long, useType: Int, currPage: Int, pageSize: Int, navNum: Int) = this.pictureDao.page(userId, useType, currPage, pageSize, navNum)
+    override fun list(userId: Long, useType: Int, page: Int, row: Int): List<Picture> {
+        return this.pictureDao.list(userId, useType, page, row)
+    }
+
 }

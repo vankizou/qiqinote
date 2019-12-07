@@ -51,6 +51,4 @@ class Note {
     var updateDatetime: Date? = null
 
     var createDatetime: Date? = null
-
-    var del: Int? = null
 }

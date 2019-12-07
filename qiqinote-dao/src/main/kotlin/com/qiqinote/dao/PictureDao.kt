@@ -1,6 +1,5 @@
 package com.qiqinote.dao
 
-import com.qiqinote.model.Page
 import com.qiqinote.po.Picture
 
 /**
@@ -11,5 +10,5 @@ interface PictureDao {
 
     fun getById(id: Long): Picture?
 
-    fun page(userId: Long, useType: Int, currPage: Int, pageSize: Int, navNum: Int): Page<Picture>
+    fun list(userId: Long, useType: Int, page: Int, row: Int): List<Picture>
 }

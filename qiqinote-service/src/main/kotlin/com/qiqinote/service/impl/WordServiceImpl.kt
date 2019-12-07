@@ -4,8 +4,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.qiqinote.dao.WordDao
 import com.qiqinote.po.Word
 import com.qiqinote.service.WordService
-import com.qiqinote.util.HttpUtil
 import com.qiqinote.util.StringUtil
+import com.qiqinote.util.asynchttp.AsyncHttpClientUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -19,10 +19,10 @@ class WordServiceImpl @Autowired constructor(
     override fun random(): String {
         val wordStr =
                 try {
-                    HttpUtil.doGet("https://api.hitokoto.cn/?encode=json")
+                    AsyncHttpClientUtil.doGet("https://api.hitokoto.cn/?encode=json")
                 } catch (e: Exception) {
                     null
-                }
+                }?.value?.responseBody
         var w: String? = null
         if (StringUtil.isNotBlank(wordStr)) {
             val wordNode = jacksonObjectMapper().readTree(wordStr)

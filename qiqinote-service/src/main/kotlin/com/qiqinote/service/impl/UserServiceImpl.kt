@@ -1,21 +1,27 @@
 package com.qiqinote.service.impl
 
-import com.qiqinote.constant.CodeEnum
-import com.qiqinote.constant.DBConst
+import com.alibaba.fastjson.JSON
+import com.qiqinote.constant.*
+import com.qiqinote.dao.EnvDao
 import com.qiqinote.dao.UserDao
+import com.qiqinote.dto.PictureDTO
 import com.qiqinote.po.Picture
 import com.qiqinote.po.User
 import com.qiqinote.po.UserLoginRecord
+import com.qiqinote.service.AbstractBaseService
 import com.qiqinote.service.PictureService
 import com.qiqinote.service.UserLoginRecordService
 import com.qiqinote.service.UserService
-import com.qiqinote.util.PasswordUtil
-import com.qiqinote.util.StringUtil
+import com.qiqinote.util.*
 import com.qiqinote.vo.ResultVO
 import com.qiqinote.vo.UserContextVO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.core.BoundValueOperations
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by vanki on 2018/1/19 11:33.
@@ -23,31 +29,40 @@ import java.util.*
 @Service
 class UserServiceImpl @Autowired constructor(
         private val userDao: UserDao,
+        private val envDao: EnvDao,
         private val pictureService: PictureService,
-        private val userLoginRecordService: UserLoginRecordService
-) : UserService {
+        private val userLoginRecordService: UserLoginRecordService,
+        private val redisTemplate: StringRedisTemplate
+) : UserService, AbstractBaseService() {
 
-    override fun preSignIn(account: String, password: String, userLoginRecord: UserLoginRecord?): ResultVO<UserContextVO?> {
-        val passworded = password
-        if (StringUtil.isBlank(account) || StringUtil.isEmpty(passworded)) {
-            return ResultVO(CodeEnum.PARAM_ERROR)
-        }
-        val user = this.getByAccount(account)
-        if (user == null || (user.password != null && passworded != PasswordUtil.getDecPwd(user.password!!))) {
-            return ResultVO(CodeEnum.USER_ACCOUNT_OR_PWD_ERROR)
-        }
-        val userId = user.id!!
+    override fun signIn(
+            request: HttpServletRequest,
+            response: HttpServletResponse,
+            account: String,
+            password: String,
+            isRemember: Boolean?,
+            origin: Int?
+    ): UserContextVO? {
+        val uc = this.getUserContextVO(request, response, account, password, isRemember) ?: return null
 
-        /**
-         * 帐号校验成功
-         */
-        userLoginRecord?.let {
-            userLoginRecord.userId = userId
-            this.userLoginRecordService.add(userLoginRecord)
-        }
+        val userLoginRecord = UserLoginRecord.buildRequestInfo(request)
+        userLoginRecord.origin = origin
+        userLoginRecord.userId = uc.id
 
-        val ucVO = this.getUserContextVO(user)
-        return ResultVO(ucVO)
+        this.userLoginRecordService.add(userLoginRecord)
+
+        return uc
+    }
+
+    override fun singOut(request: HttpServletRequest, response: HttpServletResponse) {
+        val token = UserUtil.getLoginTokenFromCookie(request)
+        if (token != null) {
+            this.redisTemplate.delete(RedisKeyEnum.kvLoginToken_.buildVariableKey(token))
+        }
+        CookieUtil.deleteCookie(response, WebKeyEnum.cookieLoginToken.shortName)
+        CookieUtil.deleteCookie(response, WebKeyEnum.cookieUserPassword.shortName)
+        CookieUtil.deleteCookie(response, WebKeyEnum.cookieLastNoteView.shortName)
+        request.session.invalidate()
     }
 
     /**
@@ -117,16 +132,12 @@ class UserServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getByAccount(account: String) = this.getByAccount(account, null)
-
-    override fun getByAccount(account: String, loginUser: User?): User? {
+    override fun getByAccount(account: String): User? {
         val accounted = account.trim()
-        var userId = account.toLongOrNull()
+        val userId = account.toLongOrNull()
         return if (userId != null) {
-            if (loginUser != null && loginUser.id == userId) return loginUser
             this.getById(userId)
         } else {
-            if (loginUser != null && loginUser.name == accounted) return loginUser
             this.getByName(accounted)
         }
     }
@@ -135,30 +146,111 @@ class UserServiceImpl @Autowired constructor(
 
     override fun getByName(name: String) = this.userDao.getByName(name)
 
-    override fun getUserContextVO(user: User?, userId: Long?, name: String?): UserContextVO? {
-        var userTmp = user
-        if (userTmp == null && userId == null && StringUtil.isEmpty(name)) {
+    override fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse): UserContextVO? {
+        return this.getUserContextVO(request, response, null, null, null)
+    }
+
+    override fun getUserContextVO(
+            request: HttpServletRequest,
+            response: HttpServletResponse,
+            account: String?,
+            password: String?,
+            remember: Boolean?
+    ): UserContextVO? {
+        /**
+         * 通过token获取用户登录信息
+         */
+        var tokenTmp = UserUtil.getLoginTokenFromCookie(request)
+        if (account == null || password == null) {
+            /**
+             * 有用户名和密码则重新登录
+             */
+            if (StringUtil.isNotBlank(tokenTmp)) {
+                val ops = this.buildLoginTokenOps(tokenTmp!!)
+                val ucCache = ops.get()
+                val cacheResult = getCacheObj(ucCache, UserContextVO::class.java)
+                if (cacheResult.left) {
+                    if (cacheResult.right != null) {
+                        // 刷新token时效
+                        ops.expire(RedisKeyEnum.kvLoginToken_.time, RedisKeyEnum.kvLoginToken_.timeUnit)
+                    }
+                    return cacheResult.right
+                }
+            }
+        }
+        if (tokenTmp != null) {
+            this.redisTemplate.delete(RedisKeyEnum.kvLoginToken_.buildVariableKey(tokenTmp))
+            CookieUtil.deleteCookie(response, WebKeyEnum.cookieLoginToken.shortName)
+        }
+
+        /**
+         * 有密码表示记住登录，则会自动登录
+         */
+        val pwdTmp = password ?: UserUtil.getUserPwdFromCookie(request) ?: return null
+        val accountTmp = account ?: UserUtil.getUserAccountInCookie(request)
+        if (StringUtil.isBlank(accountTmp)) {
+            return null
+        }
+        val userTmp = this.getByAccount(accountTmp!!) ?: return null
+        if (!checkPwd(userTmp.password ?: "", pwdTmp!!)) {
             return null
         }
 
-        if (userTmp == null) {
-            userTmp = this.getById(userId!!)
-        }
-        if (userTmp == null) {
-            userTmp = this.getByName(name!!)
-        }
-        if (userTmp == null) {
+        val uc = this.buildUserContext(userTmp)
+        if (!uc.isOK()) {
             return null
         }
 
-        var avatar: Picture? = null
-        if (userTmp.avatarId != null) {
-            avatar = this.pictureService.getById(userTmp.avatarId!!)
+        /**
+         * 写缓存、写cookie
+         */
+        UserUtil.setUserAccountInCookie(response, accountTmp)
+        tokenTmp = UUIDUtil.getUUID()
+        UserUtil.setLoginTokenInCookie(response, tokenTmp)
+        this.buildLoginTokenOps(tokenTmp)
+                .set(JSON.toJSONString(uc), RedisKeyEnum.kvLoginToken_.time, RedisKeyEnum.kvLoginToken_.timeUnit)
+        if (remember != null) {
+            if (remember) {
+                UserUtil.setUserPwdInCookie(response, pwdTmp)
+            } else {
+                CookieUtil.deleteCookie(response, WebKeyEnum.cookieUserPassword.shortName)
+            }
         }
-        val uc = UserContextVO()
-        uc.user = userTmp
-        uc.avatar = avatar
         return uc
     }
 
+    private fun checkPwd(dbPwd: String, inputPwd: String): Boolean {
+        return dbPwd == PasswordUtil.getEncPwd(inputPwd)
+    }
+
+    private fun buildUserContext(user: User): UserContextVO {
+        val uc = UserContextVO()
+        uc.build(user)
+
+        /**
+         * 用户头像信息
+         */
+        var avatar: Picture? = null
+        if (user.avatarId != null) {
+            avatar = this.pictureService.getById(user.avatarId!!)
+        }
+        avatar = if (avatar == null) {
+            val defaultAvatarId = this.envDao.getVByK(EnvEnum.defaultAvatarId)?.trim()?.toLongOrNull()
+            if (defaultAvatarId == null) {
+                null
+            } else {
+                this.pictureService.getById(defaultAvatarId)
+            }
+        } else {
+            avatar
+        }
+        if (avatar != null) {
+            uc.build(PictureDTO(this.imageDomain, avatar))
+        }
+        return uc
+    }
+
+    private fun buildLoginTokenOps(token: String): BoundValueOperations<String, String> {
+        return this.redisTemplate.boundValueOps(RedisKeyEnum.kvLoginToken_.buildVariableKey(token))
+    }
 }

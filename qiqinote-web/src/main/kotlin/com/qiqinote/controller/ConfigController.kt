@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import springfox.documentation.annotations.ApiIgnore
 
 /**
  * Created by vanki on 2018/9/3 17:49.
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/config")
 class ConfigController @Autowired constructor(

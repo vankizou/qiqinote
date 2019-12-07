@@ -29,6 +29,12 @@
             <artifactId>im4java</artifactId>
             <version>${im4java.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>${async-http-client.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

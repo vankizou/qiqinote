@@ -1,12 +1,9 @@
 package com.qiqinote.interceptor
 
-import com.qiqinote.constant.DBConst
 import com.qiqinote.service.UserService
-import com.qiqinote.util.UserUtil
 import com.qiqinote.util.WebUtil
 import org.apache.log4j.Logger
 import org.springframework.core.env.Environment
-import org.springframework.core.env.get
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 import javax.servlet.http.HttpServletRequest
@@ -24,7 +21,6 @@ class LoginInterceptor(
     private val excludeSuffixs = mutableListOf<String>()
 
     init {
-        excludeSuffixs.add("/")
         excludeSuffixs.add(".json")
         excludeSuffixs.add(".html")
 
@@ -48,6 +44,9 @@ class LoginInterceptor(
 
         /* 异常 */
         excludeSuffixs.add("/error")
+
+        /* swagger */
+        excludeSuffixs.add("/csrf")
     }
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
@@ -55,7 +54,16 @@ class LoginInterceptor(
         response.setCharacterEncoding("UTF-8")
         response.setContentType("application/json;charset=UTF-8")
 
-        var requestURI = request.servletPath ?: "/"
+        val requestURI = request.servletPath ?: "/"
+        if (requestURI == "/" || requestURI.contains("swagger")) {
+            return true
+        }
+
+        excludeSuffixs.forEach {
+            if (requestURI.endsWith(it)) {
+                return true
+            }
+        }
 
         val isLogin = autoSignIn(request, response)
         if (isLogin) return true
@@ -71,18 +79,7 @@ class LoginInterceptor(
      * 自动登录
      */
     private fun autoSignIn(request: HttpServletRequest, response: HttpServletResponse): Boolean {
-        var uc = UserUtil.getUCBySession(request)
-        if (uc != null) return true
-
-        val userIdAndPwd = UserUtil.getUserIdAndPwdByCookie(request)
-
-        userIdAndPwd?.let {
-            val isSuccess = UserUtil.signIn(request, response, userService, userIdAndPwd[0],
-                    userIdAndPwd[1], DBConst.trueVal, DBConst.UserLoginRecord.originAutoLogin, env["qiqinote.image.domain"]!!)
-            if (isSuccess) return true
-        }
-
-        WebUtil.doSignOut(response)
-        return false
+        val uc = this.userService.getUserContextVO(request, response)
+        return uc != null
     }
 }

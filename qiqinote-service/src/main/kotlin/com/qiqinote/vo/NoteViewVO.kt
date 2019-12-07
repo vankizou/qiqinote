@@ -10,14 +10,14 @@ import com.qiqinote.po.NoteDetail
  */
 class NoteViewVO {
     var note: Note? = null
-    var noteDetailList: List<NoteDetail>? = null
+    var noteDetails: List<NoteDetail>? = null
     var needPwd: Int = ServiceConst.falseVal
 
     /**
      * 详情页
      */
-    var createDatetimeStr: String? = null
-    var updateDatetimeStr: String? = null
+//    var createDatetimeStr: String? = null
+//    var updateDatetimeStr: String? = null
     var parentNote: Note? = null
-    var user: UserDTO? = null
+    var user: UserContextVO? = null
 }

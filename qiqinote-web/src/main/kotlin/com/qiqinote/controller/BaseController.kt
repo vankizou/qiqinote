@@ -1,12 +1,15 @@
 package com.qiqinote.controller
 
 import com.qiqinote.constant.WebKeyEnum
-import com.qiqinote.dto.UserContext
-import com.qiqinote.util.*
-import org.apache.log4j.Logger
+import com.qiqinote.service.AbstractBaseService
+import com.qiqinote.service.UserService
+import com.qiqinote.util.CookieUtil
+import com.qiqinote.util.DateUtil
+import com.qiqinote.util.MD5Util
+import com.qiqinote.util.WebUtil
+import com.qiqinote.vo.UserContextVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.propertyeditors.CustomDateEditor
-import org.springframework.core.env.Environment
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.InitBinder
 import java.util.*
@@ -16,21 +19,19 @@ import javax.servlet.http.HttpServletResponse
 /**
  * Created by vanki on 2018/1/25 16:03.
  */
-open class BaseController {
-    protected val log = Logger.getLogger(this.javaClass)
-
+abstract class BaseController : AbstractBaseService() {
     @Autowired
     protected lateinit var request: HttpServletRequest
     @Autowired
     protected lateinit var response: HttpServletResponse
     @Autowired
-    protected lateinit var env: Environment
+    protected lateinit var userService: UserService
 
-    protected var userContext: UserContext? = null
+    protected var userContext: UserContextVO? = null
         get() {
-            field = UserUtil.getUCBySession(request)
-            if ((field == null || field?.user == null)) {
-                WebUtil.buildExceptionIfNeedLogin(request.servletPath)
+            field = this.userService.getUserContextVO(this.request, this.response)
+            if (field == null || !field!!.isOK()) {
+                WebUtil.buildExceptionIfNeedLogin(this.request.servletPath)
             }
             return field
         }
@@ -38,15 +39,15 @@ open class BaseController {
     /**
      * 用户是否有操作权限
      */
-    protected fun isMine(userId: Long?) = if (userId == null) false else userId == userContext?.user?.id
+    protected fun isMine(userId: Long?) = if (userId == null) false else userId == userContext?.id
 
     protected fun getLoginUserId() = justGetLoginUserId()!!
 
-    protected fun justGetLoginUserId() = userContext?.user?.id
+    protected fun justGetLoginUserId() = userContext?.id
 
     protected fun validateImageCode(imageCode: String?): Boolean {
         if (imageCode == null) return false
-        val cookieVal = CookieUtil.getCookie(request, WebKeyEnum.cookieImageCodeV.shortName) ?: return false
+        val cookieVal = CookieUtil.getCookie(request, WebKeyEnum.cookieImageCodeValue.shortName) ?: return false
         return cookieVal.equals(MD5Util.getMD5(imageCode))
     }
 

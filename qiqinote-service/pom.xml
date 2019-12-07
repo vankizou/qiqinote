@@ -24,11 +24,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libfb303</artifactId>
             <version>${thrift.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>

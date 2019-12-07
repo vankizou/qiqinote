@@ -26,6 +26,7 @@
     </parent>
 
     <properties>
+        <async-http-client.version>2.4.9</async-http-client.version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
         <druid.version>1.0.29</druid.version>
@@ -102,7 +103,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
+            <version>1.2.62</version>
         </dependency>
 
         <!-- 热部署 -->
@@ -173,15 +174,5 @@
                 </dependencies>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>*.properties</exclude>
-                    <exclude>logback.xml</exclude>
-                </excludes>
-            </resource>
-        </resources>
     </build>
 </project>

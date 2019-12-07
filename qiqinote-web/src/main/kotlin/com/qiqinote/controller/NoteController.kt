@@ -8,12 +8,19 @@ import com.qiqinote.model.Page
 import com.qiqinote.po.Note
 import com.qiqinote.po.NoteDetail
 import com.qiqinote.po.User
-import com.qiqinote.service.*
+import com.qiqinote.service.NoteDetailService
+import com.qiqinote.service.NoteService
+import com.qiqinote.service.PictureService
+import com.qiqinote.service.WordService
 import com.qiqinote.util.DateUtil
 import com.qiqinote.util.EntityUtil
 import com.qiqinote.util.StringUtil
 import com.qiqinote.util.TemplateUtil
 import com.qiqinote.vo.*
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiImplicitParam
+import io.swagger.annotations.ApiImplicitParams
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.get
 import org.springframework.stereotype.Controller
@@ -27,10 +34,10 @@ import java.nio.charset.Charset
 /**
  * Created by vanki on 2018/3/12 14:20.
  */
+@Api("笔记相关")
 @Controller
 @RequestMapping("/note")
 class NoteController @Autowired constructor(
-        private val userService: UserService,
         private val noteService: NoteService,
         private val noteDetailService: NoteDetailService,
         private val pictureService: PictureService,
@@ -50,10 +57,10 @@ class NoteController @Autowired constructor(
         return mv
     }
 
-    @GetMapping("/{id}" + WebConst.htmlSuffix)
-    fun viewHtml2(@PathVariable("id") id: Long, password: String?) = "forward:/note/$id?password=$password"
+    /*@GetMapping("/{id}" + WebConst.htmlSuffix)
+    fun viewHtml2(@PathVariable("id") id: Long, password: String?) = "forward:/note/$id?password=$password"*/
 
-    @GetMapping("/{idOrIdLink}")
+    /*@GetMapping("/{idOrIdLink}")
     fun viewHtml(@PathVariable("idOrIdLink") idOrIdLink: String, password: String?): ModelAndView {
         val loginUserId = this.justGetLoginUserId()
         val mv = ModelAndView(WebPageEnum.note_view.url)
@@ -97,21 +104,38 @@ class NoteController @Autowired constructor(
         if (title != null) title = title.split("/", limit = 2)[0]
         mv.addObject("searchLink", if (StringUtil.isAnyBlank(userName, title)) "/" else "/$userName/${URLEncoder.encode(title, "UTF-8")}")
         return mv
-    }
+    }*/
 
+    @ApiOperation("添加新笔记")
+    @ApiImplicitParams(
+            ApiImplicitParam(name = "")
+    )
     @ResponseBody
     @PostMapping("/add" + WebConst.needLoginJsonSuffix)
-    fun add(noteVO: NoteViewVO): ResultVO<Note?> {
-        val result = this.noteService.add(this.getLoginUserId(), noteVO.note
-                ?: Note(), noteVO.noteDetailList)
+    fun add(p: UpsertNoteParam): ResultVO<Note?> {
+        val result = this.noteService.add(
+                this.getLoginUserId(),
+                p.note ?: return ResultVO(CodeEnum.PARAM_ERROR),
+                p.noteDetails
+        )
         if (!result.isSuccess()) return ResultVO(result.code, result.msg)
         return ResultVO(this.noteService.getByIdOrIdLink(result.data!!))
     }
 
+    class UpsertNoteParam {
+        var note: Note? = null
+        var noteDetails: List<NoteDetail>? = null
+    }
+
     @ResponseBody
     @PostMapping("/updateById" + WebConst.needLoginJsonSuffix)
-    fun updateById(noteVO: NoteViewVO) = this.noteService.updateById(this.getLoginUserId(), noteVO.note
-            ?: Note(), noteVO.noteDetailList)
+    fun updateById(p: UpsertNoteParam): ResultVO<Int> {
+        return this.noteService.updateById(
+                this.getLoginUserId(),
+                p.note ?: return ResultVO(CodeEnum.PARAM_ERROR),
+                p.noteDetails
+        )
+    }
 
     @ResponseBody
     @GetMapping("/closeNote" + WebConst.jsonSuffix)
@@ -280,7 +304,7 @@ class NoteController @Autowired constructor(
     @RequestMapping("/preDownload" + WebConst.jsonSuffix)
     fun downloadNote(id: Long, idLink: String?, password: String?): ResultVO<Any> {
         val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, idLink, password)
-        val detailList = noteViewVo?.noteDetailList
+        val detailList = noteViewVo?.noteDetails
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return ResultVO(CodeEnum.PWD_ERROR)
         }
@@ -294,7 +318,7 @@ class NoteController @Autowired constructor(
         val noteTempList = TemplateUtil.getExportNoteTempList() ?: return
 
         val noteViewVo = this.noteService.getNoteVOByIdOrIdLink(this.justGetLoginUserId(), id, idLink, password)
-        val detailList = noteViewVo?.noteDetailList
+        val detailList = noteViewVo?.noteDetails
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return
         }

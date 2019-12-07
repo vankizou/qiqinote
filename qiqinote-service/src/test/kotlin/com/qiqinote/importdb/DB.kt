@@ -36,7 +36,7 @@ class DB {
         val result = mutableListOf<Note>()
         noteList(null, result)
 
-        result.forEach({
+        result.forEach {
             val paramMap = mutableMapOf<String, Any?>()
             it.id?.let{paramMap["id"] = it}
             it.parentId?.let{paramMap["parent_id"] = it}
@@ -59,10 +59,9 @@ class DB {
             it.statusDescription?.let{paramMap["status_description"] = it}
             it.updateDatetime?.let{paramMap["update_datetime"] = it}
             it.createDatetime?.let{paramMap["create_datetime"] = it}
-            it.del?.let{paramMap["is_del"] = it}
 
             this.namedParameterJdbcTemplate.update(NamedSQLUtil.getInsertSQL(Note::class, paramMap), paramMap)
-        })
+        }
     }
 
     fun noteList(note: Note?, result: MutableList<Note>) {
@@ -71,24 +70,23 @@ class DB {
         if (list.isEmpty()) return
 
 
-        list.forEach({
+        list.forEach {
             if (it.parentId == -1L) {
                 it.path = "-1"
             } else {
                 if (note != null)
                     it.path = note.path + "_" + note.id
             }
-            it.del = 0
             result.add(it)
             noteList(it, result)
-        })
+        }
     }
 
     @Test
     fun user() {
         val list = this.namedParameterJdbcTemplate.query("select * from t_user", mapOf<String, Any>(), BeanPropertyRowMapper(User::class.java))
 
-        list.forEach({
+        list.forEach {
             if (it.id!! == 1L) {
                 it.password = PasswordUtil.getEncPwd("vanki ")
             } else {
@@ -119,7 +117,7 @@ class DB {
             it.del?.let{paramMap["is_del"] = it}
 
             this.namedParameterJdbcTemplate.update(NamedSQLUtil.getInsertSQL(User::class, paramMap), paramMap)
-        })
+        }
 
     }
 }

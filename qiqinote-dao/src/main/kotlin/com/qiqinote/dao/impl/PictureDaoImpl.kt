@@ -2,7 +2,6 @@ package com.qiqinote.dao.impl
 
 import com.qiqinote.constant.DBConst
 import com.qiqinote.dao.PictureDao
-import com.qiqinote.model.Page
 import com.qiqinote.po.Picture
 import com.qiqinote.util.sql.NamedSQLUtil
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,19 +47,14 @@ class PictureDaoImpl @Autowired constructor(
         return if (list.isEmpty()) null else list[0]
     }
 
-    override fun page(userId: Long, useType: Int, currPage: Int, pageSize: Int, navNum: Int): Page<Picture> {
+    override fun list(userId: Long, useType: Int, page: Int, row: Int): List<Picture> {
         val paramMap = mapOf("user_id" to userId, "use_type" to useType, "del" to DBConst.falseVal)
-
-        val countSql = NamedSQLUtil.getSelectSQL(Picture::class, "COUNT(*)", paramMap)
-        val total = this.namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Int::class.java)
-
-        val returnPage = Page<Picture>(currPage, pageSize, total ?: 0)
-        if (returnPage.totalRow <= 0) return returnPage
-
         val sql = NamedSQLUtil.getSelectSQL(Picture::class, paramMap)
-
-        returnPage.data = this.namedParameterJdbcTemplate
-                .query("$sql ORDER BY ID DESC LIMIT ${returnPage.startRow},${returnPage.pageSize}", paramMap, rowMapper)
-        return returnPage
+        if (page < 1 || row <= 0) {
+            return listOf()
+        }
+        val start = (page - 1) * row
+        return this.namedParameterJdbcTemplate
+                .query("$sql ORDER BY ID DESC LIMIT $start,$row", paramMap, rowMapper)
     }
 }
