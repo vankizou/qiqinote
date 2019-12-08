@@ -20,7 +20,9 @@ class ConfigDaoImpl @Autowired constructor(
 ) : ConfigDao {
 
     override fun upsert(config: Config): Int {
-        if (config.userId == null) return -1
+        if (config.userId == null) {
+            return -1
+        }
 
         val old = this.getByUserId(config.userId!!)
         return if (old == null) {
@@ -55,7 +57,7 @@ class ConfigDaoImpl @Autowired constructor(
     override fun getByUserId(userId: Long): Config? {
         val paramMap = mapOf("user_id" to userId)
         val sql = NamedSQLUtil.getSelectSQL(Config::class, paramMap)
-        val list = this.namedParameterJdbcTemplate.query(sql, paramMap, { rs, i ->
+        val list = this.namedParameterJdbcTemplate.query(sql, paramMap) { rs, _ ->
             val config = Config()
             config.id = rs.getLong("id")
             config.userId = rs.getLong("user_id")
@@ -65,7 +67,7 @@ class ConfigDaoImpl @Autowired constructor(
                 config.noteTreeConfig = JSON.parseObject(noteTreeConfig, ConfigNoteTree::class.java)
             }
             config
-        })
+        }
         return if (list.isEmpty()) null else list[0]
     }
 }

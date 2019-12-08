@@ -22,7 +22,9 @@ class SecurityQuestionDaoImpl @Autowired constructor(
     private val rowMapper = BeanPropertyRowMapper(SecurityQuestion::class.java)
 
     override fun upsert(question: SecurityQuestion): Int {
-        if (question.userId == null || StringUtil.isBlank(question.question) || StringUtil.isBlank(question.answer)) return 0
+        if (question.userId == null || StringUtil.isBlank(question.question) || StringUtil.isBlank(question.answer)) {
+            return 0
+        }
 
         if (question.id == null) {
             val paramMap = mutableMapOf<String, Any?>()

@@ -50,6 +50,10 @@ class WordServiceImpl @Autowired constructor(
 
             w = word
         }
-        return if (StringUtil.isBlank(w)) this.wordDao.random() else w!!.trim()
+        return if (StringUtil.isBlank(w)) {
+            this.wordDao.random()
+        } else {
+            w!!.trim()
+        }
     }
 }

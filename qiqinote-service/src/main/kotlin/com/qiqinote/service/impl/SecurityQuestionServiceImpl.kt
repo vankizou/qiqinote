@@ -19,7 +19,9 @@ class SecurityQuestionServiceImpl @Autowired constructor(
 ) : SecurityQuestionService {
     override fun upsert(loginUserId: Long, questions: List<SecurityQuestion>): ResultVO<List<SecurityQuestion>> {
         val questionsTmp = questions.filter { StringUtil.isNotBlank(it.question) && StringUtil.isNotBlank(it.answer) }
-        if (questionsTmp.size != ServiceConst.findPwdQuestionNum) return ResultVO(CodeEnum.PARAM_ERROR)
+        if (questionsTmp.size != ServiceConst.findPwdQuestionNum) {
+            return ResultVO(CodeEnum.PARAM_ERROR)
+        }
 
         questionsTmp.forEach {
             it.userId = loginUserId
@@ -28,7 +30,11 @@ class SecurityQuestionServiceImpl @Autowired constructor(
         return ResultVO(this.securityQuestionDao.list(loginUserId))
     }
 
-    override fun deleteOne(id: Long, loginUserId: Long) = this.securityQuestionDao.deleteOne(id, loginUserId)
+    override fun deleteOne(id: Long, loginUserId: Long): Int {
+        return this.securityQuestionDao.deleteOne(id, loginUserId)
+    }
 
-    override fun list(userId: Long) = this.securityQuestionDao.list(userId)
+    override fun list(userId: Long): MutableList<SecurityQuestion> {
+        return this.securityQuestionDao.list(userId)
+    }
 }

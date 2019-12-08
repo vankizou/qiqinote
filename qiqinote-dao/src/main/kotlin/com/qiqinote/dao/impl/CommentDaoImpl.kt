@@ -48,7 +48,9 @@ class CommentDaoImpl @Autowired constructor(
     }
 
     override fun updateSubNumByRootId(id: Long): Int {
-        if (id == DBConst.defaultParentId) return 0
+        if (id == DBConst.defaultParentId) {
+            return 0
+        }
 
         val sql = """
             UPDATE comment AS c1 ,

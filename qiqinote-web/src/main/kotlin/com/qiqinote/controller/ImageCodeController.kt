@@ -28,13 +28,15 @@ class ImageCodeController : BaseController() {
             ApiImplicitParam(name = "height", value = "图片高度，默认：45")
     )
     @GetMapping("/getImageCode")
-    fun getImageCode(width: Int?, height: Int?) = ResultVO(this.getImageCodeBase64(width, height))
+    fun getImageCode(width: Int?, height: Int?): ResultVO<String> {
+        return ResultVO(this.getImageCodeBase64(width, height))
+    }
 
     private fun getImageCodeBase64(width: Int?, height: Int?): String {
         var widthTmp = width
         var heightTmp = height
-        widthTmp = if (widthTmp == null) 220 else widthTmp
-        heightTmp = if (heightTmp == null) 45 else heightTmp
+        widthTmp = widthTmp ?: 220
+        heightTmp = heightTmp ?: 45
         val imageCode = ImageCodeMathCalcUtil(widthTmp, heightTmp)
         var value = imageCode.getResult()
         value = MD5Util.getMD5(value)

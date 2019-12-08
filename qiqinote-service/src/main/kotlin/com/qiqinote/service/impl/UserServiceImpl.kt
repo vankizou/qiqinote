@@ -141,12 +141,27 @@ class UserServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getById(id: Long) = this.userDao.getById(id)
+    override fun getById(id: Long): User? {
+        return this.userDao.getById(id)
+    }
 
-    override fun getByName(name: String) = this.userDao.getByName(name)
+    override fun getByName(name: String): User? {
+        return this.userDao.getByName(name)
+    }
 
-    override fun getUserContextVO(request: HttpServletRequest, response: HttpServletResponse, randomMotto: Boolean?): UserContextVO? {
-        return this.getUserContextVO(request, response, null, null, randomMotto, null)
+    override fun getUserContextVO(
+            request: HttpServletRequest,
+            response: HttpServletResponse,
+            randomMotto: Boolean?
+    ): UserContextVO? {
+        return this.getUserContextVO(
+                request,
+                response,
+                null,
+                null,
+                randomMotto,
+                null
+        )
     }
 
     override fun getUserContextVO(
@@ -234,16 +249,17 @@ class UserServiceImpl @Autowired constructor(
         if (user.avatarId != null) {
             avatar = this.pictureService.getById(user.avatarId!!)
         }
-        avatar = if (avatar == null) {
-            val defaultAvatarId = this.envDao.getVByK(EnvEnum.defaultAvatarId)?.trim()?.toLongOrNull()
-            if (defaultAvatarId == null) {
-                null
-            } else {
-                this.pictureService.getById(defaultAvatarId)
-            }
-        } else {
-            avatar
-        }
+        avatar =
+                if (avatar == null) {
+                    val defaultAvatarId = this.envDao.getVByK(EnvEnum.defaultAvatarId)?.trim()?.toLongOrNull()
+                    if (defaultAvatarId == null) {
+                        null
+                    } else {
+                        this.pictureService.getById(defaultAvatarId)
+                    }
+                } else {
+                    avatar
+                }
         if (avatar != null) {
             uc.build(PictureDTO(this.imageDomain, avatar))
         }

@@ -21,7 +21,9 @@ class PictureServiceImpl @Autowired constructor(
         return this.pictureDao.insert(picture)
     }
 
-    override fun getById(id: Long) = this.pictureDao.getById(id)
+    override fun getById(id: Long): Picture? {
+        return this.pictureDao.getById(id)
+    }
 
     override fun list(userId: Long, useType: Int, page: Int, row: Int): List<Picture> {
         return this.pictureDao.list(userId, useType, page, row)

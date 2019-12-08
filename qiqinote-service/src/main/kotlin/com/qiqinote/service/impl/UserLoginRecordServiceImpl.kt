@@ -13,5 +13,7 @@ import org.springframework.stereotype.Service
 class UserLoginRecordServiceImpl @Autowired constructor(
         private val userLoginRecordDao: UserLoginRecordDao
 ) : UserLoginRecordService {
-    override fun add(userLoginRecord: UserLoginRecord) = this.userLoginRecordDao.insert(userLoginRecord)
+    override fun add(userLoginRecord: UserLoginRecord): Int {
+        return this.userLoginRecordDao.insert(userLoginRecord)
+    }
 }

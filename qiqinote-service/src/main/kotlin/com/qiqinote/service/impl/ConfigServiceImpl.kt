@@ -20,5 +20,7 @@ class ConfigServiceImpl @Autowired constructor(
         return if (status > 0) ResultVO() else ResultVO.buildFail()
     }
 
-    override fun getByUserId(userId: Long) = this.configDao.getByUserId(userId)
+    override fun getByUserId(userId: Long): Config? {
+        return this.configDao.getByUserId(userId)
+    }
 }

@@ -52,8 +52,12 @@ class PictureController @Autowired constructor(
     @PostMapping("/uploadMulti")
     fun uploadMulti(@RequestParam images: Array<MultipartFile>?, useType: Int?): ResultVO<List<PictureDTO>> {
         val uploadNum = images?.size
-        if (uploadNum == null || uploadNum == 0) return ResultVO(CodeEnum.IMAGE_NOT_FOUNT)
-        if (uploadNum > uploadMaxNum) return ResultVO(CodeEnum.IMAGE_UPLOAD_TOO_MANY)
+        if (uploadNum == null || uploadNum == 0) {
+            return ResultVO(CodeEnum.IMAGE_NOT_FOUNT)
+        }
+        if (uploadNum > uploadMaxNum) {
+            return ResultVO(CodeEnum.IMAGE_UPLOAD_TOO_MANY)
+        }
         val useTypeTmp = useType ?: DBConst.Picture.useTypeNote
 
         val baseDir = File(imageBasePath)
@@ -69,7 +73,9 @@ class PictureController @Autowired constructor(
             for (image in images) {
                 log.info(image.originalFilename)
                 val imageType = ImageTypeUtil.getFileType(image.inputStream)
-                if (StringUtil.isEmpty(imageType) || !isAllowType(imageType)) continue
+                if (StringUtil.isEmpty(imageType) || !isAllowType(imageType)) {
+                    continue
+                }
 
                 val uuid = UUIDUtil.getUUID()
                 var imageRelationPath = getSubDir()
@@ -150,7 +156,9 @@ class PictureController @Autowired constructor(
     }
 
     private fun isAllowType(type: String?): Boolean {
-        if (type == null) return false;
+        if (type == null) {
+            return false
+        }
 
         if (imageAllowTypeList.isEmpty()) {
             imageAllowTypeList.addAll(imageAllowType.split(","))
@@ -184,7 +192,9 @@ class PictureController @Autowired constructor(
                 else -> otherSize
             }
 
-            if (width <= maxWidth) return false
+            if (width <= maxWidth) {
+                return false
+            }
 
             /**
              * TODO: 缩放图片，可以把这个操作加到消息队列里去

@@ -48,7 +48,9 @@ class NoteController @Autowired constructor(
                 p.note ?: return ResultVO(CodeEnum.PARAM_ERROR),
                 p.noteDetails
         )
-        if (!result.isSuccess()) return ResultVO(result.code, result.msg)
+        if (!result.isSuccess()) {
+            return ResultVO(result.code, result.msg)
+        }
         return ResultVO(this.noteService.getByIdOrIdLink(result.data!!))
     }
 
@@ -91,7 +93,9 @@ class NoteController @Autowired constructor(
     @NeedLogin
     @ApiOperation("删除笔记")
     @PostMapping("/deleteById")
-    fun deleteById(id: Long) = this.noteService.deleteById(this.getLoginUserId(), id)
+    fun deleteById(id: Long): ResultVO<Int> {
+        return this.noteService.deleteById(this.getLoginUserId(), id)
+    }
 
     @ApiOperation("获取笔记详情")
     @ApiImplicitParams(
@@ -166,7 +170,9 @@ class NoteController @Autowired constructor(
              * 获取笔记详情
              */
             noteContents = this.noteDetailService.listByNoteId(note.id!!)
-            if (noteContents.isEmpty()) continue
+            if (noteContents.isEmpty()) {
+                continue
+            }
             noteHomeVO.noteContent = noteContents[0].content
 
             /**
@@ -175,8 +181,9 @@ class NoteController @Autowired constructor(
             userDTOTmp = userTmpMap[userIdTmp]
             if (userDTOTmp == null) {
                 userTmp = this.userService.getById(userIdTmp)
-                if (userTmp == null) continue
-
+                if (userTmp == null) {
+                    continue
+                }
                 userDTOTmp = this.userService.buildUserContext(userTmp, true)
                 userTmpMap[userIdTmp] = userDTOTmp
             }
@@ -188,11 +195,15 @@ class NoteController @Autowired constructor(
              * 添加父笔记信息
              */
             parentNoteIdTmp = note.parentId ?: continue
-            if (parentNoteIdTmp == DBConst.defaultParentId) continue
+            if (parentNoteIdTmp == DBConst.defaultParentId) {
+                continue
+            }
             var pNote: Note? = parentNoteMap[parentNoteIdTmp]
             if (pNote == null) {
                 pNote = this.noteService.getByIdOrIdLink(parentNoteIdTmp)
-                if (pNote == null) continue
+                if (pNote == null) {
+                    continue
+                }
                 parentNoteMap[parentNoteIdTmp] = pNote
             }
             noteHomeVO.parentNote = pNote
@@ -313,7 +324,9 @@ class NoteController @Autowired constructor(
         if (noteViewVo?.needPwd != null && noteViewVo.needPwd == ServiceConst.trueVal) {
             return
         }
-        if (detailList == null || detailList.isEmpty()) return
+        if (detailList == null || detailList.isEmpty()) {
+            return
+        }
 
         val title = noteViewVo.note?.title ?: ""
         val htmlContent = StringBuffer()
@@ -327,7 +340,10 @@ class NoteController @Autowired constructor(
         try {
             val byteArr = htmlContent.toString().toByteArray()
             response.reset()
-            response.setHeader("Content-Disposition", "attachment; filename=\"${String(title.toByteArray(charset("UTF-8")), Charset.forName("ISO-8859-1"))}.html\"")
+            response.setHeader(
+                    "Content-Disposition",
+                    "attachment; filename=\"${String(title.toByteArray(charset("UTF-8")), Charset.forName("ISO-8859-1"))}.html\""
+            )
             response.addHeader("Content-Length", "" + byteArr.size)
             response.contentType = "application/octet-stream;charset=UTF-8"
             val outputStream = BufferedOutputStream(response.outputStream)

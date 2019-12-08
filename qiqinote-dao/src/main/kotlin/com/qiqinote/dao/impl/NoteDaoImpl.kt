@@ -58,9 +58,13 @@ class NoteDaoImpl @Autowired constructor(
         return 0
     }
 
-    override fun updateIdLink(userId: Long, id: Long, idLink: String) = this.updateById(userId, id, mapOf("id_link" to idLink))
+    override fun updateIdLink(userId: Long, id: Long, idLink: String): Int {
+        return this.updateById(userId, id, mapOf("id_link" to idLink))
+    }
 
-    override fun updateViewNum(userId: Long, id: Long, viewNum: Long) = this.updateById(userId, id, mapOf("view_num" to viewNum))
+    override fun updateViewNum(userId: Long, id: Long, viewNum: Long): Int {
+        return this.updateById(userId, id, mapOf("view_num" to viewNum))
+    }
 
     override fun updateNoteNum(userId: Long, id: Long): Int {
         val count1 = this.countByParentId(id, true)
@@ -179,7 +183,9 @@ class NoteDaoImpl @Autowired constructor(
     }
 
     override fun countNoteHasContent(loginUserId: Long?, userId: Long?): Int {
-        if (loginUserId == null && userId == null) return 0
+        if (loginUserId == null && userId == null) {
+            return 0
+        }
 
         val paramMap = mapOf("user_id" to userId, "del" to DBConst.falseVal)
         val sql = StringBuilder(64)
@@ -191,7 +197,9 @@ class NoteDaoImpl @Autowired constructor(
     }
 
     override fun getByIdOrIdLink(id: Long?, idLink: String?): Note? {
-        if ((id == null || id == DBConst.defaultParentId) && idLink == null) return null
+        if ((id == null || id == DBConst.defaultParentId) && idLink == null) {
+            return null
+        }
 
         val paramMap = mutableMapOf<String, Any>()
         paramMap["del"] = DBConst.falseVal

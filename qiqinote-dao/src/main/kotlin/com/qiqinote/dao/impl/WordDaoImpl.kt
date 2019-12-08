@@ -21,8 +21,12 @@ class WordDaoImpl @Autowired constructor(
         if (StringUtil.isBlank(word.type) ||
                 StringUtil.isBlank(word.from) ||
                 StringUtil.isBlank(word.word) ||
-                word.word!!.length > 500) return 0
-        if (this.exists(word.word!!)) return 0
+                word.word!!.length > 500) {
+            return 0
+        }
+        if (this.exists(word.word!!)) {
+            return 0
+        }
 
         val paramMap = mapOf("word" to word.word!!.trim(), "from" to word.from!!.trim(), "type" to word.type?.trim())
         val sql = "INSERT INTO word(`type`, `from`, `word`) VALUES(:type, :from, :word)"

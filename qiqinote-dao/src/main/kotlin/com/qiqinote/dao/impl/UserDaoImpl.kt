@@ -56,8 +56,12 @@ class UserDaoImpl @Autowired constructor(
     }
 
     override fun updateById(id: Long, user: User): Int {
-        if (StringUtil.isBlank(user.name)) user.name = null
-        if (StringUtil.isBlank(user.alias)) user.alias = null
+        if (StringUtil.isBlank(user.name)) {
+            user.name = null
+        }
+        if (StringUtil.isBlank(user.alias)) {
+            user.alias = null
+        }
 
         val paramMap = LinkedHashMap<String, Any?>()
         user.avatarId?.let { paramMap["avatar_id"] = it }

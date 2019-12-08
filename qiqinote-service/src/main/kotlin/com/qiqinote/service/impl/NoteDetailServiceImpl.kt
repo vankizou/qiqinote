@@ -22,7 +22,9 @@ class NoteDetailServiceImpl @Autowired constructor(
         if (noteDetail.userId == null || noteDetail.noteId == null || StringUtil.isEmpty(noteDetail.content)) {
             return ResultVO(CodeEnum.PARAM_ERROR)
         }
-        if (noteDetail.type == null) noteDetail.type = DBConst.NoteDetail.typeMarkdown
+        if (noteDetail.type == null) {
+            noteDetail.type = DBConst.NoteDetail.typeMarkdown
+        }
 
         val id = if (noteDetail.id == null) {
             /**
@@ -34,17 +36,27 @@ class NoteDetailServiceImpl @Autowired constructor(
              * 更新
              */
             val old = this.getById(noteDetail.id!!) ?: return ResultVO(CodeEnum.NOT_FOUND)
-            if (noteDetail.userId != old.userId) return ResultVO(CodeEnum.FORBIDDEN)
+            if (noteDetail.userId != old.userId) {
+                return ResultVO(CodeEnum.FORBIDDEN)
+            }
             this.noteDetailDao.updateByUserIdAndId(noteDetail)
         }
         return if (id > 0) ResultVO(id) else ResultVO(CodeEnum.FAIL)
     }
 
-    override fun deleteById(loginUserId: Long, id: Long) = this.noteDetailDao.deleteById(loginUserId, id)
+    override fun deleteById(loginUserId: Long, id: Long): Int {
+        return this.noteDetailDao.deleteById(loginUserId, id)
+    }
 
-    override fun deleteByNoteId(loginUserId: Long, noteId: Long, excludeIdList: MutableList<Long>): Int = this.noteDetailDao.deleteByNoteId(loginUserId, noteId, excludeIdList)
+    override fun deleteByNoteId(loginUserId: Long, noteId: Long, excludeIdList: MutableList<Long>): Int {
+        return this.noteDetailDao.deleteByNoteId(loginUserId, noteId, excludeIdList)
+    }
 
-    override fun getById(id: Long) = this.noteDetailDao.getById(id)
+    override fun getById(id: Long): NoteDetail? {
+        return this.noteDetailDao.getById(id)
+    }
 
-    override fun listByNoteId(noteId: Long) = this.noteDetailDao.listByNoteId(noteId)
+    override fun listByNoteId(noteId: Long): MutableList<NoteDetail> {
+        return this.noteDetailDao.listByNoteId(noteId)
+    }
 }

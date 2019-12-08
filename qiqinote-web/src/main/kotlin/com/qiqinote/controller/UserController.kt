@@ -38,7 +38,9 @@ class UserController @Autowired constructor(
     @ResponseBody
     @PostMapping("/signUp")
     fun signUp(name: String, alias: String?, password: String, imageCode: String): ResultVO<Long> {
-        if (!this.validateImageCode(imageCode)) return ResultVO(CodeEnum.IMAGE_CODE_ERROR)
+        if (!this.validateImageCode(imageCode)) {
+            return ResultVO(CodeEnum.IMAGE_CODE_ERROR)
+        }
 
         val user = User()
         user.name = name
@@ -153,10 +155,14 @@ class UserController @Autowired constructor(
     @ResponseBody
     @PostMapping("/updateSecurityQuestions")
     fun updateSecurityQuestions(password: String, questionDTO: SecurityQuestionDTO): ResultVO<List<SecurityQuestion>> {
-        if (questionDTO.questions == null || questionDTO.questions?.size != ServiceConst.findPwdQuestionNum) return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_NUM_NOT_ENOUGH)
+        if (questionDTO.questions == null || questionDTO.questions?.size != ServiceConst.findPwdQuestionNum) {
+            return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_NUM_NOT_ENOUGH)
+        }
 
         val user = this.userService.getById(this.getLoginUserId()) ?: return ResultVO(CodeEnum.USER_NOT_EXISTS)
-        if (PasswordUtil.getEncPwd(password) != user.password) return ResultVO(CodeEnum.PWD_ERROR)
+        if (PasswordUtil.getEncPwd(password) != user.password) {
+            return ResultVO(CodeEnum.PWD_ERROR)
+        }
 
         return this.securityQuestionService.upsert(this.getLoginUserId(), questionDTO.questions!!)
     }
@@ -166,11 +172,17 @@ class UserController @Autowired constructor(
     @PostMapping("/updatePwdByOldPwd")
     fun updatePwdByOldPwd(account: String?, oldPassword: String, newPassword: String): ResultVO<Long> {
         var accountTmp = account
-        if (accountTmp == null) accountTmp = this.justGetLoginUserId()?.toString()
-        if (accountTmp == null || StringUtil.isEmpty(newPassword)) return ResultVO(CodeEnum.PARAM_ERROR)
+        if (accountTmp == null) {
+            accountTmp = this.justGetLoginUserId()?.toString()
+        }
+        if (accountTmp == null || StringUtil.isEmpty(newPassword)) {
+            return ResultVO(CodeEnum.PARAM_ERROR)
+        }
 
         val user = this.userService.getByAccount(accountTmp) ?: return ResultVO(CodeEnum.USER_NOT_EXISTS)
-        if (PasswordUtil.getEncPwd(oldPassword) != user.password) return ResultVO(CodeEnum.PWD_ERROR)
+        if (PasswordUtil.getEncPwd(oldPassword) != user.password) {
+            return ResultVO(CodeEnum.PWD_ERROR)
+        }
 
         user.password = newPassword
         val status = this.userService.upsertUser(user)
@@ -185,8 +197,12 @@ class UserController @Autowired constructor(
     @PostMapping("/updatePwdByQuestions")
     fun updatePwdByQuestions(account: String?, password: String, questionDTO: SecurityQuestionDTO): ResultVO<Long> {
         var accountTmp = account
-        if (accountTmp == null) accountTmp = this.justGetLoginUserId()?.toString()
-        if (accountTmp == null) return ResultVO(CodeEnum.PARAM_ERROR)
+        if (accountTmp == null) {
+            accountTmp = this.justGetLoginUserId()?.toString()
+        }
+        if (accountTmp == null) {
+            return ResultVO(CodeEnum.PARAM_ERROR)
+        }
 
         val questionMap = mutableMapOf<Long, String?>()
         questionDTO.questions?.forEach {
@@ -194,14 +210,18 @@ class UserController @Autowired constructor(
                 questionMap[it.id!!] = it.answer?.trim()
             }
         }
-        if (questionMap.size < ServiceConst.findPwdQuestionRightMinNum) return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_NUM_NOT_ENOUGH)
+        if (questionMap.size < ServiceConst.findPwdQuestionRightMinNum) {
+            return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_NUM_NOT_ENOUGH)
+        }
 
         val user = this.userService.getByAccount(accountTmp) ?: return ResultVO(CodeEnum.USER_NOT_EXISTS)
         val answers = this.securityQuestionService.list(user.id!!)
 
         var rightCount = 0
         answers.forEach {
-            if (it.answer == questionMap[it.id]) rightCount++
+            if (it.answer == questionMap[it.id]) {
+                rightCount++
+            }
         }
         if (rightCount < ServiceConst.findPwdQuestionRightMinNum) {
             return ResultVO(CodeEnum.FIND_PWD_QUESTIONS_ANSWER_ERROR)
@@ -220,8 +240,12 @@ class UserController @Autowired constructor(
     @PostMapping("/listOfPwdQuestion")
     fun listOfPwdQuestion(account: String?, password: String?): ResultVO<List<SecurityQuestion>> {
         var accountTmp = account
-        if (accountTmp == null) accountTmp = this.justGetLoginUserId()?.toString()
-        if (accountTmp == null) return ResultVO(CodeEnum.PARAM_ERROR)
+        if (accountTmp == null) {
+            accountTmp = this.justGetLoginUserId()?.toString()
+        }
+        if (accountTmp == null) {
+            return ResultVO(CodeEnum.PARAM_ERROR)
+        }
 
         val user = this.userService.getByAccount(accountTmp) ?: return ResultVO(CodeEnum.USER_NOT_EXISTS)
 

@@ -36,7 +36,9 @@ abstract class BaseController : AbstractBaseService() {
     /**
      * 用户是否有操作权限
      */
-    protected fun isMine(userId: Long?) = if (userId == null) false else userId == userContext?.id
+    protected fun isMine(userId: Long?): Boolean {
+        return if (userId == null) false else userId == userContext?.id
+    }
 
     protected fun getLoginUserId() : Long {
         val loginUserId = justGetLoginUserId()

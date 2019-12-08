@@ -152,7 +152,9 @@ class NoteServiceImpl @Autowired constructor(
     override fun deleteById(loginUserId: Long, id: Long): ResultVO<Int> {
         val old = this.getByIdOrIdLink(id) ?: return ResultVO()
         val status = this.noteDao.deleteById(loginUserId, id)
-        if (status <= 0) return ResultVO(CodeEnum.FAIL)
+        if (status <= 0) {
+            return ResultVO(CodeEnum.FAIL)
+        }
 
         this.updateNoteNum(loginUserId, old.parentId ?: DBConst.defaultParentId)
         this.closeNoteInRedis(loginUserId, id)
@@ -164,8 +166,17 @@ class NoteServiceImpl @Autowired constructor(
         return this.noteDao.getByIdOrIdLink(id, idLink)
     }
 
-    override fun getNoteVOByIdOrIdLink(loginUserId: Long?, id: Long?, idLink: String?, password: String?, request: HttpServletRequest?, response: HttpServletResponse?): NoteViewVO? {
-        if (id == null && idLink == null) return null
+    override fun getNoteVOByIdOrIdLink(
+            loginUserId: Long?,
+            id: Long?,
+            idLink: String?,
+            password: String?,
+            request: HttpServletRequest?,
+            response: HttpServletResponse?
+    ): NoteViewVO? {
+        if (id == null && idLink == null) {
+            return null
+        }
 
         val note = this.getByIdOrIdLink(id, idLink) ?: return null
         val secret = note.secret ?: DBConst.Note.secretOpen
@@ -209,7 +220,9 @@ class NoteServiceImpl @Autowired constructor(
     }
 
     override fun listOfNoteTreeVO(loginUserId: Long?, userId: Long, parentId: Long?, deep: Int): MutableList<NoteTreeVO> {
-        if (deep > 8) return arrayListOf()
+        if (deep > 8) {
+            return arrayListOf()
+        }
         val h = 10    // 横向找最多打开的节点数
         var hCount = 0
 
@@ -237,7 +250,9 @@ class NoteServiceImpl @Autowired constructor(
                             row,
                             false
                     ).right
-            if (notesTmp.isEmpty()) break
+            if (notesTmp.isEmpty()) {
+                break
+            }
 
             /**
              * 获取展开的数据
@@ -253,14 +268,18 @@ class NoteServiceImpl @Autowired constructor(
                 voTmp.note = note
                 results.add(voTmp)
             }
-            if (notesTmp.size < row) break
+            if (notesTmp.size < row) {
+                break
+            }
             page++
         } while (true)
         return results
     }
 
     override fun listOfNoteTreeVOByTitleLike(loginUserId: Long, titleLike: String): NoteTreeVOAndTotalNote {
-        if (StringUtil.isEmpty(titleLike.trim())) return NoteTreeVOAndTotalNote(Collections.emptyList(), 0)
+        if (StringUtil.isEmpty(titleLike.trim())) {
+            return NoteTreeVOAndTotalNote(Collections.emptyList(), 0)
+        }
         var page = Page.firstPage
         val row = 200
 
@@ -287,9 +306,13 @@ class NoteServiceImpl @Autowired constructor(
                 total = dataPair.left
             }
             notesTmp = dataPair.right
-            if (notesTmp.isEmpty()) break
+            if (notesTmp.isEmpty()) {
+                break
+            }
             results.addAll(notesTmp)
-            if (notesTmp.size < row) break
+            if (notesTmp.size < row) {
+                break
+            }
             page++
         } while (true)
 
@@ -307,7 +330,9 @@ class NoteServiceImpl @Autowired constructor(
      */
     private fun buildNoteTreeVOOfNoteTitleLike(resultList: MutableList<NoteTreeVO>?, parentId: Long, parentIdAndNoteMap: HashMap<Long, LinkedHashMap<Long, Note>>) {
         val noteMap = parentIdAndNoteMap[parentId]
-        if (noteMap == null || noteMap.isEmpty()) return
+        if (noteMap == null || noteMap.isEmpty()) {
+            return
+        }
 
         var noteTreeVOTmp: NoteTreeVO
 
@@ -325,11 +350,15 @@ class NoteServiceImpl @Autowired constructor(
      * 搜索title并一直追溯到根
      */
     private fun reviewParentOfNoteTitleLike(note: Note?, parentIdAndNoteMap: HashMap<Long, LinkedHashMap<Long, Note>>) {
-        if (note == null) return
+        if (note == null) {
+            return
+        }
 
         val parentId = note.parentId ?: DBConst.defaultParentId
         val noteMap = parentIdAndNoteMap[parentId] ?: LinkedHashMap()
-        if (noteMap.containsKey(note.id)) return
+        if (noteMap.containsKey(note.id)) {
+            return
+        }
 
         noteMap[note.id!!] = note
         parentIdAndNoteMap[parentId] = noteMap
@@ -374,10 +403,14 @@ class NoteServiceImpl @Autowired constructor(
         this.redisTemplate.opsForSet().add(RedisKeyEnum.sOpenedNoteId_.name + userId, noteId.toString())
     }
 
-    override fun countNoteHasContent(loginUserId: Long?, userId: Long?) = this.noteDao.countNoteHasContent(loginUserId, userId)
+    override fun countNoteHasContent(loginUserId: Long?, userId: Long?): Int {
+        return this.noteDao.countNoteHasContent(loginUserId, userId)
+    }
 
     private fun updateNoteNum(loginUserId: Long, parentId: Long) {
-        if (parentId == DBConst.defaultParentId) return
+        if (parentId == DBConst.defaultParentId) {
+            return
+        }
         this.noteDao.updateNoteNum(loginUserId, parentId)
     }
 

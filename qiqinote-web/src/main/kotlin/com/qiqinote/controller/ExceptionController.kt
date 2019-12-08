@@ -1,7 +1,6 @@
 package com.qiqinote.controller
 
 import com.qiqinote.constant.CodeEnum
-import com.qiqinote.constant.WebPageEnum
 import com.qiqinote.vo.ResultVO
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.stereotype.Controller
@@ -16,14 +15,23 @@ import springfox.documentation.annotations.ApiIgnore
 @RequestMapping("/")
 class ExceptionController : ErrorController {
 
-    override fun getErrorPath() = ""
+    override fun getErrorPath(): String {
+        return ""
+    }
 
     @RequestMapping("/error")
-    fun error() = ResultVO<String>(CodeEnum.NOT_LOGIN.code, CodeEnum.NOT_LOGIN.msg)
+    fun error(): ResultVO<String> {
+        return ResultVO(CodeEnum.NOT_LOGIN.code, CodeEnum.NOT_LOGIN.msg)
+    }
 
     @RequestMapping("/404.html")
-    fun _404() = ResultVO<String>(CodeEnum.NOT_LOGIN.code, CodeEnum.NOT_LOGIN.msg)
+    fun _404(): ResultVO<String> {
+        return ResultVO(CodeEnum.NOT_LOGIN.code, CodeEnum.NOT_LOGIN.msg)
+    }
 
     @RequestMapping("/500.html")
-    fun _500() = ResultVO<String>(CodeEnum.SYSTEM_ERROR.code, CodeEnum.SYSTEM_ERROR.msg)
+    fun _500(): ResultVO<String> {
+        return ResultVO(CodeEnum.SYSTEM_ERROR.code, CodeEnum.SYSTEM_ERROR.msg)
+    }
+
 }

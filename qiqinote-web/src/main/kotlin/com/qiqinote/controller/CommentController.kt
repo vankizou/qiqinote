@@ -44,10 +44,11 @@ class CommentController @Autowired constructor(
     @ApiOperation("删除评论")
     @PostMapping("/delete")
     fun delete(type: Int, id: Long): ResultVO<Unit> {
-        return if (this.commentService.delete(this.getLoginUserId(), type, id) > 0)
+        return if (this.commentService.delete(this.getLoginUserId(), type, id) > 0) {
             ResultVO()
-        else
+        } else {
             ResultVO(CodeEnum.FAIL)
+        }
     }
 
     @ApiOperation("某节点评论数量")
@@ -80,5 +81,13 @@ class CommentController @Autowired constructor(
 
     @ApiOperation("未读消息数量")
     @GetMapping("/unreadNum")
-    fun unreadNum(type: Int) = ResultVO(if (this.justGetLoginUserId() == null) 0 else this.commentService.unreadNum(this.getLoginUserId(), type))
+    fun unreadNum(type: Int): ResultVO<Long> {
+        return ResultVO(
+                if (this.justGetLoginUserId() == null) {
+                    0
+                } else {
+                    this.commentService.unreadNum(this.getLoginUserId(), type)
+                }
+        )
+    }
 }
