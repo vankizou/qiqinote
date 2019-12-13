@@ -17,7 +17,7 @@ class ExceptionHandler {
     private val log = Logger.getLogger(com.qiqinote.exception.ExceptionHandler::class.java)
 
     @ExceptionHandler(Exception::class)
-    fun exception(ex: Exception, request: HttpServletRequest, response: HttpServletResponse): Any? {
+    fun exception(ex: Exception, request: HttpServletRequest, response: HttpServletResponse) {
         request.characterEncoding = "UTF-8"
         response.characterEncoding = "UTF-8"
         response.contentType = "application/json;charset=UTF-8"
@@ -35,6 +35,5 @@ class ExceptionHandler {
                 WebUtil.printResponseData(response, ResultVO(CodeEnum.FAIL))
             }
         }
-        return null
     }
 }
