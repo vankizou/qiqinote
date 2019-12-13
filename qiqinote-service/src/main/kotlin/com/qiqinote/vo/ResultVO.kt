@@ -1,6 +1,6 @@
 package com.qiqinote.vo
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.alibaba.fastjson.JSON
 import com.qiqinote.constant.CodeEnum
 
 /**
@@ -11,13 +11,11 @@ class ResultVO<T> {
     var msg: String? = null
     var data: T? = null
 
-    constructor() : this(CodeEnum.SUCCESS)
+    constructor() : this(CodeEnum.SUCCESS, null)
 
     constructor(data: T) : this(CodeEnum.SUCCESS, data)
 
-    constructor(sc: CodeEnum) : this(sc.code, sc.msg)
-
-    constructor(sc: CodeEnum, data: T) : this(sc.code, sc.msg, data)
+    constructor(sc: CodeEnum, data: T?) : this(sc.code, sc.msg, data)
 
     constructor(code: Int, msg: String?) : this(code, msg, null)
 
@@ -30,12 +28,12 @@ class ResultVO<T> {
     fun isSuccess() = this.code == CodeEnum.SUCCESS.code
 
     override fun toString(): String {
-        return jacksonObjectMapper().writeValueAsString(this)
+        return JSON.toJSONString(this)
     }
 
     companion object {
-        fun buildFail() = ResultVO<Unit>(CodeEnum.FAIL)
+        fun buildFail() = ResultVO<Unit>(CodeEnum.FAIL, null)
 
-        fun buildParamError() = ResultVO<Unit>(CodeEnum.PARAM_ERROR)
+        fun buildParamError() = ResultVO<Unit>(CodeEnum.PARAM_ERROR, null)
     }
 }
